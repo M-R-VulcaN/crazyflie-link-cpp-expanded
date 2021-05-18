@@ -30,8 +30,11 @@ The library can be tested using the included example applications, e.g.,:
 
 ## File Structure Explained
 ### Directories
+
 `src` - source files for crazyflie lib classes and functions
+
 `examples` - example files 
+
 `include/crazflieLinkCpp` - contains all header files for crazyflie lib
 
 
