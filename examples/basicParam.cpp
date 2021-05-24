@@ -27,12 +27,12 @@ int main()
     }
     cout << "------------------\n" << "numOfElements: " << (int) numOfElements << "\n------------------\n\n\n" << endl;
 
-    cout << "Get by name:                activeMarker . mode  \n";
-    
+    cout << "Example of access to param by (group).(value):\n";
+    cout << "Get by name:          (activeMarker . mode)\nParam Value: ";
     cout << param.getUIntByName("activeMarker", "mode") << endl;
 
 
-    cout << "Get by name:                usd . logging  \n";
+    cout << "\nGet by name:          (usd . logging)\nParam Value: ";
     cout << param.getUIntByName("usd", "logging") << endl;
 
     return 0;
