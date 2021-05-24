@@ -28,6 +28,16 @@ The library can be tested using the included example applications, e.g.,:
 ./example_scan
 ```
 
+## File Structure Explained
+### Directories
+
+`src` - source files for crazyflie lib classes and functions
+
+`examples` - example files 
+
+`include/crazflieLinkCpp` - contains all header files for crazyflie lib
+
+
 ## Build and install development version of the python binding
 
 Building the python binding requires python>=3.6, cmake and Ninja. Ninja and CMake can be installed with pip on Windows and Mac (```pip install cmake ninja```), or using apt-get on Ubuntu/debian (```apt-get install cmake ninja-build```).
@@ -44,12 +54,4 @@ The library can be tested using the included example scripts, e.g.,:
 python3 examples/scan.py
 ```
 
-## To Do
 
-* add new test that uses echoDelay
-* Windows crash
-
-* add broadcast support
-  * support send2PacketsNoAck 
-* integrate in Crazyflie_cpp and crazyflie_tools
-* Hot Plug support (Linux/Mac only)
