@@ -75,7 +75,6 @@ float Param::getFloatByName(std::string group, std::string name)
 
         if (tocItem._groupName == group && tocItem._paramName == name)
         {
-
             return getFloatById(tocItem._paramId);
         }
     }
