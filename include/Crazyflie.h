@@ -10,7 +10,9 @@
 
 #define APP_CHANNEL 2
 
-#define TOC_CHANNEL 0
+#define TOC_CHANNEL_LOG 0
+
+#define TOC_CHANNEL_PARAM 0
 #define PARAM_READ_CHANNEL 1
 #define PARAM_WRITE_CHANNEL 2
 
@@ -20,6 +22,7 @@
 #define CMD_TOC_INFO_V2 3 // version 2: up to 16k entries
 
 #define PARAM_PORT 2
+#define LOG_PORT 5
 #define APPCHANNEL_PORT 13
 
 class Crazyflie
@@ -28,16 +31,19 @@ private:
     bitcraze::crazyflieLinkCpp::Connection _con;
     ConnectionWrapper _conWrapperParamRead;
     ConnectionWrapper _conWrapperParamWrite;
-    ConnectionWrapper _conWrapperToc;
+    ConnectionWrapper _conWrapperParamToc;
+    ConnectionWrapper _conWrapperLogToc;
     ConnectionWrapper _conWrapperAppchannel;
     bool _isRunning;
-    Toc _toc;
+    Toc _paramToc;
+    Toc _logToc;
     bool setParamInCrazyflie(uint16_t paramId, float newValue);
     bool setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const size_t &valueSize);
 
     uint32_t getUIntFromCrazyflie(uint16_t paramId) const;
     float getFloatFromCrazyflie(uint16_t paramId) const;
-    void initToc();
+    void initParamToc();
+    void initLogToc();
     TocItem getTocItemFromCrazyflie(uint16_t id) const;
 
 public:
@@ -54,7 +60,8 @@ public:
     bool setParamByName(const std::string &group, const std::string &name, float newValue);
     bool setParamByName(const std::string &group, const std::string &name, uint32_t newValue, const size_t &valueSize);
 
-    void printToc();
+    void printParamToc() const;
+    void printLogToc() const;
     std::vector<std::pair<TocItem, ParamValue>> getTocAndValues() const;
 
     void sendAppChannelData(const void *data, const size_t &dataLen);
@@ -62,6 +69,7 @@ public:
     //returns the amount of bytes it wrote
     size_t recvAppChannelData(void* dest, const size_t& dataLen);
 
+    
     //todo: add callback for param changed
     //todo: console
 };

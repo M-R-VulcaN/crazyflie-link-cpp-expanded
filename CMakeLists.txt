@@ -43,6 +43,7 @@ add_library(crazyflieLinkCpp
   src/Crazyflie.cpp
   src/Toc.cpp
   src/LoggingCrazyflieWrapper.cpp
+  src/TocWrapper.cpp
 )
 
 # target_include_directories(libCrazyflieLinkCpp
@@ -94,6 +95,14 @@ add_executable(example_benchmark
   examples/benchmark.cpp
 )
 target_link_libraries(example_benchmark
+  crazyflieLinkCpp
+)
+
+# example_basicLog
+add_executable(example_basicLog
+  examples/basicLog.cpp
+)
+target_link_libraries(example_basicLog
   crazyflieLinkCpp
 )
 

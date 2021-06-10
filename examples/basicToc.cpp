@@ -15,7 +15,7 @@ int main()
 {
     Crazyflie crazyflie("usb://0");
     crazyflie.init();
-    crazyflie.printToc();
+    crazyflie.printParamToc();
 
     return 0;
 }

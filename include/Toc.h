@@ -57,9 +57,9 @@ struct TocItem
 {
     std::string _groupName;
     std::string _paramName;
-    ParamType _paramType;
+    ParamType _Type;
     AccessType _paramAccessType;
-    uint16_t _paramId;
+    uint16_t _Id;
 
     bool isFloat() const;
     bool operator>(const TocItem &other) const;
