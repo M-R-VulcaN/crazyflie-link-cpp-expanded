@@ -1,5 +1,5 @@
 #include "Crazyflie.h"
-#include "TocWrapper.h"
+#include "Crazyflie.h"
 
 using namespace bitcraze::crazyflieLinkCpp;
 
@@ -28,10 +28,11 @@ using namespace bitcraze::crazyflieLinkCpp;
 
 int main()
 {
-    Toc toc;
-    TocWrapper tocWpr(toc);
-    toc.insert(TocItem());
-    toc.insert(TocItem());
+    Crazyflie crazyflie("usb://0");
+
+    crazyflie.init();
+
+    crazyflie.printLogToc();
     // std::cout << tocWpr->getAllTocItems().size();
 
     // Crazyflie crazyflie("usb://0");

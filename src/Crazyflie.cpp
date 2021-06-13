@@ -1,7 +1,7 @@
 #include "Crazyflie.h"
 using namespace bitcraze::crazyflieLinkCpp;
 
-Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWrapperParamRead(_con), _conWrapperParamWrite(_con), _conWrapperParamToc(_con), _conWrapperLogToc(_con), _conWrapperAppchannel(_con) 
+Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWrapperParamRead(_con), _conWrapperParamWrite(_con), _conWrapperParamToc(_con), _conWrapperLogToc(_con), _conWrapperAppchannel(_con), _logTocWpr(_logToc,_conWrapperLogToc), _paramTocWpr(_paramToc, _conWrapperParamToc)
 {
     _isRunning = false;
     _conWrapperLogToc.setPort(LOG_PORT);
@@ -99,49 +99,6 @@ bool Crazyflie::setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const s
     return true;
 }
 
-void Crazyflie::initParamToc()
-{
-    // ask for the toc info
-    uint8_t cmd = CMD_TOC_INFO_V2;
-    _conWrapperParamToc.sendData(&cmd, sizeof(cmd));
-    Packet p_recv = _conWrapperParamToc.recvFilteredData(0);
-    TocInfo cfTocInfo(p_recv);
-
-    uint16_t num_of_elements = cfTocInfo._numberOfElements;
-
-    for (uint16_t i = 0; i < num_of_elements; i++)
-    {
-        TocItem tocItem();
-        _paramToc.insert(getTocItemFromCrazyflie(i));
-    }
-}
-
-void Crazyflie::initLogToc()
-{
-    // ask for the toc info
-    uint8_t cmd = CMD_TOC_INFO_V2;
-    _conWrapperLogToc.sendData(&cmd, sizeof(cmd));
-    Packet p_recv = _conWrapperLogToc.recvFilteredData(0);
-    TocInfo cfTocInfo(p_recv);
-
-    uint16_t num_of_elements = cfTocInfo._numberOfElements;
-
-    for (uint16_t i = 0; i < num_of_elements; i++)
-    {
-        TocItem tocItem();
-        _logToc.insert(getTocItemFromCrazyflie(i));
-    }
-}
-
-TocItem Crazyflie::getTocItemFromCrazyflie(uint16_t id) const
-{
-    uint8_t cmd = CMD_TOC_ITEM_V2;
-    // ask for a param with the given id
-    _conWrapperParamToc.sendData(&cmd, sizeof(uint8_t), &id, sizeof(id));
-    Packet p_recv = _conWrapperParamToc.recvFilteredData(0);
-
-    return TocItem(p_recv);
-}
 
 // //print the TOC with values!
 void Crazyflie::printParamToc() const
@@ -151,10 +108,10 @@ void Crazyflie::printParamToc() const
     for (TocItem tocItem : tocItemsVector)
     {
         std::cout << tocItem;
-        if (to_string(tocItem._Type).find("int") != std::string::npos)
-            std::cout << getUIntFromCrazyflie(tocItem._Id) << std::endl;
+        if (to_string(tocItem._type).find("int") != std::string::npos)
+            std::cout << getUIntFromCrazyflie(tocItem._id) << std::endl;
         else
-            std::cout << getFloatFromCrazyflie(tocItem._Id) << std::endl;
+            std::cout << getFloatFromCrazyflie(tocItem._id) << std::endl;
     }
     std::cout << "Printed " << tocItemsVector.size() << " items total" << std::endl;
 }
@@ -167,18 +124,18 @@ void Crazyflie::printLogToc() const
     for (TocItem tocItem : tocItemsVector)
     {
         std::cout << tocItem;
-        if (to_string(tocItem._Type).find("int") != std::string::npos)
-            std::cout << getUIntFromCrazyflie(tocItem._Id) << std::endl;
+        if (to_string(tocItem._type).find("int") != std::string::npos)
+            std::cout << getUIntFromCrazyflie(tocItem._id) << std::endl;
         else
-            std::cout << getFloatFromCrazyflie(tocItem._Id) << std::endl;
+            std::cout << getFloatFromCrazyflie(tocItem._id) << std::endl;
     }
     std::cout << "Printed " << tocItemsVector.size() << " items total" << std::endl;
 }
 
 bool Crazyflie::init()
 {
-    initParamToc();
-    initLogToc();
+    _logTocWpr.initToc();
+    _paramTocWpr.initToc();
     _isRunning = true;
     return true;
 }
@@ -211,11 +168,11 @@ std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() const
         ParamValue val;
         if (tocItem.isFloat())
         {
-            val._floatVal = this->getFloatFromCrazyflie(tocItem._Id);
+            val._floatVal = this->getFloatFromCrazyflie(tocItem._id);
         }
         else
         {
-            val._floatVal = this->getUIntFromCrazyflie(tocItem._Id);
+            val._floatVal = this->getUIntFromCrazyflie(tocItem._id);
         }
 
         res.emplace_back(tocItem, val);

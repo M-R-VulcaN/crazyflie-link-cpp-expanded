@@ -24,7 +24,7 @@ int main()
         TocItem& tocItem = element.first;
         auto val = element.second;
 
-        tocParamsFile << (unsigned int)tocItem._Id << "," << to_string(tocItem._paramAccessType) << "," << to_string(tocItem._Type) << "," << tocItem._groupName << "," << tocItem._paramName << ",";
+        tocParamsFile << (unsigned int)tocItem._id << "," << to_string(tocItem._accessType) << "," << to_string(tocItem._type) << "," << tocItem._groupName << "," << tocItem._name << ",";
         if(tocItem.isFloat())
             tocParamsFile << val._floatVal << endl;
         else 

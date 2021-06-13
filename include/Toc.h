@@ -42,24 +42,24 @@ struct AccessType
     AccessType &operator=(const uint8_t &accessType);
 };
 
-struct ParamType
+struct TocItemType
 {
-    uint8_t _paramtype;
+    uint8_t _type;
     operator std::string() const;
-    friend std::string to_string(ParamType const &self);
+    friend std::string to_string(TocItemType const &self);
     bool operator==(uint8_t val) const;
     bool operator==(const std::string& val) const;
-    ParamType &operator=(const std::string &strParamType);
-    ParamType &operator=(const uint8_t &paramType);
+    TocItemType &operator=(const std::string &strParamType);
+    TocItemType &operator=(const uint8_t &paramType);
 };
 
 struct TocItem
 {
     std::string _groupName;
-    std::string _paramName;
-    ParamType _Type;
-    AccessType _paramAccessType;
-    uint16_t _Id;
+    std::string _name;
+    TocItemType _type;
+    AccessType _accessType;
+    uint16_t _id;
 
     bool isFloat() const;
     bool operator>(const TocItem &other) const;

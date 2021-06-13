@@ -3,7 +3,7 @@
 #include <map>
 #include <fstream> //for saving .csv file
 #include "ConnectionWrapper.h"
-#include "Toc.h"
+#include "TocWrapper.h"
 
 #define PAYLOAD_VALUE_BEGINING_INDEX 3
 #define NOT_FOUND 0
@@ -16,11 +16,6 @@
 #define PARAM_READ_CHANNEL 1
 #define PARAM_WRITE_CHANNEL 2
 
-#define CMD_TOC_ELEMENT 0 // original version: up to 255 entries
-#define CMD_TOC_INFO 1    // original version: up to 255 entries
-#define CMD_TOC_ITEM_V2 2 // version 2: up to 16k entries
-#define CMD_TOC_INFO_V2 3 // version 2: up to 16k entries
-
 #define PARAM_PORT 2
 #define LOG_PORT 5
 #define APPCHANNEL_PORT 13
@@ -28,15 +23,19 @@
 class Crazyflie
 {
 private:
+    Toc _paramToc;
+    Toc _logToc;
     bitcraze::crazyflieLinkCpp::Connection _con;
     ConnectionWrapper _conWrapperParamRead;
     ConnectionWrapper _conWrapperParamWrite;
     ConnectionWrapper _conWrapperParamToc;
     ConnectionWrapper _conWrapperLogToc;
     ConnectionWrapper _conWrapperAppchannel;
+    TocWrapper _logTocWpr;
+    TocWrapper _paramTocWpr;
     bool _isRunning;
-    Toc _paramToc;
-    Toc _logToc;
+
+    
     bool setParamInCrazyflie(uint16_t paramId, float newValue);
     bool setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const size_t &valueSize);
 
@@ -44,7 +43,6 @@ private:
     float getFloatFromCrazyflie(uint16_t paramId) const;
     void initParamToc();
     void initLogToc();
-    TocItem getTocItemFromCrazyflie(uint16_t id) const;
 
 public:
     Crazyflie(const std::string &uri);
