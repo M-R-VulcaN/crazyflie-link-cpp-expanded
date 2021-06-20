@@ -15,7 +15,9 @@ void TocWrapper::initToc()
 {
      // ask for the toc info
     uint8_t cmd = CMD_TOC_INFO_V2;
+
     _conWpr->sendData(&cmd, sizeof(cmd));
+
     TocInfo cfTocInfo(_conWpr->recvFilteredData(0));
 
     uint16_t num_of_elements = cfTocInfo._numberOfElements;
@@ -25,6 +27,7 @@ void TocWrapper::initToc()
         TocItem tocItem();
         _core->insert(getTocItemFromCrazyflie(i));
     }
+
 }
 
 TocItem TocWrapper::getTocItemFromCrazyflie(uint16_t id) const

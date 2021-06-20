@@ -4,18 +4,7 @@ using namespace bitcraze::crazyflieLinkCpp;
 Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWrapperParamRead(_con), _conWrapperParamWrite(_con), _conWrapperParamToc(_con), _conWrapperLogToc(_con), _conWrapperAppchannel(_con), _logTocWpr(_logToc,_conWrapperLogToc), _paramTocWpr(_paramToc, _conWrapperParamToc)
 {
     _isRunning = false;
-    _conWrapperLogToc.setPort(LOG_PORT);
-
-    _conWrapperParamToc.setPort(PARAM_PORT);
-    _conWrapperParamRead.setPort(PARAM_PORT);
-    _conWrapperParamWrite.setPort(PARAM_PORT);
-    _conWrapperAppchannel.setPort(APPCHANNEL_PORT);
-
-    _conWrapperLogToc.setPort(TOC_CHANNEL_LOG);
-    _conWrapperParamToc.setChannel(TOC_CHANNEL_PARAM);
-    _conWrapperParamRead.setChannel(PARAM_READ_CHANNEL);
-    _conWrapperParamWrite.setChannel(PARAM_WRITE_CHANNEL);
-    _conWrapperAppchannel.setChannel(APP_CHANNEL);
+   
 }
 
 void Crazyflie::sendAppChannelData(const void *data, const size_t &dataLen)
@@ -134,8 +123,23 @@ void Crazyflie::printLogToc() const
 
 bool Crazyflie::init()
 {
+     _conWrapperLogToc.setPort(LOG_PORT);
+
+    _conWrapperParamToc.setPort(PARAM_PORT);
+    _conWrapperParamRead.setPort(PARAM_PORT);
+    _conWrapperParamWrite.setPort(PARAM_PORT);
+    _conWrapperAppchannel.setPort(APPCHANNEL_PORT);
+
+    _conWrapperLogToc.setChannel(TOC_CHANNEL_LOG);
+    _conWrapperParamToc.setChannel(TOC_CHANNEL_PARAM);
+    _conWrapperParamRead.setChannel(PARAM_READ_CHANNEL);
+    _conWrapperParamWrite.setChannel(PARAM_WRITE_CHANNEL);
+    _conWrapperAppchannel.setChannel(APP_CHANNEL);
+
     _logTocWpr.initToc();
+
     _paramTocWpr.initToc();
+
     _isRunning = true;
     return true;
 }
