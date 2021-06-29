@@ -47,22 +47,16 @@ The library can be tested from the build directory using the example application
 # IMPORTANT DATA SOURCES and REFERENCES 
 
 
-
-*   
-[Bitcraze parameters documentation](https://www.bitcraze.io/documentation/repository/crazyflie-firmware/master/functional-areas/crtp/crtp_parameters/) 
+*   [Bitcraze parameters documentation](https://www.bitcraze.io/documentation/repository/crazyflie-firmware/master/functional-areas/crtp/crtp_parameters/) 
 
 
-*   
-parameter [TOC structure](https://github.com/bitcraze/crazyflie-lib-python/blob/master/cflib/crazyflie/toc.py)
+*   parameter [TOC structure](https://github.com/bitcraze/crazyflie-lib-python/blob/master/cflib/crazyflie/toc.py)
 
 
-*   
-[Bitcraze python lib](https://github.com/bitcraze/crazyflie-lib-python)
+*   [Bitcraze python lib](https://github.com/bitcraze/crazyflie-lib-python)
 
 
-*   
-[How to properly setup usb of crazyflie in ubuntu](https://www.bitcraze.io/documentation/repository/crazyflie-lib-python/0.1.9/usb_permissions/)
-
+*   [How to properly setup usb of crazyflie in ubuntu](https://www.bitcraze.io/documentation/repository/crazyflie-lib-python/0.1.9/usb_permissions/)
 
 
 # METHODS and ARCHITECTURE
