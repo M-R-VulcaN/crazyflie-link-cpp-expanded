@@ -44,6 +44,7 @@ add_library(crazyflieLinkCpp
   src/Toc.cpp
   src/LoggingCrazyflieWrapper.cpp
   src/debug.cpp
+  src/Log.cpp
 )
 
 # target_include_directories(libCrazyflieLinkCpp
@@ -145,4 +146,3 @@ add_executable(example_basicParamCSV
 target_link_libraries(example_basicParamCSV
   crazyflieLinkCpp
 )
-
