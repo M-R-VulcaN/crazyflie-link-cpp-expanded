@@ -2,16 +2,6 @@
 
 A library which you could include into your c++ project and run the functions in here to code yourself a program for the crazyflie. A c++ version of [crazyflie-lib-python](https://github.com/bitcraze/crazyflie-lib-python)
 
-## Development
-
-### Repo Structure
-
-* `src` - source files for crazyflie lib classes and functions
-
-* `examples` - example files which you can run
-
-* `include` - contains all header files for crazyflie lib
-
 ## Setup and Install
 
 ### For Visual Studio Editting Best Experience
@@ -47,6 +37,15 @@ Before you can run an example:
 5. Click `Allow` intelisense for c/c++
 6. Click `Allow` intelisense for CMakeLists and select `unspecified` compiler
 
+## Development
+
+### Repo Structure
+
+* `src` - source files for crazyflie lib classes and functions
+
+* `examples` - example files which you can run
+
+* `include` - contains all header files for crazyflie lib
 
 # IMPORTANT DATA SOURCES and REFERENCES 
 
