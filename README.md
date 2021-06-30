@@ -12,25 +12,18 @@ A library which you could include into your c++ project and run the functions in
 
 * `include` - contains all header files for crazyflie lib
 
+## Setup and Install
+
 ### For Visual Studio Editting Best Experience
-
-1. Install c/c++ add-on
-2. Install CMakeLists add-on
-3. Open Directory in Vscode
-4. Allow intelisense for c/c++
-5. Allow intelisense for CMakeLists (let the compiler guess which g++ version to use) 
-
-
-
-## How to run
-
-### Dependencies
 
 ```
 sudo apt install -y libusb-1.0-0-dev
+git clone https://github.com/M-R-VulcaN/crazyflie-link-cpp-expanded.git
+cd crazyflie-link-cpp-expanded
 ```
+## How to Run
 
-### Build C++ lib and examples
+First you must build:
 
 ```
 mkdir build
@@ -39,11 +32,22 @@ cmake ..
 make
 ```
 
-The library can be tested from the build directory using the example applications, e.g.,:
+Before you can run an example:
 
 ```
-./example_scan
+./example_<example_name>
 ```
+
+### Building and Running with vscode
+
+1. [Install vscode](https://code.visualstudio.com/download)
+2. `code <path_to_repo_directory>`
+3. Install `c/c++` add-on
+4. Install `CMakeLists` add-on
+5. Click `Allow` intelisense for c/c++
+6. Click `Allow` intelisense for CMakeLists and select `unspecified` compiler
+
+
 # IMPORTANT DATA SOURCES and REFERENCES 
 
 
