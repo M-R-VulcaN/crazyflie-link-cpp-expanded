@@ -156,11 +156,20 @@ bool Crazyflie::setParamByName(const std::string &group, const std::string &name
 {
     return setParamInCrazyflie(_paramToc.getItemId(group, name), newValue, valueSize);
 }
-bool Crazyflie::isParamFloat(const std::string &group, const std::string &name) const
-{
-    return _paramToc.getItem(group, name).isFloat();
-}
+/*
+   {0x08, "uint8_t"},
+        {0x09, "uint16_t"},
+        {0x0A, "uint32_t"},
+        {0x0B, "uint64_t"},
+        {0x00, "int8_t"},
+        {0x01, "int16_t"},
+        {0x02, "int32_t"},
+        {0x03, "int64_t"},
+        {0x05, "FP16"},
+        {0x06, "float"},
+        {0x07, "double"}};
 
+*/
 std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() const
 {
     std::vector<std::pair<TocItem, ParamValue>> res;
@@ -170,11 +179,11 @@ std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() const
     for (TocItem tocItem : tocItems)
     {
         ParamValue val;
-        if (tocItem.isFloat())
+        if (tocItem._type == "float")
         {
             val._floatVal = this->getFloatFromCrazyflie(tocItem._id);
         }
-        else
+        else if (tocItem._type == "uint32_t")
         {
             val._floatVal = this->getUIntFromCrazyflie(tocItem._id);
         }

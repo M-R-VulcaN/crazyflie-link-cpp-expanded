@@ -1,5 +1,4 @@
 #include "Crazyflie.h"
-#include "Crazyflie.h"
 
 using namespace bitcraze::crazyflieLinkCpp;
 
@@ -40,7 +39,7 @@ int main()
     // // conWrapper.setChannel(CHAN_TOC);
     // // uint8_t i = CMD_GET_INFO_V2;
     // // conWrapper.sendData(&i,1);
-    // // std::cout << conWrapper.recvFilteredData(0) << std::endl;
+    // // std::cout << conWrappedr.recvFilteredData(0) << std::endl;
     // crazyflie.init();
     //  crazyflie.printLogToc();
 

@@ -188,11 +188,6 @@ void Toc::clearToc()
 }
 
 
-bool TocItem::isFloat() const
-{
-    return _type == FLOAT_PARAM_TYPE;
-}
-
 
 bool TocItemType::operator==(const std::string& val) const
 {

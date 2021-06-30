@@ -39,5 +39,26 @@ public:
 
     void sendData(const void* data1, const size_t& data1_len, const void* data2 = nullptr, const size_t& data2_len = 0) const;
 
+    //returns true if it was successful, else, false
+    template <typename ValType>
+    bool recvValue(ValType& result)
+    {
+        // std::cout << (int)objectToSend << std::endl;
+        auto p_recv = this->recvFilteredData(0);
+        if(sizeof(result)<p_recv.payloadSize())
+            return false;
+        std::copy_n(p_recv.payload(),p_recv.payloadSize(),(uint8_t*)&result);
+        return true;
+    }
+    //returns true if it was successful, else, false
+    bool recvFP16(float& result)
+    {
+        auto p_recv = this->recvFilteredData(0);
+        if(p_recv.payloadSize() != sizeof(uint16_t))
+            return false;
+        std::copy_n(p_recv.payload(),p_recv.payloadSize(),(uint8_t*)&result);
+        return true;
+    }
+
     ~ConnectionWrapper();
 };

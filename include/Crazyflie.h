@@ -50,7 +50,6 @@ public:
     bool isRunning() const;
     bool init();
 
-    bool isParamFloat(const std::string &group, const std::string &name) const;
 
     uint32_t getUIntByName(const std::string &group, const std::string &name) const;
     float getFloatByName(const std::string &group, const std::string &name) const;
