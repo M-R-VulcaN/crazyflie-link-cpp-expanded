@@ -10,11 +10,14 @@
 
 #define APP_CHANNEL 2
 
-#define TOC_CHANNEL_LOG 0
+#define TOC_CHANNEL_LOG 0         //	Table of content access: Used for reading out the TOC
 
 #define TOC_CHANNEL_PARAM 0
 #define PARAM_READ_CHANNEL 1
 #define PARAM_WRITE_CHANNEL 2
+
+#define LOG_CONTROL_CHANNEL 1     //	Log control: Used for adding/removing/starting/pausing log blocks
+#define LOG_DATA_CHANNEL 2       // 	Log data: Used to send log data from the Crazyflie to the client
 
 #define PARAM_PORT 2
 #define LOG_PORT 5
@@ -41,6 +44,7 @@ private:
 
     uint32_t getUIntFromCrazyflie(uint16_t paramId) const;
     float getFloatFromCrazyflie(uint16_t paramId) const;
+    double getDoubleFromCrazyflie(uint16_t paramId) const;
     void initParamToc();
     void initLogToc();
 

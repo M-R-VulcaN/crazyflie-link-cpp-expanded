@@ -60,6 +60,17 @@ uint32_t Crazyflie::getUIntFromCrazyflie(uint16_t paramId) const
     return res;
 }
 
+double Crazyflie::getDoubleFromCrazyflie(uint16_t paramId) const
+{
+    double res = 0;
+    
+    _conWrapperParamRead.sendData(&paramId, sizeof(paramId));
+    Packet p = _conWrapperParamRead.recvFilteredData(0);
+    std::memcpy(&res, p.payload() + PAYLOAD_VALUE_BEGINING_INDEX, sizeof(res));
+    
+    return res;
+}
+
 float Crazyflie::getFloatByName(const std::string &group, const std::string &name) const
 {
     return getFloatFromCrazyflie(_paramToc.getItemId(group, name));
@@ -89,7 +100,7 @@ bool Crazyflie::setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const s
 }
 
 
-// //print the TOC with values!
+//print the TOC with values!
 void Crazyflie::printParamToc() const
 {
     auto tocItemsVector = _paramToc.getAllTocItems();
@@ -105,20 +116,17 @@ void Crazyflie::printParamToc() const
     std::cout << "Printed " << tocItemsVector.size() << " items total" << std::endl;
 }
 
-// //print the TOC with values!
+//print the TOC
 void Crazyflie::printLogToc() const
 {
     auto tocItemsVector = _logToc.getAllTocItems();
 
     for (TocItem tocItem : tocItemsVector)
     {
-        std::cout << tocItem;
-        if (to_string(tocItem._type).find("int") != std::string::npos)
-            std::cout << getUIntFromCrazyflie(tocItem._id) << std::endl;
-        else
-            std::cout << getFloatFromCrazyflie(tocItem._id) << std::endl;
+        std::cout << tocItem <<std::endl;
     }
     std::cout << "Printed " << tocItemsVector.size() << " items total" << std::endl;
+    std::cout << "=========================================================================" << std::endl;
 }
 
 bool Crazyflie::init()
@@ -157,7 +165,7 @@ bool Crazyflie::setParamByName(const std::string &group, const std::string &name
     return setParamInCrazyflie(_paramToc.getItemId(group, name), newValue, valueSize);
 }
 /*
-   {0x08, "uint8_t"},
+        {0x08, "uint8_t"},
         {0x09, "uint16_t"},
         {0x0A, "uint32_t"},
         {0x0B, "uint64_t"},
@@ -168,7 +176,6 @@ bool Crazyflie::setParamByName(const std::string &group, const std::string &name
         {0x05, "FP16"},
         {0x06, "float"},
         {0x07, "double"}};
-
 */
 std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() const
 {

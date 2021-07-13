@@ -32,6 +32,8 @@ int main()
     crazyflie.init();
 
     crazyflie.printLogToc();
+    crazyflie.printParamToc();
+
     // std::cout << tocWpr->getAllTocItems().size();
 
     // Crazyflie crazyflie("usb://0");

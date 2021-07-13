@@ -107,6 +107,14 @@ target_link_libraries(example_basicLog
   crazyflieLinkCpp
 )
 
+# example_basicLogRead
+add_executable(example_basicLogRead
+  examples/basicLogRead.cpp
+)
+target_link_libraries(example_basicLogRead
+  crazyflieLinkCpp
+)
+
 # example_basicToc
 add_executable(example_basicToc
   examples/basicToc.cpp
