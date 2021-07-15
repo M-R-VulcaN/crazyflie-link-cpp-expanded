@@ -35,14 +35,6 @@ int main()
 
     cout << "------------------\n" << "numOfElements: " << tocAndValues.size() << "\n------------------\n\n\n" << endl;
 
-    cout << "Get by name:                activeMarker . mode  \n";
-    
-    cout << crazyflie.getUIntByName("activeMarker", "mode") << endl;
-
-
-    cout << "Get by name:                usd . logging  \n";
-    cout << crazyflie.getUIntByName("usd", "logging") << endl;
-
     cout << "Time: " << (double)diff.count() << endl;
 
     cout << "file saved to build/ under the name toc.csv" << endl;

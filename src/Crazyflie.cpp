@@ -109,11 +109,41 @@ void Crazyflie::printParamToc() const
     {
         std::cout << tocItem;
         if (to_string(tocItem._type).find("int") != std::string::npos)
-            std::cout << getUIntFromCrazyflie(tocItem._id) << std::endl;
+        {
+            std::cout << "here" << std::endl;
+            std::cout << getUIntFromCrazyflie(tocItem._id) << std::endl;}
         else
             std::cout << getFloatFromCrazyflie(tocItem._id) << std::endl;
     }
     std::cout << "Printed " << tocItemsVector.size() << " items total" << std::endl;
+}
+
+
+/*
+save the TOC with values to a csv file.
+input: path = the requested path.
+       fileName = the requested file name. 
+*/
+void Crazyflie::csvParamToc(std::string path,std::string fileName) const
+{
+    std::string filepath = path + "/" + fileName;
+    std::ofstream file;   
+    file.open(filepath); 
+
+    auto tocItemsVector = _paramToc.getAllTocItems();
+
+    for (TocItem tocItem : tocItemsVector)
+    {
+        //tocParamsFile << tocItem;
+        file << (unsigned int)tocItem._id << "," << to_string(tocItem._accessType) << "," << to_string(tocItem._type) << "," << tocItem._groupName << "," << tocItem._name << ",";
+        if (to_string(tocItem._type).find("int") != std::string::npos)
+        {
+            file << getUIntFromCrazyflie(tocItem._id) << std::endl;}
+        else
+            file << getFloatFromCrazyflie(tocItem._id) << std::endl;
+    }
+    std::cout << "saved " << tocItemsVector.size() << " parameters to a .csv file under the path: " << filepath << std::endl;
+    file.close();
 }
 
 //print the TOC

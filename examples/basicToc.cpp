@@ -18,5 +18,11 @@ int main()
 
     crazyflie.printParamToc();
 
+
+    std::string path = "/home/makeruser/crazyflie-link-cpp-expanded";
+    std::string fileName = "toc.csv";
+
+    crazyflie.csvParamToc(path, fileName);
+
     return 0;
 }

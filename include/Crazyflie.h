@@ -2,6 +2,7 @@
 
 #include <map>
 #include <fstream> //for saving .csv file
+
 #include "ConnectionWrapper.h"
 #include "TocWrapper.h"
 
@@ -62,6 +63,7 @@ public:
     bool setParamByName(const std::string &group, const std::string &name, uint32_t newValue, const size_t &valueSize);
 
     void printParamToc() const;
+    void csvParamToc(std::string path,std::string fileName) const;
     void printLogToc() const;
     std::vector<std::pair<TocItem, ParamValue>> getTocAndValues() const;
 
@@ -70,7 +72,8 @@ public:
     //returns the amount of bytes it wrote
     size_t recvAppChannelData(void* dest, const size_t& dataLen);
 
-    
+    //**************************************
     //todo: add callback for param changed
     //todo: console
+    //**************************************
 };
