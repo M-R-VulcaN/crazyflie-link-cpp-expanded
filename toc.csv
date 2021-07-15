@@ -53,7 +53,7 @@
 53,RO,float,pid_rate,yaw_kd,0
 54,RO,float,sensfusion6,kp,0.8
 55,RO,float,sensfusion6,ki,0.002
-56,RO,float,sensfusion6,baseZacc,0.996848
+56,RO,float,sensfusion6,baseZacc,0.999382
 57,RO,uint8_t,health,startPropTest,0
 58,RO,float,health,testVariance,2.5
 59,RO,uint16_t,health,testPower,5000
