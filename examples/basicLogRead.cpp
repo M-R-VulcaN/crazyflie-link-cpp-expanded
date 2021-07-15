@@ -19,15 +19,23 @@ Packet recvFilteredData(int timeout, int port, int channel, Connection* conPtr)
 
 int main()
 {
+    int newBlockID = 0;
     Connection con("usb://0");
     ConnectionWrapper conWpr(con);
 
-    conWpr.setPort(5);
-    conWpr.setChannel(CONTROL_CH);
-    int idOfFirstLogVariable = 32;
-    int newBlockID = 3;
+    std::cout << "logger:\n enter the new log id: " << std::endl;
+    std::cin >> newBlockID;
+    //create a new log
+    conWpr.setPort(5);                    //port 5
+    conWpr.setChannel(CONTROL_CH);        //channel 1 (Log control: Used for adding/removing/starting/pausing log blocks)
+    int idOfFirstLogVariable = 32;        //?
+    //int newBlockID = 30;                  //the id i chose for the new block that i create
+
     conWpr.sendData(&newBlockID, sizeof(newBlockID), &idOfFirstLogVariable, sizeof(idOfFirstLogVariable));
     std::cout << conWpr.recvFilteredData(0) << std::endl;
+
+
+
 
 
     // Packet p;
