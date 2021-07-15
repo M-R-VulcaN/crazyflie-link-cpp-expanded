@@ -110,7 +110,6 @@ void Crazyflie::printParamToc() const
         std::cout << tocItem;
         if (to_string(tocItem._type).find("int") != std::string::npos)
         {
-            std::cout << "here" << std::endl;
             std::cout << getUIntFromCrazyflie(tocItem._id) << std::endl;}
         else
             std::cout << getFloatFromCrazyflie(tocItem._id) << std::endl;

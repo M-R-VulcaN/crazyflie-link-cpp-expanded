@@ -19,6 +19,11 @@ int main(int argc, char *argv[])
     std::string group = argv[1];
     std::string name = argv[2];
     size_t newValueSize = std::stoul(argv[4]);
+
+    std::cout << group << std::endl;
+    std::cout << name << std::endl;
+    std::cout << newValueSize << std::endl;
+
     // if(crazyflie.isParamFloat(group, name))
     // {
     //     std::cout << "Initial value: " << crazyflie.getFloatByName(group, name) << std::endl;
