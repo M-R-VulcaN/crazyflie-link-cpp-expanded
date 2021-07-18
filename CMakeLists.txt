@@ -43,6 +43,7 @@ add_library(crazyflieLinkCpp
   src/Crazyflie.cpp
   src/Toc.cpp
   src/LoggingCrazyflieWrapper.cpp
+  src/TocWrapper.cpp
   src/debug.cpp
   src/Log.cpp
 )
@@ -99,27 +100,27 @@ target_link_libraries(example_benchmark
   crazyflieLinkCpp
 )
 
+# example_basicLog
+add_executable(example_basicLog
+  examples/basicLog.cpp
+)
+target_link_libraries(example_basicLog
+  crazyflieLinkCpp
+)
+
+# example_basicLogRead
+add_executable(example_basicLogRead
+  examples/basicLogRead.cpp
+)
+target_link_libraries(example_basicLogRead
+  crazyflieLinkCpp
+)
+
 # example_basicToc
 add_executable(example_basicToc
   examples/basicToc.cpp
 )
 target_link_libraries(example_basicToc
-  crazyflieLinkCpp
-)
-
-# example_basicParamWrite
-add_executable(example_basicParamWrite
-  examples/basicParamWrite.cpp
-)
-target_link_libraries(example_basicParamWrite
-  crazyflieLinkCpp
-)
-
-# example_basicSave
-add_executable(example_basicSave
-  examples/basicSave.cpp
-)
-target_link_libraries(example_basicSave
   crazyflieLinkCpp
 )
 

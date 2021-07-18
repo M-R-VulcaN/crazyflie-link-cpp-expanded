@@ -11,10 +11,31 @@
 
 typedef std::pair<std::string, std::string> StrPair;
 
+#pragma pack(push, 1)
+struct FP16
+{
+    uint8_t _sign : 1;
+    uint8_t _exponent : 5;
+    uint16_t _value : 10;
+};
+#pragma pack(pop)
+
 union ParamValue
 {
     float _floatVal;
+    float _FP16val;
+
+    double _doubleVal;
+
+    uint8_t _uint8Val;
+    uint16_t _uint16Val;
     uint32_t _uintVal;
+    uint64_t _uint64Val;
+
+    int8_t _int8Val;
+    int16_t _int16Val;
+    int32_t _int32Val;
+    int64_t _int64Val;
 };
 
 const std::map<uint8_t, std::string>
@@ -42,26 +63,25 @@ struct AccessType
     AccessType &operator=(const uint8_t &accessType);
 };
 
-struct ParamType
+struct TocItemType
 {
-    uint8_t _paramtype;
+    uint8_t _type;
     operator std::string() const;
-    friend std::string to_string(ParamType const &self);
+    friend std::string to_string(TocItemType const &self);
     bool operator==(uint8_t val) const;
     bool operator==(const std::string& val) const;
-    ParamType &operator=(const std::string &strParamType);
-    ParamType &operator=(const uint8_t &paramType);
+    TocItemType &operator=(const std::string &strParamType);
+    TocItemType &operator=(const uint8_t &paramType);
 };
 
 struct TocItem
 {
     std::string _groupName;
-    std::string _paramName;
-    ParamType _paramType;
-    AccessType _paramAccessType;
-    uint16_t _paramId;
+    std::string _name;
+    TocItemType _type;
+    AccessType _accessType;
+    uint16_t _id;
 
-    bool isFloat() const;
     bool operator>(const TocItem &other) const;
     bool operator<(const TocItem &other) const;
     TocItem(const TocItem& other);

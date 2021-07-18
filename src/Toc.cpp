@@ -5,33 +5,33 @@ const uint8_t AccessType::RO = 0;
 
 TocItem::TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv)
 {
-    _paramId = 0;
-    memcpy(&_paramId, &p_recv.payload()[1], sizeof(_paramId));
+    _id = 0;
+    memcpy(&_id, &p_recv.payload()[1], sizeof(_id));
     uint8_t typeAndAccessType = 0;
     memcpy(&typeAndAccessType, &p_recv.payload()[3], sizeof(typeAndAccessType));
     
     _groupName = (const char *)(p_recv.payload()) + 4;
-    _paramName = (const char *)(p_recv.payload()) + 4 + _groupName.length() + 1;
-    _paramType = typeAndAccessType & ~ACCESS_TYPE_BYTE;
+    _name = (const char *)(p_recv.payload()) + 4 + _groupName.length() + 1;
+    _type = typeAndAccessType & ~ACCESS_TYPE_BYTE;
 
     if ((bool)(typeAndAccessType & ACCESS_TYPE_BYTE) == (bool)AccessType::RO)
     {
-        _paramAccessType = AccessType::RO;
+        _accessType = AccessType::RO;
     }
     else
     {
-        _paramAccessType = AccessType::RW;
+        _accessType = AccessType::RW;
     }
 }
 
 bool TocItem::operator<(const TocItem &other) const
 {
-    return ((unsigned)_paramId) < ((unsigned)other._paramId);
+    return ((unsigned)_id) < ((unsigned)other._id);
 }
 
 bool TocItem::operator>(const TocItem &other) const
 {
-    return ((unsigned)_paramId) > ((unsigned)other._paramId);
+    return ((unsigned)_id) > ((unsigned)other._id);
 }
 
 std::string to_string(AccessType const &self)
@@ -56,7 +56,7 @@ AccessType &AccessType::operator=(const uint8_t &accessType)
 
 std::ostream &operator<<(std::ostream &out, const TocItem &tocItem)
 {
-    out << tocItem._paramId << ": " << to_string(tocItem._paramAccessType) << ":" << to_string(tocItem._paramType) << "  " << tocItem._groupName << "." << tocItem._paramName << "  val=";
+    out << tocItem._id << ": " << to_string(tocItem._accessType) << ":" << to_string(tocItem._type) << "  " << tocItem._groupName << "." << tocItem._name << "  val=";
 
     return out;
 }
@@ -74,33 +74,33 @@ std::ostream &operator<<(std::ostream &out, const TocInfo &tocInfo)
     return out;
 }
 
-std::string to_string(ParamType const &self)
+std::string to_string(TocItemType const &self)
 {
-    auto res = PARAM_TYPES.find(self._paramtype);
+    auto res = PARAM_TYPES.find(self._type);
 
     if (res != PARAM_TYPES.end())
     {
         return res->second;
     }
-    return "? " + (int)self._paramtype;
+    return "? " + (int)self._type;
 }
 
-ParamType &ParamType::operator=(const std::string &strParamType)
+TocItemType &TocItemType::operator=(const std::string &strParamType)
 {
     for (auto element : PARAM_TYPES)
     {
         if (element.second == strParamType)
         {
-            _paramtype = element.first;
+            _type = element.first;
             break;
         }
     }
     return *this;
 }
 
-ParamType &ParamType::operator=(const uint8_t &paramType)
+TocItemType &TocItemType::operator=(const uint8_t &paramType)
 {
-    _paramtype = paramType;
+    _type = paramType;
     return *this;
 }
 
@@ -122,14 +122,14 @@ TocInfo::~TocInfo()
 TocItem::TocItem(const TocItem& other)  
 {
     _groupName = other._groupName;
-    _paramName = other._paramName;
-    _paramType = other._paramType;
-    _paramAccessType = other._paramAccessType;
-    _paramId = other._paramId;
+    _name = other._name;
+    _type = other._type;
+    _accessType = other._accessType;
+    _id = other._id;
 }
 void Toc::insert(const TocItem& tocItem)
 {
-    _tocItems.insert({{tocItem._groupName, tocItem._paramName},tocItem});
+    _tocItems.insert({{tocItem._groupName, tocItem._name},tocItem});
 }
 
 TocItem Toc::getItem(const std::string &groupName, const std::string &paramName, bool caching) const
@@ -149,7 +149,7 @@ TocItem Toc::getItem(const std::string &groupName, const std::string &paramName,
 
 uint16_t Toc::getItemId(const std::string &groupName, const std::string &paramName, bool caching) const
 {
-    return this->getItem(groupName, paramName, caching)._paramId;
+    return this->getItem(groupName, paramName, caching)._id;
 }
 
 std::vector<TocItem> Toc::getAllTocItems() const
@@ -188,22 +188,17 @@ void Toc::clearToc()
 }
 
 
-bool TocItem::isFloat() const
-{
-    return _paramType == FLOAT_PARAM_TYPE;
-}
 
-
-bool ParamType::operator==(const std::string& val) const
+bool TocItemType::operator==(const std::string& val) const
 {
     return std::string(*this) == val; 
 }
 
-bool ParamType::operator==(uint8_t val) const
+bool TocItemType::operator==(uint8_t val) const
 {
-    return _paramtype == val;
+    return _type == val;
 }
-ParamType::operator std::string() const
+TocItemType::operator std::string() const
 {
     return to_string(*this);
 }

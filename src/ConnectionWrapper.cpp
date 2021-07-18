@@ -59,7 +59,7 @@ void ConnectionWrapper::sendData(const void *data1, const size_t &data1_len, con
 
 Packet ConnectionWrapper::recvFilteredData(int timeout, int port, int channel) const
 {
-    std::cout << _conPtr->statistics() << std::endl;
+    //std::cout << _conPtr->statistics() << std::endl;
     while (true)
     {
         Packet p = _conPtr->recv(timeout);
