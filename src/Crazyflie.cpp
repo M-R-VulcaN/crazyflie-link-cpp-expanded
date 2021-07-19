@@ -37,6 +37,9 @@ size_t Crazyflie::recvAppChannelData(void* dest, const size_t& dataLen)
     return sizeToWrite;
 }
 
+Connection& Crazyflie::getCon()
+{return _con;}
+
 float Crazyflie::getFloatFromCrazyflie(uint16_t paramId) const
 {
     float res = 0;

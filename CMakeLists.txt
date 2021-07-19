@@ -140,10 +140,10 @@ target_link_libraries(example_logViaAppChannel
   crazyflieLinkCpp
 )
 
-# example_basicParamCSV
-add_executable(example_basicParamCSV
-  examples/basicParamCSV.cpp
-)
-target_link_libraries(example_basicParamCSV
-  crazyflieLinkCpp
-)
+# # example_basicParamCSV
+# add_executable(example_basicParamCSV
+#   examples/basicParamCSV.cpp
+# )
+# target_link_libraries(example_basicParamCSV
+#   crazyflieLinkCpp
+# )

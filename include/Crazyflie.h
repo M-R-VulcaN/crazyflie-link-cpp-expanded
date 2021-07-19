@@ -28,7 +28,7 @@ class Crazyflie
 {
 private:
     Toc _paramToc;
-    Toc _logToc;
+    
     bitcraze::crazyflieLinkCpp::Connection _con;
     ConnectionWrapper _conWrapperParamRead;
     ConnectionWrapper _conWrapperParamWrite;
@@ -54,8 +54,9 @@ public:
     ~Crazyflie();
     bool isRunning() const;
     bool init();
-
-
+    bitcraze::crazyflieLinkCpp::Connection& getCon();
+    Toc _logToc;
+    
     uint32_t getUIntByName(const std::string &group, const std::string &name) const;
     float getFloatByName(const std::string &group, const std::string &name) const;
 
