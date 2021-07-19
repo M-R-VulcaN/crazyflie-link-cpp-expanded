@@ -23,29 +23,34 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/tools/build)
 find_package(libusb REQUIRED)
 
+set(BITCRAZE_INCLUDE ${CMAKE_SOURCE_DIR}/include/bitcraze)
+set(M_R_VULKAN_INCLUDE ${CMAKE_SOURCE_DIR}/include/M-R-VulkaN)
+
 include_directories(
-  include
+  ${BITCRAZE_INCLUDE}
+  ${M_R_VULKAN_INCLUDE}
   ${LIBUSB_INCLUDE_DIR}
 )
 
 # C++ library
 
 add_library(crazyflieLinkCpp
-  src/USBManager.cpp
-  src/Connection.cpp
-  src/USBDevice.cpp
-  src/Crazyradio.cpp
-  src/CrazyradioThread.cpp
-  src/CrazyflieUSB.cpp
-  src/CrazyflieUSBThread.cpp
-  src/Version.cpp
-  src/ConnectionWrapper.cpp
-  src/Crazyflie.cpp
-  src/Toc.cpp
-  src/LoggingCrazyflieWrapper.cpp
-  src/TocWrapper.cpp
-  src/debug.cpp
-  src/Log.cpp
+  src/bitcraze/USBManager.cpp
+  src/bitcraze/Connection.cpp
+  src/bitcraze/USBDevice.cpp
+  src/bitcraze/Crazyradio.cpp
+  src/bitcraze/CrazyradioThread.cpp
+  src/bitcraze/CrazyflieUSB.cpp
+  src/bitcraze/CrazyflieUSBThread.cpp
+  src/bitcraze/Version.cpp
+  src/M-R-VulkaN/ConnectionWrapper.cpp
+  src/M-R-VulkaN/Crazyflie.cpp
+  src/M-R-VulkaN/Toc.cpp
+  src/M-R-VulkaN/LoggingCrazyflieWrapper.cpp
+  src/M-R-VulkaN/TocWrapper.cpp
+  src/M-R-VulkaN/debug.cpp
+  src/M-R-VulkaN/Log.cpp
+  src/M-R-VulkaN/Param.cpp
 )
 
 # target_include_directories(libCrazyflieLinkCpp
@@ -78,7 +83,7 @@ set_property(TARGET crazyflieLinkCpp PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # example_console
 add_executable(example_console
-  examples/console.cpp
+  examples/bitcraze/console.cpp
 )
 target_link_libraries(example_console
   crazyflieLinkCpp
@@ -86,7 +91,7 @@ target_link_libraries(example_console
 
 # example_scan
 add_executable(example_scan
-  examples/scan.cpp
+  examples/bitcraze/scan.cpp
 )
 target_link_libraries(example_scan
   crazyflieLinkCpp
@@ -94,7 +99,7 @@ target_link_libraries(example_scan
 
 # example_benchmark
 add_executable(example_benchmark
-  examples/benchmark.cpp
+  examples/bitcraze/benchmark.cpp
 )
 target_link_libraries(example_benchmark
   crazyflieLinkCpp
@@ -102,7 +107,7 @@ target_link_libraries(example_benchmark
 
 # example_basicLog
 add_executable(example_basicLog
-  examples/basicLog.cpp
+  examples/M-R-VulkaN/basicLog.cpp
 )
 target_link_libraries(example_basicLog
   crazyflieLinkCpp
@@ -110,7 +115,7 @@ target_link_libraries(example_basicLog
 
 # example_basicLogRead
 add_executable(example_basicLogRead
-  examples/basicLogRead.cpp
+  examples/M-R-VulkaN/basicLogRead.cpp
 )
 target_link_libraries(example_basicLogRead
   crazyflieLinkCpp
@@ -118,7 +123,7 @@ target_link_libraries(example_basicLogRead
 
 # example_basicToc
 add_executable(example_basicToc
-  examples/basicToc.cpp
+  examples/M-R-VulkaN/basicToc.cpp
 )
 target_link_libraries(example_basicToc
   crazyflieLinkCpp
@@ -126,7 +131,7 @@ target_link_libraries(example_basicToc
 
 # example_appChannelTest
 add_executable(example_appChannelTest
-  examples/appChannelTest.cpp
+  examples/M-R-VulkaN/appChannelTest.cpp
 )
 target_link_libraries(example_appChannelTest
   crazyflieLinkCpp
@@ -134,7 +139,7 @@ target_link_libraries(example_appChannelTest
 
 # example_logViaAppChannel
 add_executable(example_logViaAppChannel
-  examples/logViaAppChannel.cpp
+  examples/M-R-VulkaN/logViaAppChannel.cpp
 )
 target_link_libraries(example_logViaAppChannel
   crazyflieLinkCpp
@@ -142,7 +147,7 @@ target_link_libraries(example_logViaAppChannel
 
 # # example_basicParamCSV
 # add_executable(example_basicParamCSV
-#   examples/basicParamCSV.cpp
+#   examples/M-R-VulkaN/basicParamCSV.cpp
 # )
 # target_link_libraries(example_basicParamCSV
 #   crazyflieLinkCpp

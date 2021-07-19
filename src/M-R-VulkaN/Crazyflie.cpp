@@ -40,6 +40,7 @@ size_t Crazyflie::recvAppChannelData(void* dest, const size_t& dataLen)
 Connection& Crazyflie::getCon()
 {return _con;}
 
+
 float Crazyflie::getFloatFromCrazyflie(uint16_t paramId) const
 {
     float res = 0;
@@ -73,6 +74,8 @@ double Crazyflie::getDoubleFromCrazyflie(uint16_t paramId) const
     
     return res;
 }
+
+
 
 float Crazyflie::getFloatByName(const std::string &group, const std::string &name) const
 {

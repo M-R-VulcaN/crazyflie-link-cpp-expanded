@@ -26,6 +26,7 @@ public:
         WrapperTemplate<Toc, TocWrapper>::_core = &toc;
         return *this;
     }
+    
 
     virtual ~TocWrapper();
 };

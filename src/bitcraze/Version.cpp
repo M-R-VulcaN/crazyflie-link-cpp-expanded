@@ -4,7 +4,7 @@ namespace bitcraze {
 namespace crazyflieLinkCpp {
 
 const char * version_string =
-#include "../version"
+#include "../../version"
 ;
 
 const char * version()
