@@ -111,15 +111,3 @@ add_executable(example_basicParam
 target_link_libraries(example_basicParam
   crazyflieLinkCpp
 )
-
-# Python bindings
-add_subdirectory(pybind11)
-
-pybind11_add_module(cflinkcpp
-  src/python_bindings.cpp
-)
-
-target_link_libraries(cflinkcpp
-  PRIVATE
-    crazyflieLinkCpp
-)

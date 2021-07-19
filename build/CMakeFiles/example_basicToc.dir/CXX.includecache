@@ -74,7 +74,7 @@ ConnectionWrapper.h
 
 ../include/crazyflieLinkCpp/utils.hpp
 
-/home/makeruser/crazyflie-link-cpp/examples/basicToc.cpp
+/home/makers/crazyflie-link-cpp-expanded/examples/basicToc.cpp
 iostream
 -
 thread
@@ -92,5 +92,5 @@ queue
 vector
 -
 crazyflieLinkCpp/Toc.h
-/home/makeruser/crazyflie-link-cpp/examples/crazyflieLinkCpp/Toc.h
+/home/makers/crazyflie-link-cpp-expanded/examples/crazyflieLinkCpp/Toc.h
 
