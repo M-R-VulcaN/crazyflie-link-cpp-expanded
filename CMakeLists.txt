@@ -46,7 +46,6 @@ add_library(crazyflieLinkCpp
   src/M-R-VulkaN/ConnectionWrapper.cpp
   src/M-R-VulkaN/Crazyflie.cpp
   src/M-R-VulkaN/Toc.cpp
-  src/M-R-VulkaN/LoggingCrazyflieWrapper.cpp
   src/M-R-VulkaN/TocWrapper.cpp
   src/M-R-VulkaN/debug.cpp
   src/M-R-VulkaN/Log.cpp
