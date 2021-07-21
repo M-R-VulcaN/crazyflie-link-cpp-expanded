@@ -4,6 +4,7 @@
 #include <list>
 #include <thread>
 #include <mutex>
+#include <condition_variable>
 #include "Connection.h"
 #include "Packet.hpp"
 
@@ -15,8 +16,11 @@ private:
     std::thread _sendingThread;
     std::thread _receivingThread;
     std::mutex _conMutex;
+    std::mutex _packetRecvMutex;
+    std::mutex _packetSendMutex;
+    std::condition_variable _packetSendConditionVariable;
     bitcraze::crazyflieLinkCpp::Connection* _conPtr;
-
+    bool _threadsActiveFlag;
     void sendPacketsThreadFunc();   
     void receivePacketsThreadFunc();   
 public:
