@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <vector>
 #include <string>
-#include "debug.h"
 #include "USBDevice.h"
 
 namespace bitcraze {

@@ -71,22 +71,22 @@ size_t CrazyflieUSB::recv(uint8_t *buffer, size_t max_length, unsigned int timeo
         max_length, 
         &transferred,
         /*timeout*/ timeout);
-    if(Debug::passFlag)
-    {
-        if(status == -7)
-        {
-            Debug::countError++;
-        }
-        else if(status == 0)
-        {
-            Debug::countSuccess++;
-        }
-        else
-        {
-            std::cout << status << std::endl;
-        }
-        std::cout << "errors: " << Debug::countError << "       Successes: " << Debug::countSuccess << std::endl;
-    }
+    // if(Debug::passFlag)
+    // {
+    //     if(status == -7)
+    //     {
+    //         Debug::countError++;
+    //     }
+    //     else if(status == 0)
+    //     {
+    //         Debug::countSuccess++;
+    //     }
+    //     else
+    //     {
+    //         std::cout << status << std::endl;
+    //     }
+    //     std::cout << "errors: " << Debug::countError << "       Successes: " << Debug::countSuccess << std::endl;
+    // }
     if (status != LIBUSB_SUCCESS && status != LIBUSB_ERROR_TIMEOUT) {
         throw std::runtime_error(libusb_error_name(status));
     }

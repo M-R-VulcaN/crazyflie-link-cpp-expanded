@@ -44,7 +44,7 @@ add_library(crazyflieLinkCpp
   src/bitcraze/CrazyflieUSBThread.cpp
   src/bitcraze/Version.cpp
 
-  
+
   src/M-R-VulkaN/ConnectionWorker.cpp
   src/M-R-VulkaN/Crazyflie.cpp
   src/M-R-VulkaN/Toc.cpp
@@ -59,7 +59,6 @@ add_library(crazyflieLinkCpp
 #     $<INSTALL_INTERFACE:include/crazyflie_cpp>
 #     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/crazyflie_cpp>
 # )
-
 # Apple macOS libraries
 if (APPLE)
   set(CMAKE_EXE_LINKER_FLAGS "-lobjc -framework IOKit -framework CoreFoundation")
