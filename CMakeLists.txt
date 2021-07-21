@@ -43,13 +43,15 @@ add_library(crazyflieLinkCpp
   src/bitcraze/CrazyflieUSB.cpp
   src/bitcraze/CrazyflieUSBThread.cpp
   src/bitcraze/Version.cpp
-  src/M-R-VulkaN/ConnectionWrapper.cpp
+
+  
+  src/M-R-VulkaN/ConnectionWorker.cpp
   src/M-R-VulkaN/Crazyflie.cpp
   src/M-R-VulkaN/Toc.cpp
-  src/M-R-VulkaN/TocWrapper.cpp
-  src/M-R-VulkaN/debug.cpp
   src/M-R-VulkaN/Log.cpp
   src/M-R-VulkaN/Param.cpp
+  src/M-R-VulkaN/AppChannel.cpp
+  src/M-R-VulkaN/CrtpTocProtocol.cpp
 )
 
 # target_include_directories(libCrazyflieLinkCpp
@@ -104,45 +106,45 @@ target_link_libraries(example_benchmark
   crazyflieLinkCpp
 )
 
-# example_basicLog
-add_executable(example_basicLog
-  examples/M-R-VulkaN/basicLog.cpp
-)
-target_link_libraries(example_basicLog
-  crazyflieLinkCpp
-)
+# # example_basicLog
+# add_executable(example_basicLog
+#   examples/M-R-VulkaN/basicLog.cpp
+# )
+# target_link_libraries(example_basicLog
+#   crazyflieLinkCpp
+# )
 
-# example_basicLogRead
-add_executable(example_basicLogRead
-  examples/M-R-VulkaN/basicLogRead.cpp
-)
-target_link_libraries(example_basicLogRead
-  crazyflieLinkCpp
-)
+# # example_basicLogRead
+# add_executable(example_basicLogRead
+#   examples/M-R-VulkaN/basicLogRead.cpp
+# )
+# target_link_libraries(example_basicLogRead
+#   crazyflieLinkCpp
+# )
 
-# example_basicToc
-add_executable(example_basicToc
-  examples/M-R-VulkaN/basicToc.cpp
-)
-target_link_libraries(example_basicToc
-  crazyflieLinkCpp
-)
+# # example_basicToc
+# add_executable(example_basicToc
+#   examples/M-R-VulkaN/basicToc.cpp
+# )
+# target_link_libraries(example_basicToc
+#   crazyflieLinkCpp
+# )
 
-# example_appChannelTest
-add_executable(example_appChannelTest
-  examples/M-R-VulkaN/appChannelTest.cpp
-)
-target_link_libraries(example_appChannelTest
-  crazyflieLinkCpp
-)
+# # example_appChannelTest
+# add_executable(example_appChannelTest
+#   examples/M-R-VulkaN/appChannelTest.cpp
+# )
+# target_link_libraries(example_appChannelTest
+#   crazyflieLinkCpp
+# )
 
-# example_logViaAppChannel
-add_executable(example_logViaAppChannel
-  examples/M-R-VulkaN/logViaAppChannel.cpp
-)
-target_link_libraries(example_logViaAppChannel
-  crazyflieLinkCpp
-)
+# # example_logViaAppChannel
+# add_executable(example_logViaAppChannel
+#   examples/M-R-VulkaN/logViaAppChannel.cpp
+# )
+# target_link_libraries(example_logViaAppChannel
+#   crazyflieLinkCpp
+# )
 
 # # example_basicParamCSV
 # add_executable(example_basicParamCSV
