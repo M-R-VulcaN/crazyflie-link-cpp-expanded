@@ -32,7 +32,7 @@ include_directories(
   ${LIBUSB_INCLUDE_DIR}
 )
 
-# C++ library
+# C++ library 
 
 add_library(crazyflieLinkCpp
   src/bitcraze/USBManager.cpp

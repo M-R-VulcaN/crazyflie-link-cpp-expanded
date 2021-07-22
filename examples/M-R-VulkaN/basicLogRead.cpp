@@ -29,7 +29,6 @@ int main()
     // char userInputStr[MAX_LEN_NAME] = {0};
     // userInputStr[MAX_LEN_NAME-1] = 0;
 
-    std::cout << "logger:\n enter the new log id: " << std::endl;
     std::string temp;
     std::string groupName;
     std::string paramName;
@@ -39,6 +38,7 @@ int main()
         int i = 0;
         uint16_t userInput = 0;
 
+        std::cout << "===================================" << std::endl;
         std::cout << "Menu:" << std::endl;
         std::cout << "1 - Create Log Block" << std::endl;
         std::cout << "2 - Append To Log Block" << std::endl;
@@ -112,7 +112,42 @@ int main()
         case LIST_BLOCKS_CHOICE:
             return 0;
         case DELETE_BLOCK_CHOICE:
-            return 0;
+        {
+            int id = 0;  //add a check function if the id exist
+            std::cout << "Enter log id:" << std::endl;
+            std::cin >> id;
+            uint8_t data[2] = {0};
+
+            data[0] = 2;                                                                     //define : delete block
+            data[1] = id;                                                                     //block id
+
+            uint8_t failCode = 0;
+
+            for (i = 0; i < UINT8_MAX; i++)
+            {
+                if (!idsOccupied[i])
+                {
+                    // idsOccupied[i] = true;
+                    // data[1] = i;
+                    conWpr.sendData(data, 2);
+                    Packet p_recv = conWpr.recvFilteredData(0);
+                    failCode = p_recv.payload()[2];
+                    if (17 == failCode)
+                        continue;
+                    break;
+                }
+            }
+
+            if (0 == failCode)
+            {
+                std::cout << "Success! deleted block id = " << (int)data[1] << std::endl;
+            }
+            else
+            {
+                std::cout << "Failiure! code = " << (int)failCode << std::endl;
+            }
+            break;
+        }
         case START_BLOCK_CHOICE:
             return 0;
 

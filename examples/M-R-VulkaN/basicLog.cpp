@@ -1,5 +1,5 @@
 #include "Crazyflie.h"
-
+#include "log.cpp"
 using namespace bitcraze::crazyflieLinkCpp;
 
 // #define LOG_PORT 5
@@ -33,6 +33,7 @@ int main()
 
     crazyflie.printLogToc();
     crazyflie.printParamToc();
+
 
     // std::cout << tocWpr->getAllTocItems().size();
 
