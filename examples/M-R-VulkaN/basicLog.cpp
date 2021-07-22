@@ -1,5 +1,6 @@
 #include "Crazyflie.h"
-#include "log.cpp"
+#include "Log.h"
+
 using namespace bitcraze::crazyflieLinkCpp;
 
 // #define LOG_PORT 5
@@ -31,9 +32,30 @@ int main()
 
     crazyflie.init();
 
-    crazyflie.printLogToc();
-    crazyflie.printParamToc();
+    // crazyflie.printLogToc();
+    // crazyflie.printParamToc();
 
+
+    std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
+    std::cin.ignore(INT32_MAX, '\n');
+    uint8_t data[MAX_LEN_NAME] = {0};
+    char userInputStr[MAX_LEN_NAME];
+    userInputStr[MAX_LEN_NAME] = 0;
+
+    std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
+
+    std::string temp = std::string(userInputStr);
+    std::string groupName = temp.substr(0, temp.find("."));
+    std::string paramName = temp.substr(groupName.length() + 1);
+
+    uint16_t logId = crazyflie._logToc.getItemId(groupName, paramName);
+    auto logType = crazyflie._logToc.getItem(groupName, paramName);
+
+    Log.createLogBlock(logType ,logId);
+
+
+    Log.createLogBlock();
+    Log.deleteLogBlock(1);
 
     // std::cout << tocWpr->getAllTocItems().size();
 

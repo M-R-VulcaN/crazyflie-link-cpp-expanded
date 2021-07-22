@@ -41,3 +41,38 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
     }
     return 0;
 }
+
+int Log::deleteLogBlock(uint16_t id)
+{
+    uint8_t data[2] = {0};
+
+    data[0] = CONTROL_DELETE_BLOCK_V2;
+    data[1] = id;
+
+    uint8_t failCode = 0;
+
+    for (uint16_t i = 0; i < UINT8_MAX; i++)
+    {
+        if (!idsOccupied[i])
+        {
+            // idsOccupied[i] = true;
+            // data[1] = i;
+            _conWpr.sendData(data, 2);
+            Packet p_recv = _conWpr.recvFilteredData(0);
+            failCode = p_recv.payload()[2];
+            if (17 == failCode)
+                continue;
+            break;
+        }
+    }
+
+    if (0 == failCode)
+    {
+        std::cout << "Success! deleted block id = " << (int)data[1] << std::endl;
+    }
+    else
+    {
+        std::cout << "Failiure! code = " << (int)failCode << std::endl;
+    }
+    return 0;
+}
