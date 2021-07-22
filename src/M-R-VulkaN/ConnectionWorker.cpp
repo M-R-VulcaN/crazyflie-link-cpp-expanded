@@ -34,62 +34,61 @@ void ConnectionWorker::sendPacket(const Packet &packetToSend)
 }
 Packet ConnectionWorker::recvPacket(uint8_t port, uint8_t channel)
 {
+    Packet res;
     for (auto it = _receivedPackets.begin(); it != _receivedPackets.end(); it++)
     {
         if (it->channel() == channel && it->port() == port)
         {
             std::lock_guard<std::mutex> lock(_packetRecvMutex);
-            Packet p = *it;
+            res = *it;
             _receivedPackets.erase(it);
-            return p;
+            break;
         }
     }
-    return Packet();
+    return res;
 }
 
 void ConnectionWorker::sendPacketsThreadFunc()
 {
-    // std::atomic
-    const auto& list = _receivedPackets;
+    const std::queue<Packet> &sendPacketsQueueRef = _sendPackets;
+    std::unique_lock<std::mutex> packetsToSendLock(_packetSendMutex, std::defer_lock);
+
     while (true)
     {
         while (!_threadsActiveFlag)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        std::unique_lock<std::mutex> packetsToSendLock(_packetSendMutex);
-        _packetSendConditionVariable.wait_until(packetsToSendLock, 
-        std::chrono::system_clock::now() , [list](){return !list.empty();});
-
-        Packet p_recv;
+        packetsToSendLock.lock();
+        _packetSendConditionVariable.wait_until(packetsToSendLock,
+                                                std::chrono::system_clock::now(), [sendPacketsQueueRef]()
+                                                { return !sendPacketsQueueRef.empty(); });
+        Packet pToSend =                         
         {
             std::lock_guard<std::mutex> lock(_conMutex);
-            p_recv = _conPtr->recv(2);
+            _conPtr->send(_sendPackets.front());
         }
-        if (!p_recv)
-            continue;
-        {
-            std::lock_guard<std::mutex> lock(_packetRecvMutex);
-            _receivedPackets.push_back(p_recv);
-        }
+
+        _sendPackets.pop();
+        packetsToSendLock.unlock();
+
     }
 }
 void ConnectionWorker::receivePacketsThreadFunc()
 {
-        while (true)
+    Packet p_recv;
+    while (true)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         while (!_threadsActiveFlag)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        Packet p_recv;
         {
             std::lock_guard<std::mutex> lock(_conMutex);
             p_recv = _conPtr->recv(2);
         }
-        if (!p_recv)
-            continue;
+        if (p_recv)
         {
             std::lock_guard<std::mutex> lock(_packetRecvMutex);
             _receivedPackets.push_back(p_recv);
