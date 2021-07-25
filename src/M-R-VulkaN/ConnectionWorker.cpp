@@ -26,7 +26,7 @@ void ConnectionWorker::stop()
 {
     _threadsActiveFlag = false;
 }
-void ConnectionWorker::addCallback(const PacketCallback& callback)
+void ConnectionWorker::addCallback(const PacketCallbackBundle& callback)
 {
     std::cout << (int)callback._port << std::endl;
     std::cout << (int)callback._channel << std::endl;

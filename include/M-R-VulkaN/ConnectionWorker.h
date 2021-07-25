@@ -10,18 +10,24 @@
 
 typedef void (*PacketCallbackFunc)(bitcraze::crazyflieLinkCpp::Packet);
 
-struct PacketCallback
+class IPacketCallback
+{
+    public:
+    virtual void operator()(bitcraze::crazyflieLinkCpp::Packet p_recv) = 0;
+};
+
+struct PacketCallbackBundle
 {
     uint8_t _port;
     uint8_t _channel;
-    PacketCallbackFunc _packetCallbackFunc;
+    IPacketCallback& _packetCallbackFunc;
 };
 
 class ConnectionWorker
 {
 private:
     std::list<bitcraze::crazyflieLinkCpp::Packet> _receivedPackets;
-    std::vector<PacketCallback> _paramReceivedCallbacks;
+    std::vector<PacketCallbackBundle> _paramReceivedCallbacks;
     std::thread _receivingThread;
     std::mutex _packetRecvMutex;
     bitcraze::crazyflieLinkCpp::Connection *_conPtr;
@@ -34,6 +40,6 @@ public:
     ~ConnectionWorker();
     void start();
     void stop();
-    void addCallback(const PacketCallback& callback);
+    void addCallback(const PacketCallbackBundle& callback);
     // bitcraze::crazyflieLinkCpp::Packet recvPacket(uint8_t port, uint8_t channel);
 };

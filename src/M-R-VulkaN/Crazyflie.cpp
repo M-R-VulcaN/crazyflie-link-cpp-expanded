@@ -1,7 +1,7 @@
 #include "Crazyflie.h"
 using namespace bitcraze::crazyflieLinkCpp;
 
-Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWrapperParamRead(_con), _conWrapperParamWrite(_con), _conWrapperParamToc(_con), _conWrapperLogToc(_con), _conWrapperAppchannel(_con), _logTocWpr(_logToc,_conWrapperLogToc), _paramTocWpr(_paramToc, _conWrapperParamToc)
+Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWrapperParamRead(_con), _conWrapperParamWrite(_con), _conWrapperParamToc(_con), _conWrapperLogToc(_con), _conWrapperAppchannel(_con), _logTocWpr(_logToc,_conWrapperLogToc), _paramTocWpr(_paramToc, _conWrapperParamToc), _conWorker(_con)
 {
     _isRunning = false;
    
@@ -238,6 +238,21 @@ std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() const
 void Crazyflie::addParamReceivedCallback( const ParamValueCallback& callback)
 {
     _paramReceivedCallbacks.push_back(callback);
+}
+
+
+void Crazyflie::addConsoleCallback( const ConsoleCallback& callback)
+{
+    class Callback : IPacketCallback
+    {
+        public:
+        virtual void operator()(Packet p_recv) override
+        {
+            std::cout << "operator() "<< p_recv<<std::endl;
+        }
+    } packetCallback;
+    callback("");
+    _conWorker.addCallback({0,0, (IPacketCallback&)packetCallback});
 }
 
 void Crazyflie::paramRecvThreadFunc()

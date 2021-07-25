@@ -7,6 +7,7 @@
 
 #include "ConnectionWrapper.h"
 #include "TocWrapper.h"
+#include "ConnectionWorker.h"
 
 #define PAYLOAD_VALUE_BEGINING_INDEX 3
 #define NOT_FOUND 0
@@ -27,6 +28,7 @@
 #define APPCHANNEL_PORT 13
 
 typedef void (*ParamValueCallback)(const ParamValue&);
+typedef void (*ConsoleCallback)(const char*);
 
 class Crazyflie
 {
@@ -44,8 +46,9 @@ private:
     TocWrapper _paramTocWpr;
     bool _isRunning;
     std::vector<ParamValueCallback> _paramReceivedCallbacks;
+    std::vector<ConsoleCallback> _consoleCallbacks;
     std::thread _paramRecvThread;
-    
+    ConnectionWorker _conWorker;
     bool setParamInCrazyflie(uint16_t paramId, float newValue);
     bool setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const size_t &valueSize);
 
@@ -58,6 +61,7 @@ private:
     void paramRecvThreadFunc();
 public:
     void addParamReceivedCallback( const ParamValueCallback& callback);
+    void addConsoleCallback( const ConsoleCallback& callback);
     Crazyflie(const std::string &uri);
     ~Crazyflie();
     bool isRunning() const;

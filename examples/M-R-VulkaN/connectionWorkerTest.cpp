@@ -1,4 +1,5 @@
 #include "ConnectionWorker.h"
+#include "Crazyflie.h"
 #include <chrono>
 #include <iostream>
 using bitcraze::crazyflieLinkCpp::Connection;
@@ -22,27 +23,40 @@ void func2(Packet p_recv)
     
 }
 
+void func3(const char* str)
+{
+    if(str)
+        std::cout << "res2: " <<str<< std::endl;
+    else
+        std::cout << "failed recv2" << std::endl;
+    
+}
+
 int main()
 {
-    Connection con("usb://0");
-    ConnectionWorker conWorker(con);
-    conWorker.addCallback({5,0,func});
-    conWorker.addCallback({5,0,func2});
+    // Connection con("usb://0");
+    // ConnectionWorker conWorker(con);
+    Crazyflie cf("usb://0");
+    cf.init();
+    cf.addConsoleCallback(func3);
+    // conWorker.addCallback({5,0,func});
+    // conWorker.addCallback({5,0,func2});
 
-    conWorker.start();
-    // std::this_thread::sleep_for(std::chrono::seconds(10));
-    uint8_t data[] = {1};
+    // conWorker.start();
+    // // std::this_thread::sleep_for(std::chrono::seconds(10));
+    // uint8_t data[] = {1};
 
-    Packet p(data,sizeof(data));
-    p.setChannel(0);
-    p.setPort(5);
-    con.send(p);
+    // Packet p(data,sizeof(data));
+    // p.setChannel(0);
+    // p.setPort(5);
+    // con.send(p);
+    // con.send(p);
     std::this_thread::sleep_for(std::chrono::seconds(5));
     // Packet p_recv = conWorker.recvPacket(5,0);
     
     std::this_thread::sleep_for(std::chrono::seconds(3));
     std::cout << "end" << std::endl;
-    conWorker.stop();
+    // conWorker.stop();
     // // conWorker.stop();
     return 0;
 }
