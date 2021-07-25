@@ -44,6 +44,7 @@ add_library(crazyflieLinkCpp
   src/bitcraze/CrazyflieUSBThread.cpp
   src/bitcraze/Version.cpp
   src/M-R-VulkaN/ConnectionWrapper.cpp
+  src/M-R-VulkaN/LoggingCrazyflieWrapper.cpp
   src/M-R-VulkaN/Crazyflie.cpp
   src/M-R-VulkaN/Toc.cpp
   src/M-R-VulkaN/TocWrapper.cpp

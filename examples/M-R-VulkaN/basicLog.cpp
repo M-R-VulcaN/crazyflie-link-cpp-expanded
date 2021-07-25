@@ -1,5 +1,5 @@
 #include "Crazyflie.h"
-#include "log.cpp"
+
 using namespace bitcraze::crazyflieLinkCpp;
 
 // #define LOG_PORT 5
