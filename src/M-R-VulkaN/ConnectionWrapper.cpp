@@ -65,7 +65,6 @@ Packet ConnectionWrapper::recvFilteredData(int timeout, int port, int channel) c
         Packet p = _conPtr->recv(timeout);
         if ((p.channel() == channel && p.port() == port) || !p)
             return p;
-        std::cout<<p<<std::endl;
     }
 }
 
