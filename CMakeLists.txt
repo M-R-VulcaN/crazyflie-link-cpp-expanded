@@ -32,7 +32,7 @@ include_directories(
   ${LIBUSB_INCLUDE_DIR}
 )
 
-# C++ library 
+# C++ library  
 
 add_library(crazyflieLinkCpp
   src/bitcraze/USBManager.cpp
@@ -45,12 +45,12 @@ add_library(crazyflieLinkCpp
   src/bitcraze/Version.cpp
   src/M-R-VulkaN/ConnectionWrapper.cpp
   src/M-R-VulkaN/LoggingCrazyflieWrapper.cpp
+  src/M-R-VulkaN/ConnectionWorker.cpp
   src/M-R-VulkaN/Crazyflie.cpp
   src/M-R-VulkaN/Toc.cpp
   src/M-R-VulkaN/TocWrapper.cpp
   src/M-R-VulkaN/debug.cpp
   src/M-R-VulkaN/Log.cpp
-  src/M-R-VulkaN/Param.cpp
 )
 
 # target_include_directories(libCrazyflieLinkCpp
@@ -142,6 +142,14 @@ add_executable(example_logViaAppChannel
   examples/M-R-VulkaN/logViaAppChannel.cpp
 )
 target_link_libraries(example_logViaAppChannel
+  crazyflieLinkCpp
+)
+
+# example_connectionWorkerTest
+add_executable(example_connectionWorkerTest
+  examples/M-R-VulkaN/connectionWorkerTest.cpp
+)
+target_link_libraries(example_connectionWorkerTest
   crazyflieLinkCpp
 )
 

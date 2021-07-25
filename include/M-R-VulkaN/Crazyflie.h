@@ -1,6 +1,8 @@
 #pragma once
 
 #include <map>
+#include <vector>
+#include <thread>
 #include <fstream> //for saving .csv file
 
 #include "ConnectionWrapper.h"
@@ -24,10 +26,13 @@
 #define LOG_PORT 5
 #define APPCHANNEL_PORT 13
 
+typedef void (*ParamValueCallback)(const ParamValue&);
+
 class Crazyflie
 {
 private:
     Toc _paramToc;
+    Toc _logToc;
     
     bitcraze::crazyflieLinkCpp::Connection _con;
     ConnectionWrapper _conWrapperParamRead;
@@ -38,7 +43,8 @@ private:
     TocWrapper _logTocWpr;
     TocWrapper _paramTocWpr;
     bool _isRunning;
-
+    std::vector<ParamValueCallback> _paramReceivedCallbacks;
+    std::thread _paramRecvThread;
     
     bool setParamInCrazyflie(uint16_t paramId, float newValue);
     bool setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const size_t &valueSize);
@@ -49,20 +55,22 @@ private:
     void initParamToc();
     void initLogToc();
 
+    void paramRecvThreadFunc();
 public:
+    void addParamReceivedCallback( const ParamValueCallback& callback);
     Crazyflie(const std::string &uri);
     ~Crazyflie();
     bool isRunning() const;
     bool init();
     bitcraze::crazyflieLinkCpp::Connection& getCon();
-    Toc _logToc;
     
     uint32_t getUIntByName(const std::string &group, const std::string &name) const;
     float getFloatByName(const std::string &group, const std::string &name) const;
 
     bool setParamByName(const std::string &group, const std::string &name, float newValue);
     bool setParamByName(const std::string &group, const std::string &name, uint32_t newValue, const size_t &valueSize);
-
+    const Toc& getParamToc() const;
+    const Toc& getLogToc() const;
     void printParamToc() const;
     void csvParamToc(std::string path,std::string fileName) const;
     void printLogToc() const;

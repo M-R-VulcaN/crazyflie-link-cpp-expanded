@@ -35,6 +35,7 @@ int main()
     bool idsOccupied[UINT8_MAX] = {false};
     Crazyflie crazyflie("usb://0");
     ConnectionWrapper conWpr(crazyflie.getCon());
+    const Toc& tocRef = crazyflie.getLogToc();
     conWpr.setChannel(1);
     conWpr.setPort(5);
     crazyflie.init();
@@ -80,8 +81,8 @@ int main()
                 std::string groupName = temp.substr(0, temp.find("."));
                 std::string paramName = temp.substr(groupName.length() + 1);
 
-                uint16_t logId = crazyflie._logToc.getItemId(groupName, paramName);
-                auto tocItem = crazyflie._logToc.getItem(groupName, paramName);
+                uint16_t logId = tocRef.getItemId(groupName, paramName);
+                auto tocItem = tocRef.getItem(groupName, paramName);
 
                 data[0] = CONTROL_CREATE_BLOCK_V2;
                 data[1] = 0;
@@ -140,8 +141,8 @@ int main()
                 std::string groupName = temp.substr(0, temp.find("."));
                 std::string paramName = temp.substr(groupName.length() + 1);
 
-                uint16_t logId = crazyflie._logToc.getItemId(groupName, paramName);
-                auto tocItem = crazyflie._logToc.getItem(groupName, paramName);
+                uint16_t logId = tocRef.getItemId(groupName, paramName);
+                auto tocItem = tocRef.getItem(groupName, paramName);
 
                 data[0] = CONTROL_APPEND_BLOCK_V2;
                 data[1] = logBlockId;
@@ -241,7 +242,7 @@ int main()
         case STOP_BLOCK_CHOICE:
         {
             int id = 0; //add a check function if the id exist
-            int PeriodTimeInMs = 0;
+            // int PeriodTimeInMs = 0;
             std::cout << "Enter log id:" << std::endl;
             std::cin >> id;
             uint8_t data[2] = {0};

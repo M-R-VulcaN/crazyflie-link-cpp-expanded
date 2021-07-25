@@ -234,3 +234,26 @@ std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() const
     }
     return res;
 }
+
+void Crazyflie::addParamReceivedCallback( const ParamValueCallback& callback)
+{
+    _paramReceivedCallbacks.push_back(callback);
+}
+
+void Crazyflie::paramRecvThreadFunc()
+{
+    // _
+    // for(auto callback : _paramReceivedCallbacks)
+    // {
+    //     callback()
+    // }
+}
+
+const Toc& Crazyflie::getParamToc() const
+{
+    return _paramToc;
+}
+const Toc& Crazyflie::getLogToc() const
+{
+    return _logToc;
+}
