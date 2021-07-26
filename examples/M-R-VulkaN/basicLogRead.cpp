@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <chrono>
 #include <errno.h>
 #include "Crazyflie.h"
 
@@ -16,9 +17,9 @@ using bitcraze::crazyflieLinkCpp::Packet;
 
 #define CONTROL_CH 1
 #define CRTP_PORT_LOG 0x05
-#define MAX_LEN_NAME 31
+#define MAX_LEN_NAME 32
 
-
+Packet globalPacket;
 enum UserChoices
 {
     EXIT_CHOICE,
@@ -30,6 +31,17 @@ enum UserChoices
     BLOCK_RESET
 };
 
+Packet getPacket()
+{
+    while(!globalPacket)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
+    }
+    Packet res = globalPacket;
+    globalPacket = Packet();
+    return res;
+}
+
 int main()
 {
     bool idsOccupied[UINT8_MAX] = {false};
@@ -39,15 +51,11 @@ int main()
     conWpr.setChannel(1);
     conWpr.setPort(5);
     crazyflie.init();
-    // char userInputStr[MAX_LEN_NAME] = {0};
-    // userInputStr[MAX_LEN_NAME-1] = 0;
-
-    std::string temp;
-    std::string groupName;
-    std::string paramName;
+    crazyflie._conWorker.addCallback({5,1,[](Packet p_recv){globalPacket = p_recv;}});
 
     while (true)
     {
+        // std::this_thread::sleep_for(std::chrono::milliseconds(500));
         int i = 0;
         uint16_t userInput = 0;
 
@@ -75,7 +83,7 @@ int main()
                 char userInputStr[MAX_LEN_NAME];
                 userInputStr[MAX_LEN_NAME] = 0;
 
-                std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
+                std::cin.getline(userInputStr, MAX_LEN_NAME - 1,'\n');
 
                 std::string temp = std::string(userInputStr);
                 std::string groupName = temp.substr(0, temp.find("."));
@@ -99,7 +107,7 @@ int main()
                         idsOccupied[i] = true;
                         data[1] = i;
                         conWpr.sendData(data, 5);
-                        Packet p_recv = conWpr.recvFilteredData(0);
+                        Packet p_recv = getPacket();
                         std::cout << p_recv << std::endl;
                         failCode = p_recv.payload()[2];
                         if (17 == failCode)
@@ -153,7 +161,7 @@ int main()
                 uint8_t failCode = 0;
 
                 conWpr.sendData(data, 5);
-                Packet p_recv = conWpr.recvFilteredData(0);
+                Packet p_recv = getPacket();
                 failCode = p_recv.payload()[2];
                 if (0 == failCode)
                 {
@@ -185,7 +193,7 @@ int main()
                     idsOccupied[i] = false;
                     // data[1] = i;
                     conWpr.sendData(data, 2);
-                    Packet p_recv = conWpr.recvFilteredData(0);
+                    Packet p_recv = getPacket();
                     failCode = p_recv.payload()[2];
                     if (17 == failCode)
                         continue;
@@ -220,7 +228,7 @@ int main()
             uint8_t failCode = 0;
 
             conWpr.sendData(data, 3);
-            Packet p_recv = conWpr.recvFilteredData(0);
+            Packet p_recv = getPacket();
             failCode = p_recv.payload()[2];
             std::cout << (int)data[2] << std::endl;
             std::cout << p_recv << std::endl;
@@ -253,7 +261,7 @@ int main()
             uint8_t failCode = 0;
 
             conWpr.sendData(data, 2);
-            Packet p_recv = conWpr.recvFilteredData(0);
+            Packet p_recv = getPacket();
             failCode = p_recv.payload()[2];
             std::cout << (int)data[2] << std::endl;
             std::cout << p_recv << std::endl;
@@ -276,7 +284,7 @@ int main()
             uint8_t failCode = 0;
 
             conWpr.sendData(data, 1);
-            Packet p_recv = conWpr.recvFilteredData(0);
+            Packet p_recv = getPacket();
             failCode = p_recv.payload()[2];
 
             std::fill(idsOccupied, idsOccupied + UINT8_MAX, false);

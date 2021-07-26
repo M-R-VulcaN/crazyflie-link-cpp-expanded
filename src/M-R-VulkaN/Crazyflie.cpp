@@ -241,18 +241,20 @@ void Crazyflie::addParamReceivedCallback( const ParamValueCallback& callback)
     _paramReceivedCallbacks.push_back(callback);
 }
 
+void Crazyflie::addLogCallback( const LogBlockReceivedCallback& callback)
+{
+    auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
+        if(p_recv)
+        callback(Packet(p_recv));
+    // std::this_thread::sleep_for(std::chrono::seconds(3));
+
+    };
+    _conWorker.addCallback({5,2, func});
+}
+
 void Crazyflie::addConsoleCallback( const ConsoleCallback& callback)
 {
-    // class Callback : IPacketCallback
-    // {
-    //     public:
-    //     virtual void operator()(Packet p_recv) override
-    //     {
-    //         std::cout << "operator() "<< p_recv<<std::endl;
-    //     }
-        
-    // } packetCallback;
-    // ConsoleCallback tempCallback =    callback;
+
     auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
         char data_str[33] = {0};
         data_str[p_recv.payloadSize()] = 0;

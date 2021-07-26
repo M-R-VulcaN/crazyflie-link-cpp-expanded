@@ -1,7 +1,6 @@
 #include "ConnectionWorker.h"
 #include <iostream>
 #include <chrono>
-// #include <atomic>
 
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
@@ -28,38 +27,22 @@ void ConnectionWorker::stop()
 }
 void ConnectionWorker::addCallback(const PacketCallbackBundle& callback)
 {
-    std::cout << (int)callback._port << std::endl;
-    std::cout << (int)callback._channel << std::endl;
     _paramReceivedCallbacks.push_back(callback);
 }
-
-// Packet ConnectionWorker::recvPacket(uint8_t port, uint8_t channel)
-// {
-//     Packet res;
-//     for (auto it = _receivedPackets.begin(); it != _receivedPackets.end(); it++)
-//     {
-//         if (it->channel() == channel && it->port() == port)
-//         {
-//             std::lock_guard<std::mutex> lock(_packetRecvMutex);
-//             res = *it;
-//             _receivedPackets.erase(it);
-//             break;
-//         }
-//     }
-//     return res;
-// }
 
 void ConnectionWorker::receivePacketsThreadFunc()
 {
     Packet p_recv;
     while (true)
     {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         while (!_threadsActiveFlag)
         {
              if(nullptr == _conPtr )
                 return;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
+        // _conPtr->recv
         if(_conPtr)
             p_recv = _conPtr->recv(100);
         else
@@ -71,10 +54,11 @@ void ConnectionWorker::receivePacketsThreadFunc()
             std::lock_guard<std::mutex> lock(_packetRecvMutex);
             for(PacketCallbackBundle callback : _paramReceivedCallbacks)
             {
-
                 if( p_recv.channel()==callback._channel  && p_recv.port() == callback._port )
                 {
-                    callback._packetCallbackFunc.operator()(p_recv);
+                    std::cout << p_recv <<std::endl;
+
+                    callback._packetCallbackFunc(p_recv);
                 }
             }
             _receivedPackets.push_back(p_recv);

@@ -29,6 +29,7 @@
 
 typedef void (*ParamValueCallback)(const ParamValue&);
 typedef void (*ConsoleCallback)(const char*);
+typedef void (*LogBlockReceivedCallback)(const bitcraze::crazyflieLinkCpp::Packet&);
 
 class Crazyflie
 {
@@ -48,7 +49,11 @@ private:
     std::vector<ParamValueCallback> _paramReceivedCallbacks;
     std::vector<ConsoleCallback> _consoleCallbacks;
     std::thread _paramRecvThread;
+
+    public:
     ConnectionWorker _conWorker;
+    private:
+    
     bool setParamInCrazyflie(uint16_t paramId, float newValue);
     bool setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const size_t &valueSize);
 
@@ -62,6 +67,7 @@ private:
 public:
     void addParamReceivedCallback( const ParamValueCallback& callback);
     void addConsoleCallback( const ConsoleCallback& callback);
+    void addLogCallback( const LogBlockReceivedCallback& callback);
     Crazyflie(const std::string &uri);
     ~Crazyflie();
     bool isRunning() const;

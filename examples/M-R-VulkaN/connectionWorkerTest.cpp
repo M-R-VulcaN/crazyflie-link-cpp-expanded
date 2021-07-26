@@ -7,9 +7,10 @@ using bitcraze::crazyflieLinkCpp::Packet;
 
 void func(Packet p_recv)
 {
+
     if(p_recv)
-        std::cout << "res1: " <<p_recv<< std::endl;
-    else
+        std::cout << "res1: " <<p_recv.payloadSize()<< std::endl;
+    // else
         std::cout << "failed recv1" << std::endl;
     
 }
@@ -39,6 +40,8 @@ int main()
     Crazyflie cf("usb://0");
     cf.init();
     cf.addConsoleCallback(func3);
+
+    cf.addLogCallback( (LogBlockReceivedCallback) func);
     // conWorker.addCallback({5,0,func});
     // conWorker.addCallback({5,0,func2});
 
