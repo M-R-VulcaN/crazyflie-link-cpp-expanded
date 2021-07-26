@@ -24,6 +24,10 @@ public:
     Log(Toc& toc, bitcraze::crazyflieLinkCpp::Connection& con);
     ~Log();
     int createLogBlock(uint8_t logType,uint16_t logId);
-    int deleteLogBlock(uint16_t id);
+    int appendLogBlock(uint8_t logType,uint16_t logId);
+    int deleteLogBlock(uint8_t id);
+    int startLogBlock(uint8_t id);
+    int stopLogBlock(uint8_t id);
+    int resetLogBlocks();
 
 };

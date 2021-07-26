@@ -51,7 +51,7 @@ int main()
     conWpr.setChannel(1);
     conWpr.setPort(5);
     crazyflie.init();
-    crazyflie._conWorker.addCallback({5,1,[](Packet p_recv){globalPacket = p_recv;}});
+    crazyflie._conWorker.addCallback({5,1,[](Packet p_recv){globalPacket = p_recv; return true;}});
 
     while (true)
     {

@@ -42,7 +42,7 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
     return 0;
 }
 
-int Log::deleteLogBlock(uint16_t id)
+int Log::deleteLogBlock(uint8_t id)
 {
     uint8_t data[2] = {0};
 
@@ -76,3 +76,21 @@ int Log::deleteLogBlock(uint16_t id)
     }
     return 0;
 }
+
+    int Log::appendLogBlock(uint8_t logType,uint16_t logId)
+    {
+        return logType+logId;
+    }
+    int Log::startLogBlock(uint8_t id)
+    {
+        return id;
+
+    }
+    int Log::stopLogBlock(uint8_t id)
+    {
+        return id;
+    }
+    int Log::resetLogBlocks()
+    {
+        return 0;
+    }

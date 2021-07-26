@@ -27,9 +27,9 @@
 #define LOG_PORT 5
 #define APPCHANNEL_PORT 13
 
-typedef void (*ParamValueCallback)(const ParamValue&);
-typedef void (*ConsoleCallback)(const char*);
-typedef void (*LogBlockReceivedCallback)(const bitcraze::crazyflieLinkCpp::Packet&);
+typedef bool (*ParamValueCallback)(const ParamValue&);
+typedef bool (*ConsoleCallback)(const char*);
+typedef bool (*LogBlockReceivedCallback)(const bitcraze::crazyflieLinkCpp::Packet&);
 
 class Crazyflie
 {

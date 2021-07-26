@@ -243,8 +243,8 @@ void Crazyflie::addParamReceivedCallback( const ParamValueCallback& callback)
 
 void Crazyflie::addLogCallback( const LogBlockReceivedCallback& callback)
 {
-    auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
-        callback(p_recv);
+    auto func = (std::function<bool (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
+        return callback(p_recv);
     };
     _conWorker.addCallback({5,2, func});
 }
@@ -252,11 +252,11 @@ void Crazyflie::addLogCallback( const LogBlockReceivedCallback& callback)
 void Crazyflie::addConsoleCallback( const ConsoleCallback& callback)
 {
 
-    auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
+    auto func = (std::function<bool (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
         char data_str[33] = {0};
         data_str[p_recv.payloadSize()] = 0;
         std::memcpy(data_str,p_recv.payload(),p_recv.payloadSize());
-        callback(data_str);
+        return callback(data_str);
       
     };
     _conWorker.addCallback({0,0, func});

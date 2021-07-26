@@ -23,7 +23,7 @@ struct PacketCallbackBundle
 {
     uint8_t _port;
     uint8_t _channel;
-    std::function<void(bitcraze::crazyflieLinkCpp::Packet)> _packetCallbackFunc;
+    std::function<bool(bitcraze::crazyflieLinkCpp::Packet)> _packetCallbackFunc;
 };
 
 class ConnectionWorker

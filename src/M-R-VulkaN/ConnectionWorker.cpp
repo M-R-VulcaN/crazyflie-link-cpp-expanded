@@ -35,7 +35,7 @@ void ConnectionWorker::receivePacketsThreadFunc()
     Packet p_recv;
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
         while (!_threadsActiveFlag)
         {
              if(nullptr == _conPtr )
@@ -44,7 +44,7 @@ void ConnectionWorker::receivePacketsThreadFunc()
         }
         // _conPtr->recv
         if(_conPtr)
-            p_recv = _conPtr->recv(100);
+            p_recv = _conPtr->recv(1);
         else
             break;
         
@@ -52,13 +52,14 @@ void ConnectionWorker::receivePacketsThreadFunc()
         {
 
             std::lock_guard<std::mutex> lock(_packetRecvMutex);
-            for(PacketCallbackBundle callback : _paramReceivedCallbacks)
+            for(auto it = _paramReceivedCallbacks.begin(); it != _paramReceivedCallbacks.end();it++)
             {
-                if( p_recv.channel()==callback._channel  && p_recv.port() == callback._port )
+                if( p_recv.channel()==it->_channel  && it->_port == p_recv.port() )
                 {
-                    std::cout << p_recv <<std::endl;
-
-                    callback._packetCallbackFunc(p_recv);
+                    if(!it->_packetCallbackFunc(p_recv))
+                    {
+                        _paramReceivedCallbacks.erase(it);
+                    }
                 }
             }
             _receivedPackets.push_back(p_recv);

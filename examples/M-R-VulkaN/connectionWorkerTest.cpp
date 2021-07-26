@@ -5,32 +5,44 @@
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
 
-void func(const Packet& p_recv)
+bool func(const Packet& p_recv)
 {
 
     if(p_recv)
         std::cout << "res1: " <<p_recv.payloadSize()<< std::endl;
     // else
         std::cout << "failed recv1" << std::endl;
+        return true;
     
 }
 
-void func2(Packet p_recv)
+bool func2(Packet p_recv)
 {
     if(p_recv)
         std::cout << "res2: " <<p_recv<< std::endl;
     else
         std::cout << "failed recv2" << std::endl;
-    
+    return true;
 }
 
-void func3(const char* str)
+bool func3(const char* str)
+{
+    // if(str)
+    //     std::cout << "res2: " <<str<< std::endl;
+    // else
+    //     std::cout << "failed recv2" << std::endl;
+    std::cout <<"###" <<str;
+    return false;
+}
+
+bool func4(const char* str)
 {
     // if(str)
     //     std::cout << "res2: " <<str<< std::endl;
     // else
     //     std::cout << "failed recv2" << std::endl;
     std::cout <<str;
+    return true;
 }
 
 int main()
@@ -40,6 +52,7 @@ int main()
     Crazyflie cf("usb://0");
     cf.init();
     cf.addConsoleCallback(func3);
+    cf.addConsoleCallback(func4);
 
     cf.addLogCallback( func);
     // conWorker.addCallback({5,0,func});
