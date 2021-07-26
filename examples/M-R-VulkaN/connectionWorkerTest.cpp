@@ -25,11 +25,11 @@ void func2(Packet p_recv)
 
 void func3(const char* str)
 {
-    if(str)
-        std::cout << "res2: " <<str<< std::endl;
-    else
-        std::cout << "failed recv2" << std::endl;
-    
+    // if(str)
+    //     std::cout << "res2: " <<str<< std::endl;
+    // else
+    //     std::cout << "failed recv2" << std::endl;
+    std::cout <<str;
 }
 
 int main()

@@ -18,12 +18,12 @@ typedef void (*PacketCallbackFunc)(bitcraze::crazyflieLinkCpp::Packet);
     
 // };
 
-
+// template<class Func>
 struct PacketCallbackBundle
 {
     uint8_t _port;
     uint8_t _channel;
-    std::function<void(bitcraze::crazyflieLinkCpp::Packet)> & _packetCallbackFunc;
+    std::function<void(bitcraze::crazyflieLinkCpp::Packet)> _packetCallbackFunc;
 };
 
 class ConnectionWorker

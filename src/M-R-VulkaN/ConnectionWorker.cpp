@@ -69,11 +69,12 @@ void ConnectionWorker::receivePacketsThreadFunc()
         {
 
             std::lock_guard<std::mutex> lock(_packetRecvMutex);
-            for(auto callback : _paramReceivedCallbacks)
+            for(PacketCallbackBundle callback : _paramReceivedCallbacks)
             {
+
                 if( p_recv.channel()==callback._channel  && p_recv.port() == callback._port )
                 {
-                    callback._packetCallbackFunc(p_recv);
+                    callback._packetCallbackFunc.operator()(p_recv);
                 }
             }
             _receivedPackets.push_back(p_recv);

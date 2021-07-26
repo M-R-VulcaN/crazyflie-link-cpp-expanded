@@ -241,7 +241,6 @@ void Crazyflie::addParamReceivedCallback( const ParamValueCallback& callback)
     _paramReceivedCallbacks.push_back(callback);
 }
 
-
 void Crazyflie::addConsoleCallback( const ConsoleCallback& callback)
 {
     // class Callback : IPacketCallback
@@ -253,7 +252,14 @@ void Crazyflie::addConsoleCallback( const ConsoleCallback& callback)
     //     }
         
     // } packetCallback;
-    auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){callback((const char*)p_recv.payload());};
+    // ConsoleCallback tempCallback =    callback;
+    auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
+        char data_str[33] = {0};
+        data_str[p_recv.payloadSize()] = 0;
+        std::memcpy(data_str,p_recv.payload(),p_recv.payloadSize());
+        callback(data_str);
+      
+    };
     _conWorker.addCallback({0,0, func});
 }
 void Crazyflie::paramRecvThreadFunc()
