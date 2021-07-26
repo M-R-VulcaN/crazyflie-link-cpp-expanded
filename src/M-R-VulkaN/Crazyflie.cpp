@@ -244,12 +244,9 @@ void Crazyflie::addParamReceivedCallback( const ParamValueCallback& callback)
 void Crazyflie::addLogCallback( const LogBlockReceivedCallback& callback)
 {
     auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
-        if(p_recv)
-        callback(Packet(p_recv));
-    // std::this_thread::sleep_for(std::chrono::seconds(3));
-
+        callback(p_recv);
     };
-    _conWorker.addCallback({5,2, func});
+    _conWorker.addCallback({5,2, func});//Todo change port and channel
 }
 
 void Crazyflie::addConsoleCallback( const ConsoleCallback& callback)

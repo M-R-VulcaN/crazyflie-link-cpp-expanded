@@ -5,7 +5,7 @@
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
 
-void func(Packet p_recv)
+void func(const Packet& p_recv)
 {
 
     if(p_recv)
@@ -41,7 +41,7 @@ int main()
     cf.init();
     cf.addConsoleCallback(func3);
 
-    cf.addLogCallback( (LogBlockReceivedCallback) func);
+    cf.addLogCallback( func);
     // conWorker.addCallback({5,0,func});
     // conWorker.addCallback({5,0,func2});
 
