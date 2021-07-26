@@ -57,7 +57,7 @@ int main()
     std::this_thread::sleep_for(std::chrono::seconds(5));
     // Packet p_recv = conWorker.recvPacket(5,0);
     
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::this_thread::sleep_for(std::chrono::seconds(30));
     std::cout << "end" << std::endl;
     // conWorker.stop();
     // // conWorker.stop();

@@ -246,7 +246,7 @@ void Crazyflie::addLogCallback( const LogBlockReceivedCallback& callback)
     auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){
         callback(p_recv);
     };
-    _conWorker.addCallback({5,2, func});//Todo change port and channel
+    _conWorker.addCallback({5,2, func});
 }
 
 void Crazyflie::addConsoleCallback( const ConsoleCallback& callback)
