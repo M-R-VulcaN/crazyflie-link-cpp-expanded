@@ -7,20 +7,23 @@
 #include <condition_variable>
 #include "Connection.h"
 #include "Packet.hpp"
+#include <functional>
 
 typedef void (*PacketCallbackFunc)(bitcraze::crazyflieLinkCpp::Packet);
 
-class IPacketCallback
-{
-    public:
-    virtual void operator()(bitcraze::crazyflieLinkCpp::Packet p_recv) = 0;
-};
+// class IPacketCallback
+// {
+//     public:
+//     virtual void operator()(bitcraze::crazyflieLinkCpp::Packet p_recv) = 0;
+    
+// };
+
 
 struct PacketCallbackBundle
 {
     uint8_t _port;
     uint8_t _channel;
-    IPacketCallback& _packetCallbackFunc;
+    std::function<void(bitcraze::crazyflieLinkCpp::Packet)> & _packetCallbackFunc;
 };
 
 class ConnectionWorker

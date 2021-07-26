@@ -184,6 +184,7 @@ bool Crazyflie::init()
     _paramTocWpr.initToc();
 
     _isRunning = true;
+    _conWorker.start();
     return true;
 }
 bool Crazyflie::isRunning() const
@@ -243,18 +244,18 @@ void Crazyflie::addParamReceivedCallback( const ParamValueCallback& callback)
 
 void Crazyflie::addConsoleCallback( const ConsoleCallback& callback)
 {
-    class Callback : IPacketCallback
-    {
-        public:
-        virtual void operator()(Packet p_recv) override
-        {
-            std::cout << "operator() "<< p_recv<<std::endl;
-        }
-    } packetCallback;
-    callback("");
-    _conWorker.addCallback({0,0, (IPacketCallback&)packetCallback});
+    // class Callback : IPacketCallback
+    // {
+    //     public:
+    //     virtual void operator()(Packet p_recv) override
+    //     {
+    //         std::cout << "operator() "<< p_recv<<std::endl;
+    //     }
+        
+    // } packetCallback;
+    auto func = (std::function<void (bitcraze::crazyflieLinkCpp::Packet)> )[callback](Packet p_recv){callback((const char*)p_recv.payload());};
+    _conWorker.addCallback({0,0, func});
 }
-
 void Crazyflie::paramRecvThreadFunc()
 {
     // _
