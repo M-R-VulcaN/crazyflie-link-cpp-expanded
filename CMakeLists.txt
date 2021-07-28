@@ -153,6 +153,14 @@ target_link_libraries(example_connectionWorkerTest
   crazyflieLinkCpp
 )
 
+# example_resetUsb
+add_executable(example_resetUsb
+  examples/M-R-VulkaN/resetUsb.cpp
+)
+target_link_libraries(example_resetUsb
+  crazyflieLinkCpp
+)
+
 # # example_basicParamCSV
 # add_executable(example_basicParamCSV
 #   examples/M-R-VulkaN/basicParamCSV.cpp
