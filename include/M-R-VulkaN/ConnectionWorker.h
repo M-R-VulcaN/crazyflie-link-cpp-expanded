@@ -8,6 +8,7 @@
 #include "Connection.h"
 #include "Packet.hpp"
 #include <functional>
+#include <atomic>
 
 typedef void (*PacketCallbackFunc)(bitcraze::crazyflieLinkCpp::Packet);
 
@@ -15,7 +16,7 @@ typedef void (*PacketCallbackFunc)(bitcraze::crazyflieLinkCpp::Packet);
 // {
 //     public:
 //     virtual void operator()(bitcraze::crazyflieLinkCpp::Packet p_recv) = 0;
-    
+
 // };
 
 // template<class Func>
@@ -33,16 +34,18 @@ private:
     std::vector<PacketCallbackBundle> _paramReceivedCallbacks;
     std::thread _receivingThread;
     std::mutex _packetRecvMutex;
+    std::mutex _threadSleepMutex;
+    std::condition_variable _threadSleepConVar;
     bitcraze::crazyflieLinkCpp::Connection *_conPtr;
-    bool _threadsActiveFlag;
+    std::atomic<bool> _deactivateThread;
+    std::atomic<bool> _isThreadSleeping;
     void receivePacketsThreadFunc();
 
 public:
-    
     ConnectionWorker(bitcraze::crazyflieLinkCpp::Connection &con);
     ~ConnectionWorker();
     void start();
     void stop();
-    void addCallback(const PacketCallbackBundle& callback);
+    void addCallback(const PacketCallbackBundle &callback);
     // bitcraze::crazyflieLinkCpp::Packet recvPacket(uint8_t port, uint8_t channel);
 };

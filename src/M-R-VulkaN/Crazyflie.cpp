@@ -41,12 +41,12 @@ Connection &Crazyflie::getCon()
     return _con;
 }
 
-float Crazyflie::getFloatByName(const std::string &group, const std::string &name) const
+float Crazyflie::getFloatByName(const std::string &group, const std::string &name) 
 {
     return getParamValFromCrazyflie<float>(_paramToc.getItemId(group, name));
 }
 
-uint32_t Crazyflie::getUIntByName(const std::string &group, const std::string &name) const
+uint32_t Crazyflie::getUIntByName(const std::string &group, const std::string &name) 
 {
     return getParamValFromCrazyflie<uint32_t>(_paramToc.getItemId(group, name));
 }
@@ -70,7 +70,7 @@ bool Crazyflie::setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const s
 }
 
 //print the TOC with values!
-void Crazyflie::printParamToc() const
+void Crazyflie::printParamToc() 
 {
     auto tocItemsVector = _paramToc.getAllTocItems();
 
@@ -90,7 +90,7 @@ save the TOC with values to a csv file.
 input: path = the requested path.
        fileName = the requested file name. 
 */
-void Crazyflie::csvParamToc(std::string path, std::string fileName) const
+void Crazyflie::csvParamToc(std::string path, std::string fileName) 
 {
     std::string filepath = path + "/" + fileName;
     std::ofstream file;
@@ -112,7 +112,7 @@ void Crazyflie::csvParamToc(std::string path, std::string fileName) const
 }
 
 //print the TOC
-void Crazyflie::printLogToc() const
+void Crazyflie::printLogToc() 
 {
     auto tocItemsVector = _logToc.getAllTocItems();
 
@@ -173,7 +173,7 @@ bool Crazyflie::setParamByName(const std::string &group, const std::string &name
         {0x06, "float"},
         {0x07, "double"}};
 */
-std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() const
+std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() 
 {
     std::vector<std::pair<TocItem, ParamValue>> res;
 
