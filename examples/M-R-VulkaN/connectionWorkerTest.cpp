@@ -47,18 +47,19 @@ bool func4(const char* str)
 
 int main()
 {
-    // Connection con("usb://0");
-    // ConnectionWorker conWorker(con);
-    Crazyflie cf("usb://0");
-    cf.init();
-    cf.addConsoleCallback(func3);
-    cf.addConsoleCallback(func4);
+    Connection con("usb://0");
+    ConnectionWorker conWorker(con);
+    // Crazyflie cf("usb://0");
+    // cf.init();
+    // cf.addConsoleCallback(func3);
+    // cf.addConsoleCallback(func4);
 
-    cf.addLogCallback( func);
+    // cf.addLogCallback( func);
     // conWorker.addCallback({5,0,func});
     // conWorker.addCallback({5,0,func2});
 
-    // conWorker.start();
+    conWorker.start();
+    std::cout <<"recv: " << conWorker.recv(0,0)<< std::endl;
     // // std::this_thread::sleep_for(std::chrono::seconds(10));
     // uint8_t data[] = {1};
 

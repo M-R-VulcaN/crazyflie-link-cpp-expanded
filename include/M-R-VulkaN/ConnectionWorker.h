@@ -31,7 +31,7 @@ class ConnectionWorker
 {
 private:
     std::list<bitcraze::crazyflieLinkCpp::Packet> _receivedPackets;
-    std::vector<PacketCallbackBundle> _paramReceivedCallbacks;
+    std::list<PacketCallbackBundle> _paramReceivedCallbacks;
     std::thread _receivingThread;
     std::mutex _packetRecvMutex;
     std::mutex _threadSleepMutex;
@@ -47,5 +47,6 @@ public:
     void start();
     void stop();
     void addCallback(const PacketCallbackBundle &callback);
+    bitcraze::crazyflieLinkCpp::Packet recv(uint8_t port, uint8_t channel);
     // bitcraze::crazyflieLinkCpp::Packet recvPacket(uint8_t port, uint8_t channel);
 };

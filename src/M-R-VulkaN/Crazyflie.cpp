@@ -13,6 +13,7 @@ void Crazyflie::sendAppChannelData(const void *data, const size_t &dataLen)
 
 std::vector<uint8_t> Crazyflie::recvAppChannelData()
 {
+    
     Packet p = _conWrapperAppchannel.recvFilteredData(0);
     std::vector<uint8_t> res;
 

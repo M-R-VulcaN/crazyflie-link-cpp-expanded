@@ -23,7 +23,7 @@ void ConnectionWorker::start()
     std::unique_lock<std::mutex> lock(_threadSleepMutex);
     _deactivateThread = false;
 
-    const std::atomic<bool> * isSleepingPtr = &_isThreadSleeping;
+    const std::atomic<bool> *isSleepingPtr = &_isThreadSleeping;
 
     _threadSleepConVar.wait(lock, [isSleepingPtr]()
                             { return !(*isSleepingPtr); });
@@ -32,12 +32,11 @@ void ConnectionWorker::stop()
 {
     std::unique_lock<std::mutex> lock(_threadSleepMutex);
     _deactivateThread = true;
-    const std::atomic<bool> * isSleepingPtr = &_isThreadSleeping;
+    const std::atomic<bool> *isSleepingPtr = &_isThreadSleeping;
     // const std::atomic<bool> * isSleepingPtr = &_isThreadSleeping;
 
     _threadSleepConVar.wait(lock, [isSleepingPtr]()
-                            { return (bool)*isSleepingPtr;});
-
+                            { return (bool)*isSleepingPtr; });
 }
 void ConnectionWorker::addCallback(const PacketCallbackBundle &callback)
 {
@@ -53,21 +52,21 @@ void ConnectionWorker::receivePacketsThreadFunc()
         while (_deactivateThread)
         {
 
-            if(!_isThreadSleeping)
-        {
-        _isThreadSleeping = true;
-        _threadSleepConVar.notify_all();
-        }
+            if (!_isThreadSleeping)
+            {
+                _isThreadSleeping = true;
+                _threadSleepConVar.notify_all();
+            }
             if (nullptr == _conPtr)
                 return;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        if(_isThreadSleeping)
+        if (_isThreadSleeping)
         {
-        _isThreadSleeping = false;
-        _threadSleepConVar.notify_all();
+            _isThreadSleeping = false;
+            _threadSleepConVar.notify_all();
         }
-        
+
         // _conPtr->recv
         if (_conPtr)
             p_recv = _conPtr->recv(1);
@@ -76,19 +75,45 @@ void ConnectionWorker::receivePacketsThreadFunc()
 
         if (p_recv && !_deactivateThread)
         {
-
             std::lock_guard<std::mutex> lock(_packetRecvMutex);
-            for (auto it = _paramReceivedCallbacks.begin(); it != _paramReceivedCallbacks.end(); it++)
+            auto it = _paramReceivedCallbacks.begin();
+            while ( it != _paramReceivedCallbacks.end())
             {
                 if (p_recv.channel() == it->_channel && it->_port == p_recv.port())
                 {
                     if (!it->_packetCallbackFunc(p_recv))
                     {
-                        _paramReceivedCallbacks.erase(it);
+                        it =_paramReceivedCallbacks.erase(it);
+                    }
+                    else
+                    {
+                        it++;
                     }
                 }
             }
             _receivedPackets.push_back(p_recv);
         }
     }
+}
+
+Packet ConnectionWorker::recv(uint8_t port, uint8_t channel)
+{
+    std::mutex mu;
+    std::unique_lock<std::mutex> lock(mu);
+    std::condition_variable waitForRecv;
+    std::condition_variable *waitForRecvPtr = &waitForRecv;
+    std::atomic<bool> isResultReturned( false);
+    std::atomic<bool>* isResultReturnedPtr = &isResultReturned;
+    std::cout << "test" << std::endl;
+    Packet res;
+    Packet *resPtr = &res;
+    this->addCallback({port,channel,(std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[resPtr,waitForRecvPtr, isResultReturnedPtr](Packet p_recv){ 
+        *resPtr = p_recv;
+         waitForRecvPtr->notify_all();
+         *isResultReturnedPtr = true;
+         return false;}});
+    waitForRecv.wait(lock,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
+    std::cout << "test2 "<< res << std::endl;
+
+    return res;
 }
