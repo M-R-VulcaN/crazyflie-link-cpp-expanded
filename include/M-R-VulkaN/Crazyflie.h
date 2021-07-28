@@ -38,6 +38,10 @@ private:
     Toc _logToc;
 
     bitcraze::crazyflieLinkCpp::Connection _con;
+    public:
+    ConnectionWorker _conWorker;
+
+    private:
     ConnectionWrapper _conWrapperParamRead;
     ConnectionWrapper _conWrapperParamWrite;
     ConnectionWrapper _conWrapperParamToc;
@@ -50,10 +54,7 @@ private:
     std::vector<ConsoleCallback> _consoleCallbacks;
     std::thread _paramRecvThread;
 
-public:
-    ConnectionWorker _conWorker;
 
-private:
     template <class Val>
 
     bool setParamValCrazyflie(uint16_t paramId, const Val& newValue)
@@ -66,10 +67,10 @@ private:
     Val getParamValFromCrazyflie(uint16_t paramId) 
     {
         Val res = 0;
-        _conWorker.stop();
+        // _conWorker.stop();
         _conWrapperParamRead.sendData(&paramId, sizeof(paramId));
         bitcraze::crazyflieLinkCpp::Packet p = _conWrapperParamRead.recvFilteredData(0);
-        _conWorker.start();
+        // _conWorker.start();
         std::memcpy(&res, p.payload() + PAYLOAD_VALUE_BEGINING_INDEX, std::min(sizeof(res), p.payloadSize() - PAYLOAD_VALUE_BEGINING_INDEX));
 
         return res;

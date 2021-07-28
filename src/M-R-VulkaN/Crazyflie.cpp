@@ -1,7 +1,7 @@
 #include "Crazyflie.h"
 using namespace bitcraze::crazyflieLinkCpp;
 
-Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWrapperParamRead(_con), _conWrapperParamWrite(_con), _conWrapperParamToc(_con), _conWrapperLogToc(_con), _conWrapperAppchannel(_con), _logTocWpr(_logToc, _conWrapperLogToc), _paramTocWpr(_paramToc, _conWrapperParamToc), _conWorker(_con)
+Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWorker(_con), _conWrapperParamRead(_conWorker), _conWrapperParamWrite(_conWorker), _conWrapperParamToc(_conWorker), _conWrapperLogToc(_conWorker), _conWrapperAppchannel(_conWorker), _logTocWpr(_logToc, _conWrapperLogToc), _paramTocWpr(_paramToc, _conWrapperParamToc)
 {
     _isRunning = false;
 }
@@ -114,6 +114,8 @@ void Crazyflie::printLogToc()
 
 bool Crazyflie::init()
 {
+    _conWorker.start();
+
     _conWrapperLogToc.setPort(LOG_PORT);
 
     _conWrapperParamToc.setPort(PARAM_PORT);
@@ -132,7 +134,6 @@ bool Crazyflie::init()
     _paramTocWpr.initToc();
 
     _isRunning = true;
-    _conWorker.start();
     return true;
 }
 bool Crazyflie::isRunning() const

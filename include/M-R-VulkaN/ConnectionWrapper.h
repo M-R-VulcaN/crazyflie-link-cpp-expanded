@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include "Connection.h"
+#include "ConnectionWorker.h"
 
 #define PAYLOAD_MAX_SIZE CRTP_MAXSIZE - 2
 
@@ -20,10 +20,10 @@ private:
     uint8_t _port;
     uint8_t _channel;
 
-    bitcraze::crazyflieLinkCpp::Connection* _conPtr;
+    ConnectionWorker* _conWorkerPtr;
 
 public:
-    ConnectionWrapper(bitcraze::crazyflieLinkCpp::Connection & con);
+    ConnectionWrapper(ConnectionWorker& conWorker);
 
     ConnectionWrapper& operator=(bitcraze::crazyflieLinkCpp::Connection& con);
 
@@ -32,7 +32,7 @@ public:
     // returns the data only from the same port and channel as the current _packet
     bitcraze::crazyflieLinkCpp::Packet recvFilteredData(int timeout) const;
 
-    bitcraze::crazyflieLinkCpp::Connection& getConnection();
+    // bitcraze::crazyflieLinkCpp::Connection& getConnection();
 
     void setPort(int port);
     void setChannel(int channel);

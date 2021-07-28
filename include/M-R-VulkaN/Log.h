@@ -21,7 +21,7 @@ private:
     bool idsOccupied[UINT8_MAX] = {false};
 
 public:
-    Log(Toc& toc, bitcraze::crazyflieLinkCpp::Connection& con);
+    Log(Toc& toc, ConnectionWorker& con);
     ~Log();
     int createLogBlock(uint8_t logType,uint16_t logId);
     int appendLogBlock(uint8_t logType,uint16_t logId);

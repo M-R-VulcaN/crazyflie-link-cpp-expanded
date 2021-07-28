@@ -79,24 +79,27 @@ void ConnectionWorker::receivePacketsThreadFunc()
             auto it = _paramReceivedCallbacks.begin();
             while ( it != _paramReceivedCallbacks.end())
             {
-                if (p_recv.channel() == it->_channel && it->_port == p_recv.port())
+                if (p_recv.channel() == it->_channel && it->_port == p_recv.port() && !it->_packetCallbackFunc(p_recv))
                 {
-                    if (!it->_packetCallbackFunc(p_recv))
-                    {
-                        it =_paramReceivedCallbacks.erase(it);
-                    }
-                    else
-                    {
-                        it++;
-                    }
+                    it =_paramReceivedCallbacks.erase(it);
+                    continue;
+                }
+                else
+                {
+                    it++;
                 }
             }
             _receivedPackets.push_back(p_recv);
         }
     }
 }
+void ConnectionWorker::send(const Packet& p)
+{
+    _conPtr->send(p);
+}
 
-Packet ConnectionWorker::recv(uint8_t port, uint8_t channel)
+
+Packet ConnectionWorker::recv(uint8_t port, uint8_t channel, unsigned long timeout)
 {
     std::mutex mu;
     std::unique_lock<std::mutex> lock(mu);
@@ -104,7 +107,7 @@ Packet ConnectionWorker::recv(uint8_t port, uint8_t channel)
     std::condition_variable *waitForRecvPtr = &waitForRecv;
     std::atomic<bool> isResultReturned( false);
     std::atomic<bool>* isResultReturnedPtr = &isResultReturned;
-    std::cout << "test" << std::endl;
+    // std::cout << "test" << std::endl;
     Packet res;
     Packet *resPtr = &res;
     this->addCallback({port,channel,(std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[resPtr,waitForRecvPtr, isResultReturnedPtr](Packet p_recv){ 
@@ -112,8 +115,15 @@ Packet ConnectionWorker::recv(uint8_t port, uint8_t channel)
          waitForRecvPtr->notify_all();
          *isResultReturnedPtr = true;
          return false;}});
-    waitForRecv.wait(lock,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
-    std::cout << "test2 "<< res << std::endl;
+    if(0 == timeout)
+    {
+        waitForRecv.wait(lock ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
+    }
+    else
+    {
+        waitForRecv.wait_for(lock,std::chrono::milliseconds(timeout) ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
+    }
+    // std::cout << "test2 "<< res << std::endl;
 
     return res;
 }

@@ -47,6 +47,7 @@ public:
     void start();
     void stop();
     void addCallback(const PacketCallbackBundle &callback);
-    bitcraze::crazyflieLinkCpp::Packet recv(uint8_t port, uint8_t channel);
+    bitcraze::crazyflieLinkCpp::Packet recv(uint8_t port, uint8_t channel, unsigned long timeout = UINT64_MAX);
+    void send(const bitcraze::crazyflieLinkCpp::Packet& p);
     // bitcraze::crazyflieLinkCpp::Packet recvPacket(uint8_t port, uint8_t channel);
 };

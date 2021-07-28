@@ -2,7 +2,7 @@
 
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
-Log::Log(Toc &toc, Connection& con) : _tocPtr(&toc), _conWpr(con)
+Log::Log(Toc &toc, ConnectionWorker& conWorker) : _tocPtr(&toc), _conWpr(conWorker)
 {
 }
 

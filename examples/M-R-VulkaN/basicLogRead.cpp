@@ -46,7 +46,7 @@ int main()
 {
     bool idsOccupied[UINT8_MAX] = {false};
     Crazyflie crazyflie("usb://0");
-    ConnectionWrapper conWpr(crazyflie.getCon());
+    ConnectionWrapper conWpr(crazyflie._conWorker);
     const Toc& tocRef = crazyflie.getLogToc();
     conWpr.setChannel(1);
     conWpr.setPort(5);

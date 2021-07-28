@@ -6,13 +6,7 @@
 
 using namespace bitcraze::crazyflieLinkCpp;
 
-ConnectionWrapper &ConnectionWrapper::operator=(bitcraze::crazyflieLinkCpp::Connection &con)
-{
-    _conPtr = &con;
-    return *this;
-}
-
-ConnectionWrapper::ConnectionWrapper(Connection &con) : _conPtr(&con)
+ConnectionWrapper::ConnectionWrapper(ConnectionWorker& conWorker) :_conWorkerPtr(&conWorker)
 {
 }
 
@@ -54,18 +48,12 @@ void ConnectionWrapper::sendData(const void *data1, const size_t &data1_len, con
             std::copy((uint8_t *)data2, (uint8_t *)data2 + data2_len, p.payload() + data1_len);
         }
     }
-    _conPtr->send(p);
+    _conWorkerPtr->send(p);
 }
 
 Packet ConnectionWrapper::recvFilteredData(int timeout, int port, int channel) const
 {
-    //std::cout << _conPtr->statistics() << std::endl;
-    while (true)
-    {
-        Packet p = _conPtr->recv(timeout);
-        if ((p.channel() == channel && p.port() == port) || !p)
-            return p;
-    }
+    return _conWorkerPtr->recv(port,channel, timeout);
 }
 
 Packet ConnectionWrapper::recvFilteredData(int timeout) const
@@ -73,10 +61,10 @@ Packet ConnectionWrapper::recvFilteredData(int timeout) const
     return this->recvFilteredData(timeout, _port, _channel);
 }
 
-Connection &ConnectionWrapper::getConnection()
-{
-    return *_conPtr;
-}
+// ConnectionWorker &ConnectionWrapper::getConnection()
+// {
+//     return *_conWorkerPtr;
+// }
 
 void ConnectionWrapper::setPort(int port)
 {
