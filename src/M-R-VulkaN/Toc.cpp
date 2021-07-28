@@ -1,7 +1,7 @@
 #include "Toc.h"
 
 const uint8_t AccessType::RW = 0;
-const uint8_t AccessType::RO = 0;
+const uint8_t AccessType::RO = 1;
 
 TocItem::TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv)
 {
@@ -13,8 +13,7 @@ TocItem::TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv)
     _groupName = (const char *)(p_recv.payload()) + 4;
     _name = (const char *)(p_recv.payload()) + 4 + _groupName.length() + 1;
     _type = typeAndAccessType & ~ACCESS_TYPE_BYTE;
-
-    if ((bool)(typeAndAccessType & ACCESS_TYPE_BYTE) == (bool)AccessType::RO)
+    if ((typeAndAccessType & ACCESS_TYPE_BYTE) == (ACCESS_TYPE_BYTE*((int)AccessType::RO)))
     {
         _accessType = AccessType::RO;
     }

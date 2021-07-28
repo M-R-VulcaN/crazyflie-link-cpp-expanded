@@ -17,8 +17,8 @@ int main()
 
     crazyflie.init();
 
-    crazyflie.setParamByName("usd", "logging", 0, 1);
-    crazyflie.setParamByName("usd", "sendAppChannle", 1, 1);
+    crazyflie.setParamByName("usd", "logging", 0);
+    crazyflie.setParamByName("usd", "sendAppChannle", 1);
 
     std::vector<uint8_t> res;
     do

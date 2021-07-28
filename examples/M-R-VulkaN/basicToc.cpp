@@ -43,7 +43,7 @@ int main()
             std::cin >> newValueSize; 
             
             std::cout << "Initial value: " << crazyflie.getUIntByName(group, name) << std::endl;
-            crazyflie.setParamByName(group,name,value, newValueSize);
+            crazyflie.setParamByName(group,name,value);
             std::cout << "New value: " << crazyflie.getUIntByName(group, name) << std::endl;
         }
 

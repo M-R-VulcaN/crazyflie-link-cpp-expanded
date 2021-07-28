@@ -55,19 +55,6 @@ Crazyflie::~Crazyflie()
 {
 }
 
-bool Crazyflie::setParamInCrazyflie(uint16_t paramId, float newValue)
-{
-    _conWrapperParamWrite.sendData(&paramId, sizeof(paramId), &newValue, sizeof(newValue));
-
-    return true;
-}
-
-bool Crazyflie::setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const size_t &valueSize)
-{
-    _conWrapperParamWrite.sendData(&paramId, sizeof(paramId), &newValue, valueSize);
-
-    return true;
-}
 
 //print the TOC with values!
 void Crazyflie::printParamToc() 
@@ -152,14 +139,6 @@ bool Crazyflie::isRunning() const
     return _isRunning;
 }
 
-bool Crazyflie::setParamByName(const std::string &group, const std::string &name, float newValue)
-{
-    return setParamInCrazyflie(_paramToc.getItemId(group, name), newValue);
-}
-bool Crazyflie::setParamByName(const std::string &group, const std::string &name, uint32_t newValue, const size_t &valueSize)
-{
-    return setParamInCrazyflie(_paramToc.getItemId(group, name), newValue, valueSize);
-}
 /*
         {0x08, "uint8_t"},
         {0x09, "uint16_t"},

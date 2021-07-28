@@ -54,8 +54,14 @@ public:
     ConnectionWorker _conWorker;
 
 private:
-    bool setParamInCrazyflie(uint16_t paramId, float newValue);
-    bool setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const size_t &valueSize);
+    template <class Val>
+
+    bool setParamValCrazyflie(uint16_t paramId, const Val& newValue)
+    {
+        _conWrapperParamWrite.sendData(&paramId, sizeof(paramId), &newValue, sizeof(newValue));
+
+        return true;
+    }
     template <class Val>
     Val getParamValFromCrazyflie(uint16_t paramId) 
     {
@@ -85,9 +91,12 @@ public:
 
     uint32_t getUIntByName(const std::string &group, const std::string &name) ;
     float getFloatByName(const std::string &group, const std::string &name) ;
+    template <class Val>
 
-    bool setParamByName(const std::string &group, const std::string &name, float newValue);
-    bool setParamByName(const std::string &group, const std::string &name, uint32_t newValue, const size_t &valueSize);
+    bool setParamByName(const std::string &group, const std::string &name, Val newValue)
+    {
+        return setParamValCrazyflie<Val>(_paramToc.getItemId(group, name), newValue);
+    }
     const Toc &getParamToc() const;
     const Toc &getLogToc() const;
     void printParamToc() ;
