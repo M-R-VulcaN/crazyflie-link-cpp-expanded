@@ -56,10 +56,19 @@ private:
     
     bool setParamInCrazyflie(uint16_t paramId, float newValue);
     bool setParamInCrazyflie(uint16_t paramId, uint32_t newValue, const size_t &valueSize);
+    template <class Val>
+    Val getParamValFromCrazyflie(uint16_t paramId) const
+    {
+          Val res = 0;
+    _conWrapperParamRead.sendData(&paramId, sizeof(paramId));
 
-    uint32_t getUIntFromCrazyflie(uint16_t paramId) const;
+    bitcraze::crazyflieLinkCpp::Packet p = _conWrapperParamRead.recvFilteredData(0);
+
+    std::memcpy(&res, p.payload() + PAYLOAD_VALUE_BEGINING_INDEX, std::min(sizeof(res),p.payloadSize() - PAYLOAD_VALUE_BEGINING_INDEX));
+
+    return res;
+    }
     float getFloatFromCrazyflie(uint16_t paramId) const;
-    double getDoubleFromCrazyflie(uint16_t paramId) const;
     void initParamToc();
     void initLogToc();
 
