@@ -27,7 +27,7 @@
 #define LOG_PORT 5
 #define APPCHANNEL_PORT 13
 
-typedef std::function<bool(const uint8_t*, uint8_t)> AppChannelCallback;
+typedef std::function<bool(const uint8_t *, uint8_t)> AppChannelCallback;
 typedef std::function<bool(const ParamValue &)> ParamValueCallback;
 typedef std::function<bool(const char *)> ConsoleCallback;
 typedef std::function<bool(const bitcraze::crazyflieLinkCpp::Packet &)> LogBlockReceivedCallback;
@@ -39,10 +39,11 @@ private:
     Toc _logToc;
 
     bitcraze::crazyflieLinkCpp::Connection _con;
-    public:
+
+public:
     ConnectionWorker _conWorker;
 
-    private:
+private:
     ConnectionWrapper _conWrapperParamRead;
     ConnectionWrapper _conWrapperParamWrite;
     ConnectionWrapper _conWrapperParamToc;
@@ -55,23 +56,22 @@ private:
     std::vector<ConsoleCallback> _consoleCallbacks;
     std::thread _paramRecvThread;
 
-
     template <class Val>
 
-    bool setParamValCrazyflie(uint16_t paramId, const Val& newValue)
+    bool setParamValCrazyflie(uint16_t paramId, const Val &newValue)
     {
-        struct __attribute__ ((packed))
+        struct __attribute__((packed))
         {
             uint16_t _paramId;
             Val _newValue;
         } data = {paramId, newValue};
-        
+
         _conWrapperParamWrite.sendRecvData(0, data);
 
         return true;
     }
     template <class Val>
-    Val getParamValFromCrazyflie(uint16_t paramId) 
+    Val getParamValFromCrazyflie(uint16_t paramId)
     {
         Val res = 0;
         // _conWorker.stop();
@@ -97,8 +97,8 @@ public:
     bool init();
     bitcraze::crazyflieLinkCpp::Connection &getCon();
 
-    uint32_t getUIntByName(const std::string &group, const std::string &name) ;
-    float getFloatByName(const std::string &group, const std::string &name) ;
+    uint32_t getUIntByName(const std::string &group, const std::string &name);
+    float getFloatByName(const std::string &group, const std::string &name);
     template <class Val>
 
     bool setParamByName(const std::string &group, const std::string &name, Val newValue)
@@ -107,10 +107,10 @@ public:
     }
     const Toc &getParamToc() const;
     const Toc &getLogToc() const;
-    void printParamToc() ;
-    void csvParamToc(std::string path, std::string fileName) ;
-    void printLogToc() ;
-    std::vector<std::pair<TocItem, ParamValue>> getTocAndValues() ;
+    void printParamToc();
+    void csvParamToc(std::string path, std::string fileName);
+    void printLogToc();
+    std::vector<std::pair<TocItem, ParamValue>> getTocAndValues();
 
     void sendAppChannelData(const void *data, const size_t &dataLen);
     // std::vector<uint8_t> recvAppChannelData();

@@ -39,7 +39,7 @@ private:
     // std::mutex _postRecvMutex;
     // std::mutex _conMutex;
     std::condition_variable _threadSleepConVar;
-    std::atomic<bitcraze::crazyflieLinkCpp::Connection*> _conAtomicPtr;
+    std::atomic<bitcraze::crazyflieLinkCpp::Connection *> _conAtomicPtr;
     std::atomic<bool> _deactivateThread;
     std::atomic<bool> _isThreadSleeping;
     void receivePacketsThreadFunc();
@@ -51,7 +51,7 @@ public:
     void stop();
     void addCallback(const PacketCallbackBundle &callback);
     bitcraze::crazyflieLinkCpp::Packet recv(uint8_t port, uint8_t channel, unsigned long timeout = UINT64_MAX);
-    void send(const bitcraze::crazyflieLinkCpp::Packet& p);
-    std::mutex& getRecvMutex();
-    std::mutex& getPostRecvMutex();
+    void send(const bitcraze::crazyflieLinkCpp::Packet &p);
+    std::mutex &getRecvMutex();
+    std::mutex &getPostRecvMutex();
 };

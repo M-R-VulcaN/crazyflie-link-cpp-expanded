@@ -43,7 +43,6 @@ void ConnectionWorker::addCallback(const PacketCallbackBundle &callback)
     _paramReceivedCallbacks.push_back(callback);
 }
 
-
 void ConnectionWorker::receivePacketsThreadFunc()
 {
     Packet p_recv;
@@ -75,7 +74,7 @@ void ConnectionWorker::receivePacketsThreadFunc()
         // _conAtomicPtr->recv
         if (_conAtomicPtr)
         {
-            p_recv = ((Connection*)_conAtomicPtr)->recv(1);
+            p_recv = ((Connection *)_conAtomicPtr)->recv(1);
         }
         else
             break;
@@ -85,11 +84,11 @@ void ConnectionWorker::receivePacketsThreadFunc()
         if (p_recv && !_deactivateThread)
         {
             auto it = _paramReceivedCallbacks.begin();
-            while ( it != _paramReceivedCallbacks.end())
+            while (it != _paramReceivedCallbacks.end())
             {
                 if (p_recv.channel() == it->_channel && it->_port == p_recv.port() && !it->_packetCallbackFunc(p_recv))
                 {
-                    it =_paramReceivedCallbacks.erase(it);
+                    it = _paramReceivedCallbacks.erase(it);
                     continue;
                 }
                 else
@@ -101,10 +100,8 @@ void ConnectionWorker::receivePacketsThreadFunc()
         }
     }
 }
-void ConnectionWorker::send(const Packet& p)
+void ConnectionWorker::send(const Packet &p)
 {
     // std::lock_guard<std::mutex> lock(_conMutex);
-    ((Connection*)_conAtomicPtr)->send(p);
+    ((Connection *)_conAtomicPtr)->send(p);
 }
-
-

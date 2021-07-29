@@ -8,22 +8,20 @@ Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWorker(_con), _con
 
 void Crazyflie::sendAppChannelData(const void *data, const size_t &dataLen)
 {
-    _conWrapperAppchannel.send<uint8_t>((*(const uint8_t*)data),dataLen);
+    _conWrapperAppchannel.send<uint8_t>((*(const uint8_t *)data), dataLen);
 }
-
-
 
 Connection &Crazyflie::getCon()
 {
     return _con;
 }
 
-float Crazyflie::getFloatByName(const std::string &group, const std::string &name) 
+float Crazyflie::getFloatByName(const std::string &group, const std::string &name)
 {
     return getParamValFromCrazyflie<float>(_paramToc.getItemId(group, name));
 }
 
-uint32_t Crazyflie::getUIntByName(const std::string &group, const std::string &name) 
+uint32_t Crazyflie::getUIntByName(const std::string &group, const std::string &name)
 {
     return getParamValFromCrazyflie<uint32_t>(_paramToc.getItemId(group, name));
 }
@@ -32,9 +30,8 @@ Crazyflie::~Crazyflie()
 {
 }
 
-
 //print the TOC with values!
-void Crazyflie::printParamToc() 
+void Crazyflie::printParamToc()
 {
     auto tocItemsVector = _paramToc.getAllTocItems();
 
@@ -54,7 +51,7 @@ save the TOC with values to a csv file.
 input: path = the requested path.
        fileName = the requested file name. 
 */
-void Crazyflie::csvParamToc(std::string path, std::string fileName) 
+void Crazyflie::csvParamToc(std::string path, std::string fileName)
 {
     std::string filepath = path + "/" + fileName;
     std::ofstream file;
@@ -76,7 +73,7 @@ void Crazyflie::csvParamToc(std::string path, std::string fileName)
 }
 
 //print the TOC
-void Crazyflie::printLogToc() 
+void Crazyflie::printLogToc()
 {
     auto tocItemsVector = _logToc.getAllTocItems();
 
@@ -129,7 +126,7 @@ bool Crazyflie::isRunning() const
         {0x06, "float"},
         {0x07, "double"}};
 */
-std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues() 
+std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues()
 {
     std::vector<std::pair<TocItem, ParamValue>> res;
 
@@ -156,11 +153,10 @@ void Crazyflie::addAppChannelCallback(const AppChannelCallback &callback)
 {
     auto func = (std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[callback](Packet p_recv)
     {
-        return callback(p_recv.payload(),p_recv.payloadSize());
+        return callback(p_recv.payload(), p_recv.payloadSize());
     };
     _conWorker.addCallback({APPCHANNEL_PORT, APP_CHANNEL, func});
 }
-
 
 void Crazyflie::addParamReceivedCallback(const ParamValueCallback &callback)
 {

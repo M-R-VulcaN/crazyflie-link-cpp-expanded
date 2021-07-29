@@ -9,11 +9,11 @@ TocItem::TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv)
     memcpy(&_id, &p_recv.payload()[1], sizeof(_id));
     uint8_t typeAndAccessType = 0;
     memcpy(&typeAndAccessType, &p_recv.payload()[3], sizeof(typeAndAccessType));
-    
+
     _groupName = (const char *)(p_recv.payload()) + 4;
     _name = (const char *)(p_recv.payload()) + 4 + _groupName.length() + 1;
     _type = typeAndAccessType & ~ACCESS_TYPE_BYTE;
-    if ((typeAndAccessType & ACCESS_TYPE_BYTE) == (ACCESS_TYPE_BYTE*((int)AccessType::RO)))
+    if ((typeAndAccessType & ACCESS_TYPE_BYTE) == (ACCESS_TYPE_BYTE * ((int)AccessType::RO)))
     {
         _accessType = AccessType::RO;
     }
@@ -118,7 +118,7 @@ TocItem::TocItem()
 TocInfo::~TocInfo()
 {
 }
-TocItem::TocItem(const TocItem& other)  
+TocItem::TocItem(const TocItem &other)
 {
     _groupName = other._groupName;
     _name = other._name;
@@ -126,21 +126,21 @@ TocItem::TocItem(const TocItem& other)
     _accessType = other._accessType;
     _id = other._id;
 }
-void Toc::insert(const TocItem& tocItem)
+void Toc::insert(const TocItem &tocItem)
 {
-    _tocItems.insert({{tocItem._groupName, tocItem._name},tocItem});
+    _tocItems.insert({{tocItem._groupName, tocItem._name}, tocItem});
 }
 
 TocItem Toc::getItem(const std::string &groupName, const std::string &paramName, bool caching) const
 {
     auto res = _tocItemsCache.find({groupName, paramName});
-    if(res == _tocItemsCache.end())
+    if (res == _tocItemsCache.end())
     {
         res = _tocItems.find({groupName, paramName});
 
-        if(caching)
+        if (caching)
         {
-            const_cast<std::map<StrPair,TocItem>&>(_tocItemsCache).insert(*res);
+            const_cast<std::map<StrPair, TocItem> &>(_tocItemsCache).insert(*res);
         }
     }
     return res->second;
@@ -186,11 +186,9 @@ void Toc::clearToc()
     _tocItemsCache.clear();
 }
 
-
-
-bool TocItemType::operator==(const std::string& val) const
+bool TocItemType::operator==(const std::string &val) const
 {
-    return std::string(*this) == val; 
+    return std::string(*this) == val;
 }
 
 bool TocItemType::operator==(uint8_t val) const

@@ -29,12 +29,12 @@ void LoggingCrazyflieWrapper::start(bool withDebugging)
     _crazyflie->setParamByName<uint8_t>("usd", "logging", 0);
     _crazyflie->setParamByName<uint8_t>("usd", "sendAppChannle", 1);
     // std::cout <<"passs"<<std::endl;
-    if(withDebugging)
+    if (withDebugging)
         return;
     // Debug::passFlag = true;
     // Crazyflie* cfPtr = _crazyflie;
     // // std::vector<uint8_t> result;
-    
+
     // std::ofstream outputFile(_outputFilePath);
     // std::ofstream* outputFilePtr= &outputFile;
     // uint32_t currMemAddress = 0;
@@ -44,14 +44,13 @@ void LoggingCrazyflieWrapper::start(bool withDebugging)
     // auto start = std::chrono::steady_clock::now();
     // auto startTimePtr = &start;
 
-
     // _crazyflie->addAppChannelCallback((AppChannelCallback)[withDebugging,cfPtr, outputFilePtr,currMemAddressPtr,dataSizePtr,startTimePtr,muPtr,waitForLoggingToFinishPtr](const uint8_t* data, uint8_t dataLen)
     // {
-        
+
     //     uint32_t& currMemAddress = *currMemAddressPtr;
     //     uint32_t& dataSize = *dataSizePtr;
     //     auto& start = *startTimePtr;
-    //     if (0==dataLen) 
+    //     if (0==dataLen)
     //     {
     //         if (withDebugging)
     //             std::cout << "Error Receiving from crazyflie" << std::endl;
@@ -62,8 +61,7 @@ void LoggingCrazyflieWrapper::start(bool withDebugging)
     //     uint8_t response[5] = {0};
     //     unsigned int ackRequestMemAddress = 0;
     //     uint32_t crazyflieCurrMemAddress = 0;
-        
-        
+
     //     switch (packetCode)
     //     {
     //     case 0:
@@ -144,4 +142,3 @@ void LoggingCrazyflieWrapper::start(bool withDebugging)
     // });
     // waitForLoggingToFinish.wait(lock,[currMemAddressPtr,dataSizePtr](){return *currMemAddressPtr >= *dataSizePtr;});
 }
-

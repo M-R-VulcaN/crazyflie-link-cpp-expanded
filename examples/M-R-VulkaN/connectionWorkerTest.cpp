@@ -5,43 +5,42 @@
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
 
-bool func(const Packet& p_recv)
+bool func(const Packet &p_recv)
 {
 
-    if(p_recv)
-        std::cout << "res1: " <<p_recv.payloadSize()<< std::endl;
+    if (p_recv)
+        std::cout << "res1: " << p_recv.payloadSize() << std::endl;
     // else
-        std::cout << "failed recv1" << std::endl;
-        return true;
-    
+    std::cout << "failed recv1" << std::endl;
+    return true;
 }
 
 bool func2(Packet p_recv)
 {
-    if(p_recv)
-        std::cout << "res2: " <<p_recv<< std::endl;
+    if (p_recv)
+        std::cout << "res2: " << p_recv << std::endl;
     else
         std::cout << "failed recv2" << std::endl;
     return true;
 }
 
-bool func3(const char* str)
+bool func3(const char *str)
 {
     // if(str)
     //     std::cout << "res2: " <<str<< std::endl;
     // else
     //     std::cout << "failed recv2" << std::endl;
-    std::cout <<"###" <<str;
+    std::cout << "###" << str;
     return false;
 }
 
-bool func4(const char* str)
+bool func4(const char *str)
 {
     // if(str)
     //     std::cout << "res2: " <<str<< std::endl;
     // else
     //     std::cout << "failed recv2" << std::endl;
-    std::cout <<str;
+    std::cout << str;
     return true;
 }
 
@@ -72,7 +71,7 @@ int main()
     // // con.send(p);
     // std::this_thread::sleep_for(std::chrono::seconds(5));
     // // Packet p_recv = conWorker.recvPacket(5,0);
-    
+
     // std::this_thread::sleep_for(std::chrono::seconds(30));
     // std::cout << "end" << std::endl;
     // // conWorker.stop();

@@ -6,7 +6,7 @@
 
 using namespace bitcraze::crazyflieLinkCpp;
 
-ConnectionWrapper::ConnectionWrapper(ConnectionWorker& conWorker) :_conWorkerPtr(&conWorker)
+ConnectionWrapper::ConnectionWrapper(ConnectionWorker &conWorker) : _conWorkerPtr(&conWorker)
 {
 }
 

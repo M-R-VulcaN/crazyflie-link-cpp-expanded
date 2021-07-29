@@ -26,7 +26,7 @@ int main()
 
     crazyflie.init();
 
-    LoggingCrazyflieWrapper loggingWrapper(crazyflie,"out.txt");
+    LoggingCrazyflieWrapper loggingWrapper(crazyflie, "out.txt");
     loggingWrapper.start(true);
     return 0;
 }

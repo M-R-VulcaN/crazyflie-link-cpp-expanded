@@ -14,7 +14,6 @@ using bitcraze::crazyflieLinkCpp::Packet;
 #define CONTROL_CREATE_BLOCK_V2 6
 #define CONTROL_APPEND_BLOCK_V2 7
 
-
 #define CONTROL_CH 1
 #define CRTP_PORT_LOG 0x05
 #define MAX_LEN_NAME 32
@@ -30,13 +29,12 @@ enum UserChoices
     BLOCK_RESET
 };
 
-
 int main()
 {
     bool idsOccupied[UINT8_MAX] = {false};
     Crazyflie crazyflie("usb://0");
     ConnectionWrapper conWpr(crazyflie._conWorker);
-    const Toc& tocRef = crazyflie.getLogToc();
+    const Toc &tocRef = crazyflie.getLogToc();
     conWpr.setChannel(1);
     conWpr.setPort(5);
     crazyflie.init();
@@ -71,7 +69,7 @@ int main()
                 char userInputStr[MAX_LEN_NAME];
                 userInputStr[MAX_LEN_NAME] = 0;
 
-                std::cin.getline(userInputStr, MAX_LEN_NAME - 1,'\n');
+                std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
 
                 std::string temp = std::string(userInputStr);
                 std::string groupName = temp.substr(0, temp.find("."));
@@ -94,7 +92,7 @@ int main()
                     {
                         idsOccupied[i] = true;
                         data[1] = i;
-                        Packet p_recv = conWpr.sendRecvData(0,data);
+                        Packet p_recv = conWpr.sendRecvData(0, data);
                         std::cout << p_recv << std::endl;
                         failCode = p_recv.payload()[2];
                         if (17 == failCode)
@@ -147,7 +145,7 @@ int main()
                 data[4] = logId >> 8;
                 uint8_t failCode = 0;
 
-                Packet p_recv = conWpr.sendRecvData(0,data);
+                Packet p_recv = conWpr.sendRecvData(0, data);
                 failCode = p_recv.payload()[2];
                 if (0 == failCode)
                 {
@@ -168,7 +166,7 @@ int main()
             uint8_t data[2] = {0};
 
             data[0] = CONTROL_DELETE_BLOCK; //define : delete block
-            data[1] = id;                      //block id
+            data[1] = id;                   //block id
 
             uint8_t failCode = 0;
 
@@ -178,7 +176,7 @@ int main()
                 {
                     idsOccupied[i] = false;
                     // data[1] = i;
-                    Packet p_recv = conWpr.sendRecvData(0,data);
+                    Packet p_recv = conWpr.sendRecvData(0, data);
                     failCode = p_recv.payload()[2];
                     if (17 == failCode)
                         continue;
@@ -208,11 +206,11 @@ int main()
 
             data[0] = CONTROL_START_BLOCK;
             data[1] = id;
-            data[2] = PeriodTimeInMs / 10;        //time in ms / 10 = senti seconds
+            data[2] = PeriodTimeInMs / 10; //time in ms / 10 = senti seconds
 
             uint8_t failCode = 0;
 
-             Packet p_recv = conWpr.sendRecvData(0,data);
+            Packet p_recv = conWpr.sendRecvData(0, data);
             failCode = p_recv.payload()[2];
             std::cout << (int)data[2] << std::endl;
             std::cout << p_recv << std::endl;
@@ -244,7 +242,7 @@ int main()
 
             uint8_t failCode = 0;
 
-             Packet p_recv = conWpr.sendRecvData(0,data);
+            Packet p_recv = conWpr.sendRecvData(0, data);
             failCode = p_recv.payload()[2];
             std::cout << (int)data[2] << std::endl;
             std::cout << p_recv << std::endl;
@@ -266,7 +264,7 @@ int main()
 
             uint8_t failCode = 0;
 
-            Packet p_recv = conWpr.sendRecvData(0,data);
+            Packet p_recv = conWpr.sendRecvData(0, data);
             failCode = p_recv.payload()[2];
 
             std::fill(idsOccupied, idsOccupied + UINT8_MAX, false);

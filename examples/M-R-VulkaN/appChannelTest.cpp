@@ -10,13 +10,13 @@
 #include "Crazyflie.h"
 
 using namespace bitcraze::crazyflieLinkCpp;
-bool appChannelCallback(const uint8_t* data, uint8_t dataLen)
+bool appChannelCallback(const uint8_t *data, uint8_t dataLen)
 {
-    for(int i = 0; i < dataLen; i++)
+    for (int i = 0; i < dataLen; i++)
     {
-        std::cout << (int)data[i]<<" ";
+        std::cout << (int)data[i] << " ";
     }
-    std::cout<<std::endl;
+    std::cout << std::endl;
     return true;
 }
 int main()
@@ -47,6 +47,5 @@ int main()
 
     // } while (res.size() > 0);
 
- 
     return 0;
 }

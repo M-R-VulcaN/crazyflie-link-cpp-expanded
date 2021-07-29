@@ -7,27 +7,24 @@
 #define CONTROL_CREATE_BLOCK_V2 6
 #define CONTROL_DELETE_BLOCK_V2 2
 
-
 #define CONTROL_CH 1
 #define CRTP_PORT_LOG 0x05
 #define MAX_LEN_NAME 31
 
-
 class Log
 {
 private:
-    Toc* _tocPtr;
+    Toc *_tocPtr;
     ConnectionWrapper _conWpr;
     bool idsOccupied[UINT8_MAX] = {false};
 
 public:
-    Log(Toc& toc, ConnectionWorker& con);
+    Log(Toc &toc, ConnectionWorker &con);
     ~Log();
-    int createLogBlock(uint8_t logType,uint16_t logId);
-    int appendLogBlock(uint8_t logType,uint16_t logId);
+    int createLogBlock(uint8_t logType, uint16_t logId);
+    int appendLogBlock(uint8_t logType, uint16_t logId);
     int deleteLogBlock(uint8_t id);
     int startLogBlock(uint8_t id);
     int stopLogBlock(uint8_t id);
     int resetLogBlocks();
-
 };

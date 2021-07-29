@@ -69,7 +69,7 @@ struct TocItemType
     operator std::string() const;
     friend std::string to_string(TocItemType const &self);
     bool operator==(uint8_t val) const;
-    bool operator==(const std::string& val) const;
+    bool operator==(const std::string &val) const;
     TocItemType &operator=(const std::string &strParamType);
     TocItemType &operator=(const uint8_t &paramType);
 };
@@ -84,7 +84,7 @@ struct TocItem
 
     bool operator>(const TocItem &other) const;
     bool operator<(const TocItem &other) const;
-    TocItem(const TocItem& other);
+    TocItem(const TocItem &other);
     TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv);
     TocItem();
     ~TocItem();
@@ -107,6 +107,7 @@ private:
     std::map<StrPair, TocItem> _tocItems;
     std::map<StrPair, TocItem> _tocItemsCache;
     TocInfo _tocInfo;
+    8 - 8;
 
 public:
     void insert(const TocItem &tocItem);

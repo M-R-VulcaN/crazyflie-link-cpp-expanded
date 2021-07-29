@@ -25,7 +25,6 @@ using namespace bitcraze::crazyflieLinkCpp;
 // #define CMD_CREATE_BLOCK_V2 6
 // #define CMD_APPEND_BLOCK_V2 7
 
-
 int main()
 {
     Crazyflie crazyflie("usb://0");
@@ -34,7 +33,6 @@ int main()
 
     // // crazyflie.printLogToc();
     // // crazyflie.printParamToc();
-
 
     // std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
     // std::cin.ignore(INT32_MAX, '\n');
@@ -53,10 +51,9 @@ int main()
 
     // Log.createLogBlock(logType ,logId);
 
-
     // Log.createLogBlock();
     // Log::createLogBlock(1);
-////
+    ////
     // std::cout << tocWpr->getAllTocItems().size();
 
     // Crazyflie crazyflie("usb://0");
