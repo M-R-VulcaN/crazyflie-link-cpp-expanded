@@ -36,26 +36,26 @@ public:
    {
         std::mutex mu;
         std::unique_lock<std::mutex> lock(mu);
+        // std::atomic<std::mutex> lockAtomic(_conWorkerPtr->getRecvMutex());
+        std::mutex* muPtr = &mu;
         std::condition_variable waitForRecv;
         std::condition_variable *waitForRecvPtr = &waitForRecv;
         std::atomic<bool> isResultReturned( false);
         std::atomic<bool>* isResultReturnedPtr = &isResultReturned;
-        std::cout << "sr"<< std::endl;
 
         // std::cout << "test" << std::endl;
         bitcraze::crazyflieLinkCpp::Packet res;
         bitcraze::crazyflieLinkCpp::Packet *resPtr = &res;
-        std::cout << "sr"<< std::endl;
 
-        PacketCallbackBundle callbackBundle= {this->_port,this->_channel,(PacketCallback)[resPtr,waitForRecvPtr, isResultReturnedPtr](bitcraze::crazyflieLinkCpp::Packet p_recv){ 
+        PacketCallbackBundle callbackBundle= {this->_port,this->_channel,(PacketCallback)[resPtr,waitForRecvPtr, isResultReturnedPtr,muPtr](bitcraze::crazyflieLinkCpp::Packet p_recv){ 
+            std::lock_guard<std::mutex> lock (*muPtr);
             *resPtr = p_recv;
             waitForRecvPtr->notify_all();
             *isResultReturnedPtr = true;
+            // std::cout <<"F";
             return false;}};
-        std::cout << "sr1"<< std::endl;
 
         _conWorkerPtr->addCallback(callbackBundle);
-        std::cout << "sr2"<< std::endl;
         bitcraze::crazyflieLinkCpp::Packet p_send;
         p_send.setPort(_port);
         p_send.setChannel(_channel);
@@ -72,11 +72,13 @@ public:
         }
         
         _conWorkerPtr->send(p_send);
-        std::cout << "sr3"<< std::endl;
 
         if(isResultReturned)
             return res;
-
+        // while(!isResultReturned && timeout ==0)
+        // {
+        //     std::this_thread::sleep_for(std::chrono::microseconds(10));
+        // }
         if(0 == timeout)
         {
             waitForRecv.wait(lock ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
@@ -85,8 +87,7 @@ public:
         {
             waitForRecv.wait_for(lock,std::chrono::milliseconds(timeout) ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
         }
-        // std::cout << "test2 "<< res << std::endl;
-        std::cout << "sr4"<< std::endl;
+        std::cout << "test2 "<< res << std::endl;
 
         return res;
     }

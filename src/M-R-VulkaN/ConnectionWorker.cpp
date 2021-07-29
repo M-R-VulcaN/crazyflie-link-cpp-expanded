@@ -4,9 +4,9 @@
 
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
-ConnectionWorker::ConnectionWorker(Connection &con)
+ConnectionWorker::ConnectionWorker(Connection &con) : _conAtomicPtr(&con)
 {
-    _conPtr = &con;
+    // ((Connection*)_conAtomicPtr) = &con;
     _receivingThread = std::thread(&ConnectionWorker::receivePacketsThreadFunc, this);
     _isThreadSleeping = true;
     _deactivateThread = true;
@@ -14,7 +14,7 @@ ConnectionWorker::ConnectionWorker(Connection &con)
 }
 ConnectionWorker::~ConnectionWorker()
 {
-    _conPtr = nullptr;
+    _conAtomicPtr = nullptr;
     this->stop();
 }
 void ConnectionWorker::start()
@@ -49,7 +49,7 @@ void ConnectionWorker::receivePacketsThreadFunc()
     Packet p_recv;
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        // std::this_thread::sleep_for(std::chrono::nanoseconds(10));
         while (_deactivateThread)
         {
 
@@ -58,7 +58,7 @@ void ConnectionWorker::receivePacketsThreadFunc()
                 _isThreadSleeping = true;
                 _threadSleepConVar.notify_all();
             }
-            if (nullptr == _conPtr)
+            if (nullptr == _conAtomicPtr)
                 return;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
@@ -68,15 +68,18 @@ void ConnectionWorker::receivePacketsThreadFunc()
             _threadSleepConVar.notify_all();
         }
 
-        // _conPtr->recv
-        if (_conPtr)
-            p_recv = _conPtr->recv(1);
+        // _conAtomicPtr->recv
+        if (_conAtomicPtr)
+        {
+            p_recv = ((Connection*)_conAtomicPtr)->recv(1);
+        }
         else
             break;
-
+        // {
+        //     std::lock_guard<std::mutex> lock(_post)
+        // }
         if (p_recv && !_deactivateThread)
         {
-            std::lock_guard<std::mutex> lock(_packetRecvMutex);
             auto it = _paramReceivedCallbacks.begin();
             while ( it != _paramReceivedCallbacks.end())
             {
@@ -96,8 +99,8 @@ void ConnectionWorker::receivePacketsThreadFunc()
 }
 void ConnectionWorker::send(const Packet& p)
 {
-    std::cout << p << std::endl;
-    _conPtr->send(p);
+    // std::lock_guard<std::mutex> lock(_conMutex);
+    ((Connection*)_conAtomicPtr)->send(p);
 }
 
 

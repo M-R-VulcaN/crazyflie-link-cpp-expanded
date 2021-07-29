@@ -15,19 +15,18 @@ void TocWrapper::initToc()
 {
      // ask for the toc info
     uint8_t cmd = CMD_TOC_INFO_V2;
-    std::cout << "pass1"<< std::endl;
+    // std::cout << "pass1"<< std::endl;
 
 
     TocInfo cfTocInfo(_conWpr->sendRecvData(0,cmd));
 
     uint16_t num_of_elements = cfTocInfo._numberOfElements;
-    std::cout << "pass1"<< std::endl;
+    // std::cout << "pass1"<< std::endl;
     for (uint16_t i = 0; i < num_of_elements; i++)
     {
-        TocItem tocItem();
         _core->insert(getTocItemFromCrazyflie(i));
     }
-    std::cout << "pass2"<< std::endl;
+    // std::cout << "pass2"<< std::endl;
 
 
 }
