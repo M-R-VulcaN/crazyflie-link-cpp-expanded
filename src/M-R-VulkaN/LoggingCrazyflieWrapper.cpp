@@ -32,7 +32,7 @@ void LoggingCrazyflieWrapper::start(bool withDebugging)
 
     do
     {
-        result = _crazyflie->recvAppChannelData();
+        // result = _crazyflie->recvAppChannelData();
         if (result.empty())
         {
             if (withDebugging)

@@ -8,39 +8,10 @@ Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWorker(_con), _con
 
 void Crazyflie::sendAppChannelData(const void *data, const size_t &dataLen)
 {
-    // _conWrapperAppchannel.sendData(data, dataLen);
-        if(data)
-        std::cout <<(int)dataLen<<std::endl;
+    _conWrapperAppchannel.send<uint8_t>((*(const uint8_t*)data),dataLen);
 }
 
-std::vector<uint8_t> Crazyflie::recvAppChannelData()
-{
-    
-    // Packet p = _conWrapperAppchannel.recvFilteredData(0);
-    std::vector<uint8_t> res;
 
-    // if (!p)
-    // {
-    //     return res;
-    // }
-    // std::copy(p.payload(), p.payload() + p.payloadSize(), std::back_inserter(res));
-    return res;
-}
-
-size_t Crazyflie::recvAppChannelData(void *dest, const size_t &dataLen)
-{
-    // Packet p = _conWrapperAppchannel.recvFilteredData(0);
-    // std::vector<uint8_t> res;
-    // size_t sizeToWrite = std::max(dataLen, p.payloadSize());
-    // if (p)
-    // {
-    //     std::copy_n(p.payload(), sizeToWrite, (uint8_t *)dest);
-    // }
-    // return sizeToWrite;
-    if(dest)
-        std::cout <<(int)dataLen<<std::endl;
-    return 0;    
-}
 
 Connection &Crazyflie::getCon()
 {
@@ -180,6 +151,16 @@ std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues()
     }
     return res;
 }
+
+void Crazyflie::addAppChannelCallback(const AppChannelCallback &callback)
+{
+    auto func = (std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[callback](Packet p_recv)
+    {
+        return callback(p_recv.payload(),p_recv.payloadSize());
+    };
+    _conWorker.addCallback({APPCHANNEL_PORT, APP_CHANNEL, func});
+}
+
 
 void Crazyflie::addParamReceivedCallback(const ParamValueCallback &callback)
 {

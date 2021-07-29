@@ -10,7 +10,15 @@
 #include "Crazyflie.h"
 
 using namespace bitcraze::crazyflieLinkCpp;
-
+bool appChannelCallback(const uint8_t* data, uint8_t dataLen)
+{
+    for(int i = 0; i < dataLen; i++)
+    {
+        std::cout << (int)data[i]<<" ";
+    }
+    std::cout<<std::endl;
+    return true;
+}
 int main()
 {
     Crazyflie crazyflie("usb://0");
@@ -20,21 +28,24 @@ int main()
     crazyflie.setParamByName("usd", "logging", 0);
     crazyflie.setParamByName("usd", "sendAppChannle", 1);
 
-    std::vector<uint8_t> res;
-    do
-    {
-        res = crazyflie.recvAppChannelData();
+    // std::vector<uint8_t> res;
+    crazyflie.addAppChannelCallback(appChannelCallback);
+    int i = 0;
+    std::cin >> i;
+    // do
+    // {
+    //     // res = crazyflie.recvAppChannelData();
 
-        uint16_t sendData = 0;
-        crazyflie.sendAppChannelData(&sendData, sizeof(sendData));
+    //     uint16_t sendData = 0;
+    //     crazyflie.sendAppChannelData(&sendData, sizeof(sendData));
 
-        for (auto element : res)
-        {
-            std::cout << (int)element;
-        }
-        std::cout << std::endl;
+    //     for (auto element : res)
+    //     {
+    //         std::cout << (int)element;
+    //     }
+    //     std::cout << std::endl;
 
-    } while (res.size() > 0);
+    // } while (res.size() > 0);
 
  
     return 0;

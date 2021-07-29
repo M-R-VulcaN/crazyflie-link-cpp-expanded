@@ -26,6 +26,27 @@ public:
     ConnectionWrapper(ConnectionWorker& conWorker);
 
     ConnectionWrapper& operator=(bitcraze::crazyflieLinkCpp::Connection& con);
+     template <class ValToSend>
+    
+    void send(const ValToSend& dataToSend, size_t sizeOfDataToSend = 0)const
+    {
+        bitcraze::crazyflieLinkCpp::Packet p_send;
+        p_send.setPort(_port);
+        p_send.setChannel(_channel);
+        
+        if(sizeOfDataToSend > 0) 
+        {
+            std::memcpy(p_send.payload(),(const uint8_t*)&dataToSend, sizeOfDataToSend);
+            p_send.setPayloadSize(sizeOfDataToSend);
+        }       
+        else
+        {
+            std::memcpy(p_send.payload(),(const uint8_t*)&dataToSend, sizeof(dataToSend));
+            p_send.setPayloadSize(sizeof(dataToSend));
+        }
+        
+        _conWorkerPtr->send(p_send);
+    }
 
     // bitcraze::crazyflieLinkCpp::Packet recvFilteredData(int timeout, int port, int channel) const ;
 
@@ -56,22 +77,8 @@ public:
             return false;}};
 
         _conWorkerPtr->addCallback(callbackBundle);
-        bitcraze::crazyflieLinkCpp::Packet p_send;
-        p_send.setPort(_port);
-        p_send.setChannel(_channel);
         
-        if(sizeOfDataToSend > 0) 
-        {
-            std::memcpy(p_send.payload(),(const uint8_t*)&dataToSend, sizeOfDataToSend);
-            p_send.setPayloadSize(sizeOfDataToSend);
-        }       
-        else
-        {
-            std::memcpy(p_send.payload(),(const uint8_t*)&dataToSend, sizeof(dataToSend));
-            p_send.setPayloadSize(sizeof(dataToSend));
-        }
-        
-        _conWorkerPtr->send(p_send);
+        this->send(dataToSend,sizeOfDataToSend);
 
         if(isResultReturned)
             return res;
@@ -87,7 +94,7 @@ public:
         {
             waitForRecv.wait_for(lock,std::chrono::milliseconds(timeout) ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
         }
-        std::cout << "test2 "<< res << std::endl;
+        // std::cout << "test2 "<< res << std::endl;
 
         return res;
     }

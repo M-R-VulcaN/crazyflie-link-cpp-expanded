@@ -28,6 +28,7 @@
 #define APPCHANNEL_PORT 13
 
 typedef bool (*ParamValueCallback)(const ParamValue &);
+typedef bool (*AppChannelCallback)(const uint8_t*, uint8_t);
 typedef bool (*ConsoleCallback)(const char *);
 typedef bool (*LogBlockReceivedCallback)(const bitcraze::crazyflieLinkCpp::Packet &);
 
@@ -86,6 +87,7 @@ private:
     void paramRecvThreadFunc();
 
 public:
+    void addAppChannelCallback(const AppChannelCallback &callback);
     void addParamReceivedCallback(const ParamValueCallback &callback);
     void addConsoleCallback(const ConsoleCallback &callback);
     void addLogCallback(const LogBlockReceivedCallback &callback);
@@ -111,9 +113,9 @@ public:
     std::vector<std::pair<TocItem, ParamValue>> getTocAndValues() ;
 
     void sendAppChannelData(const void *data, const size_t &dataLen);
-    std::vector<uint8_t> recvAppChannelData();
+    // std::vector<uint8_t> recvAppChannelData();
     //returns the amount of bytes it wrote
-    size_t recvAppChannelData(void *dest, const size_t &dataLen);
+    // size_t recvAppChannelData(void *dest, const size_t &dataLen);
 
     //**************************************
     //todo: add callback for param changed
