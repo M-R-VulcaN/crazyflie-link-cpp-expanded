@@ -55,6 +55,8 @@ void ConnectionWorker::receivePacketsThreadFunc()
 
             if (!_isThreadSleeping)
             {
+                std::lock_guard<std::mutex> lock(_threadSleepMutex);
+
                 _isThreadSleeping = true;
                 _threadSleepConVar.notify_all();
             }
@@ -64,6 +66,8 @@ void ConnectionWorker::receivePacketsThreadFunc()
         }
         if (_isThreadSleeping)
         {
+            std::lock_guard<std::mutex> lock(_threadSleepMutex);
+
             _isThreadSleeping = false;
             _threadSleepConVar.notify_all();
         }
