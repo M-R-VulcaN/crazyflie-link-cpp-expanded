@@ -86,6 +86,10 @@ public:
         // {
         //     std::this_thread::sleep_for(std::chrono::microseconds(10));
         // }
+        // if(timeout==(int)sizeOfDataToSend)
+        // {
+        //     return res;
+        // }
         if(0 == timeout)
         {
             waitForRecv.wait(lock ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});

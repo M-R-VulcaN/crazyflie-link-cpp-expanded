@@ -27,10 +27,10 @@
 #define LOG_PORT 5
 #define APPCHANNEL_PORT 13
 
-typedef bool (*ParamValueCallback)(const ParamValue &);
-typedef bool (*AppChannelCallback)(const uint8_t*, uint8_t);
-typedef bool (*ConsoleCallback)(const char *);
-typedef bool (*LogBlockReceivedCallback)(const bitcraze::crazyflieLinkCpp::Packet &);
+typedef std::function<bool(const uint8_t*, uint8_t)> AppChannelCallback;
+typedef std::function<bool(const ParamValue &)> ParamValueCallback;
+typedef std::function<bool(const char *)> ConsoleCallback;
+typedef std::function<bool(const bitcraze::crazyflieLinkCpp::Packet &)> LogBlockReceivedCallback;
 
 class Crazyflie
 {
