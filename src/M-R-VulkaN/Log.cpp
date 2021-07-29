@@ -22,8 +22,8 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
         {
             idsOccupied[i] = true;
             data[1] = i;
-            _conWpr.sendData(data, 5);
-            Packet p_recv = _conWpr.recvFilteredData(0);
+            // _conWpr.sendData(data, 5);
+            Packet p_recv = _conWpr.sendRecvData(0, data);
             failCode = p_recv.payload()[2];
             if (17 == failCode)
                 continue;
@@ -57,8 +57,8 @@ int Log::deleteLogBlock(uint8_t id)
         {
             // idsOccupied[i] = true;
             // data[1] = i;
-            _conWpr.sendData(data, 2);
-            Packet p_recv = _conWpr.recvFilteredData(0);
+            // _conWpr.sendData(data, 2);
+            Packet p_recv = _conWpr.sendRecvData(0, data);
             failCode = p_recv.payload()[2];
             if (17 == failCode)
                 continue;

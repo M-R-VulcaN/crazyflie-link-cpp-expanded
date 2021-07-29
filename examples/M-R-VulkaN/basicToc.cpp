@@ -13,8 +13,10 @@ using namespace bitcraze::crazyflieLinkCpp;
 
 int main()
 {
+    // std::cout << "pass";
+
     Crazyflie crazyflie("usb://0");
-    std::cout << "pass";
+    // std::cout << "pass";
     crazyflie.init();
     int i,value,newValueSize = 0;
     std::string group = "";

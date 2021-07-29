@@ -99,31 +99,3 @@ void ConnectionWorker::send(const Packet& p)
 }
 
 
-Packet ConnectionWorker::recv(uint8_t port, uint8_t channel, unsigned long timeout)
-{
-    std::mutex mu;
-    std::unique_lock<std::mutex> lock(mu);
-    std::condition_variable waitForRecv;
-    std::condition_variable *waitForRecvPtr = &waitForRecv;
-    std::atomic<bool> isResultReturned( false);
-    std::atomic<bool>* isResultReturnedPtr = &isResultReturned;
-    // std::cout << "test" << std::endl;
-    Packet res;
-    Packet *resPtr = &res;
-    this->addCallback({port,channel,(std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[resPtr,waitForRecvPtr, isResultReturnedPtr](Packet p_recv){ 
-        *resPtr = p_recv;
-         waitForRecvPtr->notify_all();
-         *isResultReturnedPtr = true;
-         return false;}});
-    if(0 == timeout)
-    {
-        waitForRecv.wait(lock ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
-    }
-    else
-    {
-        waitForRecv.wait_for(lock,std::chrono::milliseconds(timeout) ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
-    }
-    // std::cout << "test2 "<< res << std::endl;
-
-    return res;
-}

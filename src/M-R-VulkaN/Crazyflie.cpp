@@ -8,33 +8,38 @@ Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWorker(_con), _con
 
 void Crazyflie::sendAppChannelData(const void *data, const size_t &dataLen)
 {
-    _conWrapperAppchannel.sendData(data, dataLen);
+    // _conWrapperAppchannel.sendData(data, dataLen);
+        if(data)
+        std::cout <<(int)dataLen<<std::endl;
 }
 
 std::vector<uint8_t> Crazyflie::recvAppChannelData()
 {
     
-    Packet p = _conWrapperAppchannel.recvFilteredData(0);
+    // Packet p = _conWrapperAppchannel.recvFilteredData(0);
     std::vector<uint8_t> res;
 
-    if (!p)
-    {
-        return res;
-    }
-    std::copy(p.payload(), p.payload() + p.payloadSize(), std::back_inserter(res));
+    // if (!p)
+    // {
+    //     return res;
+    // }
+    // std::copy(p.payload(), p.payload() + p.payloadSize(), std::back_inserter(res));
     return res;
 }
 
 size_t Crazyflie::recvAppChannelData(void *dest, const size_t &dataLen)
 {
-    Packet p = _conWrapperAppchannel.recvFilteredData(0);
-    std::vector<uint8_t> res;
-    size_t sizeToWrite = std::max(dataLen, p.payloadSize());
-    if (p)
-    {
-        std::copy_n(p.payload(), sizeToWrite, (uint8_t *)dest);
-    }
-    return sizeToWrite;
+    // Packet p = _conWrapperAppchannel.recvFilteredData(0);
+    // std::vector<uint8_t> res;
+    // size_t sizeToWrite = std::max(dataLen, p.payloadSize());
+    // if (p)
+    // {
+    //     std::copy_n(p.payload(), sizeToWrite, (uint8_t *)dest);
+    // }
+    // return sizeToWrite;
+    if(dest)
+        std::cout <<(int)dataLen<<std::endl;
+    return 0;    
 }
 
 Connection &Crazyflie::getCon()

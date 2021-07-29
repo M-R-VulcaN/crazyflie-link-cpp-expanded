@@ -59,7 +59,13 @@ private:
 
     bool setParamValCrazyflie(uint16_t paramId, const Val& newValue)
     {
-        _conWrapperParamWrite.sendData(&paramId, sizeof(paramId), &newValue, sizeof(newValue));
+        struct __attribute__ ((packed))
+        {
+            uint16_t _paramId;
+            Val _newValue;
+        } data = {paramId, newValue};
+        
+        _conWrapperParamWrite.sendRecvData(0, data);
 
         return true;
     }
@@ -68,8 +74,7 @@ private:
     {
         Val res = 0;
         // _conWorker.stop();
-        _conWrapperParamRead.sendData(&paramId, sizeof(paramId));
-        bitcraze::crazyflieLinkCpp::Packet p = _conWrapperParamRead.recvFilteredData(0);
+        bitcraze::crazyflieLinkCpp::Packet p = _conWrapperParamRead.sendRecvData(0, paramId);
         // _conWorker.start();
         std::memcpy(&res, p.payload() + PAYLOAD_VALUE_BEGINING_INDEX, std::min(sizeof(res), p.payloadSize() - PAYLOAD_VALUE_BEGINING_INDEX));
 

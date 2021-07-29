@@ -20,11 +20,12 @@ typedef void (*PacketCallbackFunc)(bitcraze::crazyflieLinkCpp::Packet);
 // };
 
 // template<class Func>
+typedef std::function<bool(bitcraze::crazyflieLinkCpp::Packet)> PacketCallback;
 struct PacketCallbackBundle
 {
     uint8_t _port;
     uint8_t _channel;
-    std::function<bool(bitcraze::crazyflieLinkCpp::Packet)> _packetCallbackFunc;
+    PacketCallback _packetCallbackFunc;
 };
 
 class ConnectionWorker
@@ -49,5 +50,4 @@ public:
     void addCallback(const PacketCallbackBundle &callback);
     bitcraze::crazyflieLinkCpp::Packet recv(uint8_t port, uint8_t channel, unsigned long timeout = UINT64_MAX);
     void send(const bitcraze::crazyflieLinkCpp::Packet& p);
-    // bitcraze::crazyflieLinkCpp::Packet recvPacket(uint8_t port, uint8_t channel);
 };

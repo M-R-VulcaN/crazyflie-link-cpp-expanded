@@ -19,7 +19,6 @@ using bitcraze::crazyflieLinkCpp::Packet;
 #define CRTP_PORT_LOG 0x05
 #define MAX_LEN_NAME 32
 
-Packet globalPacket;
 enum UserChoices
 {
     EXIT_CHOICE,
@@ -31,16 +30,6 @@ enum UserChoices
     BLOCK_RESET
 };
 
-Packet getPacket()
-{
-    while(!globalPacket)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(2));
-    }
-    Packet res = globalPacket;
-    globalPacket = Packet();
-    return res;
-}
 
 int main()
 {
@@ -51,7 +40,6 @@ int main()
     conWpr.setChannel(1);
     conWpr.setPort(5);
     crazyflie.init();
-    crazyflie._conWorker.addCallback({5,1,[](Packet p_recv){globalPacket = p_recv; return true;}});
 
     while (true)
     {
@@ -106,8 +94,7 @@ int main()
                     {
                         idsOccupied[i] = true;
                         data[1] = i;
-                        conWpr.sendData(data, 5);
-                        Packet p_recv = getPacket();
+                        Packet p_recv = conWpr.sendRecvData(0,data);
                         std::cout << p_recv << std::endl;
                         failCode = p_recv.payload()[2];
                         if (17 == failCode)
@@ -160,8 +147,7 @@ int main()
                 data[4] = logId >> 8;
                 uint8_t failCode = 0;
 
-                conWpr.sendData(data, 5);
-                Packet p_recv = getPacket();
+                Packet p_recv = conWpr.sendRecvData(0,data);
                 failCode = p_recv.payload()[2];
                 if (0 == failCode)
                 {
@@ -192,8 +178,7 @@ int main()
                 {
                     idsOccupied[i] = false;
                     // data[1] = i;
-                    conWpr.sendData(data, 2);
-                    Packet p_recv = getPacket();
+                    Packet p_recv = conWpr.sendRecvData(0,data);
                     failCode = p_recv.payload()[2];
                     if (17 == failCode)
                         continue;
@@ -227,8 +212,7 @@ int main()
 
             uint8_t failCode = 0;
 
-            conWpr.sendData(data, 3);
-            Packet p_recv = getPacket();
+             Packet p_recv = conWpr.sendRecvData(0,data);
             failCode = p_recv.payload()[2];
             std::cout << (int)data[2] << std::endl;
             std::cout << p_recv << std::endl;
@@ -260,8 +244,7 @@ int main()
 
             uint8_t failCode = 0;
 
-            conWpr.sendData(data, 2);
-            Packet p_recv = getPacket();
+             Packet p_recv = conWpr.sendRecvData(0,data);
             failCode = p_recv.payload()[2];
             std::cout << (int)data[2] << std::endl;
             std::cout << p_recv << std::endl;
@@ -283,8 +266,7 @@ int main()
 
             uint8_t failCode = 0;
 
-            conWpr.sendData(data, 1);
-            Packet p_recv = getPacket();
+            Packet p_recv = conWpr.sendRecvData(0,data);
             failCode = p_recv.payload()[2];
 
             std::fill(idsOccupied, idsOccupied + UINT8_MAX, false);
