@@ -15,6 +15,7 @@ void TocWrapper::initToc()
 {
      // ask for the toc info
     uint8_t cmd = CMD_TOC_INFO_V2;
+    std::cout << "pass1"<< std::endl;
 
 
     TocInfo cfTocInfo(_conWpr->sendRecvData(0,cmd));

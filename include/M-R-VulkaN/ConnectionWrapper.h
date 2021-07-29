@@ -40,23 +40,43 @@ public:
         std::condition_variable *waitForRecvPtr = &waitForRecv;
         std::atomic<bool> isResultReturned( false);
         std::atomic<bool>* isResultReturnedPtr = &isResultReturned;
+        std::cout << "sr"<< std::endl;
+
         // std::cout << "test" << std::endl;
         bitcraze::crazyflieLinkCpp::Packet res;
         bitcraze::crazyflieLinkCpp::Packet *resPtr = &res;
+        std::cout << "sr"<< std::endl;
+
         PacketCallbackBundle callbackBundle= {this->_port,this->_channel,(PacketCallback)[resPtr,waitForRecvPtr, isResultReturnedPtr](bitcraze::crazyflieLinkCpp::Packet p_recv){ 
             *resPtr = p_recv;
             waitForRecvPtr->notify_all();
             *isResultReturnedPtr = true;
             return false;}};
+        std::cout << "sr1"<< std::endl;
+
         _conWorkerPtr->addCallback(callbackBundle);
+        std::cout << "sr2"<< std::endl;
+        bitcraze::crazyflieLinkCpp::Packet p_send;
+        p_send.setPort(_port);
+        p_send.setChannel(_channel);
+        
         if(sizeOfDataToSend > 0) 
         {
-            _conWorkerPtr->send({(const uint8_t*)&dataToSend,sizeOfDataToSend});
+            std::memcpy(p_send.payload(),(const uint8_t*)&dataToSend, sizeOfDataToSend);
+            p_send.setPayloadSize(sizeOfDataToSend);
         }       
         else
         {
-            _conWorkerPtr->send({(const uint8_t*)&dataToSend,sizeof(dataToSend)});
+            std::memcpy(p_send.payload(),(const uint8_t*)&dataToSend, sizeof(dataToSend));
+            p_send.setPayloadSize(sizeof(dataToSend));
         }
+        
+        _conWorkerPtr->send(p_send);
+        std::cout << "sr3"<< std::endl;
+
+        if(isResultReturned)
+            return res;
+
         if(0 == timeout)
         {
             waitForRecv.wait(lock ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
@@ -66,6 +86,7 @@ public:
             waitForRecv.wait_for(lock,std::chrono::milliseconds(timeout) ,[isResultReturnedPtr](){return (bool)*isResultReturnedPtr;});
         }
         // std::cout << "test2 "<< res << std::endl;
+        std::cout << "sr4"<< std::endl;
 
         return res;
     }

@@ -120,19 +120,21 @@ void Crazyflie::printLogToc()
 bool Crazyflie::init()
 {
     _conWorker.start();
-
+    std::cout <<"pass"<<std::endl;
     _conWrapperLogToc.setPort(LOG_PORT);
 
     _conWrapperParamToc.setPort(PARAM_PORT);
     _conWrapperParamRead.setPort(PARAM_PORT);
     _conWrapperParamWrite.setPort(PARAM_PORT);
     _conWrapperAppchannel.setPort(APPCHANNEL_PORT);
+    std::cout <<"pass"<<std::endl;
 
     _conWrapperLogToc.setChannel(TOC_CHANNEL_LOG);
     _conWrapperParamToc.setChannel(TOC_CHANNEL_PARAM);
     _conWrapperParamRead.setChannel(PARAM_READ_CHANNEL);
     _conWrapperParamWrite.setChannel(PARAM_WRITE_CHANNEL);
     _conWrapperAppchannel.setChannel(APP_CHANNEL);
+    std::cout <<"pass"<<std::endl;
 
     _logTocWpr.initToc();
 

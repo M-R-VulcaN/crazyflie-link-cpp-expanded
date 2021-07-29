@@ -43,6 +43,7 @@ void ConnectionWorker::addCallback(const PacketCallbackBundle &callback)
     _paramReceivedCallbacks.push_back(callback);
 }
 
+
 void ConnectionWorker::receivePacketsThreadFunc()
 {
     Packet p_recv;
@@ -95,6 +96,7 @@ void ConnectionWorker::receivePacketsThreadFunc()
 }
 void ConnectionWorker::send(const Packet& p)
 {
+    std::cout << p << std::endl;
     _conPtr->send(p);
 }
 
