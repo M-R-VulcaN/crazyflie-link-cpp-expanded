@@ -10,6 +10,15 @@
 #define CONTROL_CH 1
 #define CRTP_PORT_LOG 0x05
 #define MAX_LEN_NAME 31
+#define MAX_LOG_BLOCK_SIZE 26
+
+struct LogBlock
+{
+    uint8_t _id;
+    std::list<TocItem> _logItems;
+    bool _isActive;
+};
+
 
 class Log
 {

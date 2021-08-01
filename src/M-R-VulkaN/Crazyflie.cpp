@@ -1,7 +1,11 @@
 #include "Crazyflie.h"
 using namespace bitcraze::crazyflieLinkCpp;
 
-Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWorker(_con), _conWrapperParamRead(_conWorker), _conWrapperParamWrite(_conWorker), _conWrapperParamToc(_conWorker), _conWrapperLogToc(_conWorker), _conWrapperAppchannel(_conWorker), _logTocWpr(_logToc, _conWrapperLogToc), _paramTocWpr(_paramToc, _conWrapperParamToc)
+Crazyflie::Crazyflie(const std::string &uri) : _con(uri), _conWorker(_con), _conWrapperParamRead(_conWorker),
+                        _conWrapperParamWrite(_conWorker), _conWrapperParamToc(_conWorker), 
+                        _conWrapperLogToc(_conWorker), _conWrapperAppchannel(_conWorker),
+                        _logTocWpr(_logToc, _conWrapperLogToc), _paramTocWpr(_paramToc, 
+                        _conWrapperParamToc), _log(_logToc,_conWorker)
 {
     _isRunning = false;
 }
@@ -167,10 +171,14 @@ void Crazyflie::addLogCallback(const LogBlockReceivedCallback &callback)
 {
     auto func = (std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[callback](Packet p_recv)
     {
-        return callback(p_recv);
+        std::array<uint8_t,MAX_LOG_BLOCK_SIZE> data;
+        std::copy_n(p_recv.payload()+5,p_recv.payloadSize()-5,data.begin());
+        return callback(p_recv.payload()[0],(*(const uint32_t*)p_recv.payload()+1),data);
     };
-    _conWorker.addCallback({5, 2, func});
+    _conWorker.addCallback({LOG_PORT, LOG_DATA_CHANNEL, func});
 }
+
+
 
 void Crazyflie::addConsoleCallback(const ConsoleCallback &callback)
 {

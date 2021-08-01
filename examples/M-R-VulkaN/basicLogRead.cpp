@@ -16,7 +16,7 @@ using bitcraze::crazyflieLinkCpp::Packet;
 
 #define CONTROL_CH 1
 #define CRTP_PORT_LOG 0x05
-#define MAX_LEN_NAME 32
+// #define MAX_LEN_NAME 32
 
 enum UserChoices
 {

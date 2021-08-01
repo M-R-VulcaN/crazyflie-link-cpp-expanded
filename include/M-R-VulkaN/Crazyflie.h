@@ -8,6 +8,7 @@
 #include "ConnectionWrapper.h"
 #include "TocWrapper.h"
 #include "ConnectionWorker.h"
+#include "Log.h"
 
 #define PAYLOAD_VALUE_BEGINING_INDEX 3
 #define NOT_FOUND 0
@@ -30,7 +31,7 @@
 typedef std::function<bool(const uint8_t *, uint8_t)> AppChannelCallback;
 typedef std::function<bool(const ParamValue &)> ParamValueCallback;
 typedef std::function<bool(const char *)> ConsoleCallback;
-typedef std::function<bool(const bitcraze::crazyflieLinkCpp::Packet &)> LogBlockReceivedCallback;
+typedef std::function<bool(uint8_t,uint32_t, const std::array<uint8_t,MAX_LOG_BLOCK_SIZE>&)> LogBlockReceivedCallback;
 
 class Crazyflie
 {
@@ -44,6 +45,7 @@ public:
     ConnectionWorker _conWorker;
 
 private:
+
     ConnectionWrapper _conWrapperParamRead;
     ConnectionWrapper _conWrapperParamWrite;
     ConnectionWrapper _conWrapperParamToc;
@@ -55,7 +57,7 @@ private:
     std::vector<ParamValueCallback> _paramReceivedCallbacks;
     std::vector<ConsoleCallback> _consoleCallbacks;
     std::thread _paramRecvThread;
-
+    Log _log;
     template <class Val>
 
     bool setParamValCrazyflie(uint16_t paramId, const Val &newValue)

@@ -161,6 +161,14 @@ target_link_libraries(example_resetUsb
   crazyflieLinkCpp
 )
 
+# example_logConnectionWorker
+add_executable(example_logConnectionWorker
+  examples/M-R-VulkaN/logConnectionWorker.cpp
+)
+target_link_libraries(example_logConnectionWorker
+  crazyflieLinkCpp
+)
+
 # # example_basicParamCSV
 # add_executable(example_basicParamCSV
 #   examples/M-R-VulkaN/basicParamCSV.cpp
