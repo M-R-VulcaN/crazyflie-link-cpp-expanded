@@ -31,18 +31,14 @@ enum UserChoices
 
 int main()
 {
-    bool idsOccupied[UINT8_MAX] = {false};
     Crazyflie crazyflie("usb://0");
-    ConnectionWrapper conWpr(crazyflie._conWorker);
+    
     const Toc &tocRef = crazyflie.getLogToc();
-    conWpr.setChannel(1);
-    conWpr.setPort(5);
     crazyflie.init();
-
+    Log& log = crazyflie._log;
     while (true)
     {
         // std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        int i = 0;
         uint16_t userInput = 0;
 
         std::cout << "===================================" << std::endl;
@@ -65,7 +61,6 @@ int main()
             std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
             std::cin.ignore(INT32_MAX, '\n');
             {
-                uint8_t data[MAX_LEN_NAME] = {0};
                 char userInputStr[MAX_LEN_NAME];
                 userInputStr[MAX_LEN_NAME] = 0;
 
@@ -77,37 +72,14 @@ int main()
 
                 uint16_t logId = tocRef.getItemId(groupName, paramName);
                 auto tocItem = tocRef.getItem(groupName, paramName);
-
-                data[0] = CONTROL_CREATE_BLOCK_V2;
-                data[1] = 0;
-                data[2] = tocItem._accessType._accessType << 6 | tocItem._type._type;
-
-                data[3] = logId & 0xff;
-                data[4] = logId >> 8;
-                uint8_t failCode = 0;
-
-                for (i = 0; i < UINT8_MAX; i++)
+                int response = log.createLogBlock(tocItem._type._type,logId);
+                 if(response<0)
                 {
-                    if (!idsOccupied[i])
-                    {
-                        idsOccupied[i] = true;
-                        data[1] = i;
-                        Packet p_recv = conWpr.sendRecvData(0, data);
-                        std::cout << p_recv << std::endl;
-                        failCode = p_recv.payload()[2];
-                        if (17 == failCode)
-                            continue;
-                        break;
-                    }
-                }
-
-                if (0 == failCode)
-                {
-                    std::cout << "Success! id = " << (int)i << std::endl;
+                    std::cout << "An Error Occured: "<< -response<<std::endl;
                 }
                 else
                 {
-                    std::cout << "Failiure! code = " << (int)failCode << std::endl;
+                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
                 }
             }
 
@@ -124,7 +96,6 @@ int main()
                 std::cin >> logBlockId;
                 std::cin.ignore(INT32_MAX, '\n');
                 std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
-                uint8_t data[MAX_LEN_NAME] = {0};
                 char userInputStr[MAX_LEN_NAME];
                 userInputStr[MAX_LEN_NAME] = 0;
 
@@ -136,24 +107,14 @@ int main()
 
                 uint16_t logId = tocRef.getItemId(groupName, paramName);
                 auto tocItem = tocRef.getItem(groupName, paramName);
-
-                data[0] = CONTROL_APPEND_BLOCK_V2;
-                data[1] = logBlockId;
-                data[2] = tocItem._accessType._accessType << 6 | tocItem._type._type;
-
-                data[3] = logId & 0xff;
-                data[4] = logId >> 8;
-                uint8_t failCode = 0;
-
-                Packet p_recv = conWpr.sendRecvData(0, data);
-                failCode = p_recv.payload()[2];
-                if (0 == failCode)
+                int response = log.appendLogBlock(logBlockId,tocItem._type._type,logId);
+                if(response<0)
                 {
-                    std::cout << "Success! id = " << (int)logBlockId << std::endl;
+                    std::cout << "An Error Occured: "<< -response<<std::endl;
                 }
                 else
                 {
-                    std::cout << "Failiure! code = " << (int)failCode << std::endl;
+                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
                 }
             }
             break;
@@ -163,35 +124,15 @@ int main()
             int id = 0; //add a check function if the id exist
             std::cout << "Enter log id:" << std::endl;
             std::cin >> id;
-            uint8_t data[2] = {0};
-
-            data[0] = CONTROL_DELETE_BLOCK; //define : delete block
-            data[1] = id;                   //block id
-
-            uint8_t failCode = 0;
-
-            for (i = 0; i < UINT8_MAX; i++)
-            {
-                if (!idsOccupied[i])
+            int response = log.deleteLogBlock(id);
+ if(response<0)
                 {
-                    idsOccupied[i] = false;
-                    // data[1] = i;
-                    Packet p_recv = conWpr.sendRecvData(0, data);
-                    failCode = p_recv.payload()[2];
-                    if (17 == failCode)
-                        continue;
-                    break;
+                    std::cout << "An Error Occured: "<< -response<<std::endl;
                 }
-            }
-
-            if (0 == failCode)
-            {
-                std::cout << "Success! deleted block id = " << (int)data[1] << std::endl;
-            }
-            else
-            {
-                std::cout << "Failiure! code = " << (int)failCode << std::endl;
-            }
+                else
+                {
+                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                }
             break;
         }
         case START_BLOCK_CHOICE:
@@ -202,30 +143,15 @@ int main()
             std::cin >> id;
             std::cout << "Enter perion time in ms:" << std::endl;
             std::cin >> PeriodTimeInMs;
-            uint8_t data[3] = {0};
-
-            data[0] = CONTROL_START_BLOCK;
-            data[1] = id;
-            data[2] = PeriodTimeInMs / 10; //time in ms / 10 = senti seconds
-
-            uint8_t failCode = 0;
-
-            Packet p_recv = conWpr.sendRecvData(0, data);
-            failCode = p_recv.payload()[2];
-            std::cout << (int)data[2] << std::endl;
-            std::cout << p_recv << std::endl;
-            // if (17 == failCode)
-            //     continue;
-            // break;
-
-            if (0 == failCode)
-            {
-                std::cout << "Success! starting log on id " << (int)data[1] << " period(ms/10): " << PeriodTimeInMs / 10 << std::endl;
-            }
-            else
-            {
-                std::cout << "Failiure! code = " << (int)failCode << std::endl;
-            }
+            int response = log.startLogBlock(id, PeriodTimeInMs/10);
+            if(response<0)
+                {
+                    std::cout << "An Error Occured: "<< -response<<std::endl;
+                }
+                else
+                {
+                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                }
             break;
         }
 
@@ -235,48 +161,29 @@ int main()
             // int PeriodTimeInMs = 0;
             std::cout << "Enter log id:" << std::endl;
             std::cin >> id;
-            uint8_t data[2] = {0};
-
-            data[0] = CONTROL_START_BLOCK;
-            data[1] = id;
-
-            uint8_t failCode = 0;
-
-            Packet p_recv = conWpr.sendRecvData(0, data);
-            failCode = p_recv.payload()[2];
-            std::cout << (int)data[2] << std::endl;
-            std::cout << p_recv << std::endl;
-
-            if (0 == failCode)
-            {
-                std::cout << "Success! Stopping log on id " << (int)data[1] << std::endl;
-            }
-            else
-            {
-                std::cout << "Failiure! code = " << (int)failCode << std::endl;
-            }
+            
+            int response = log.stopLogBlock(id);
+            if(response<0)
+                {
+                    std::cout << "An Error Occured: "<< -response<<std::endl;
+                }
+                else
+                {
+                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                }
             break;
         }
         case BLOCK_RESET:
         {
-            uint8_t data[1] = {0};
-            data[0] = CONTROL_RESET;
-
-            uint8_t failCode = 0;
-
-            Packet p_recv = conWpr.sendRecvData(0, data);
-            failCode = p_recv.payload()[2];
-
-            std::fill(idsOccupied, idsOccupied + UINT8_MAX, false);
-
-            if (0 == failCode)
-            {
-                std::cout << "Success! deleted all blocks" << std::endl;
-            }
-            else
-            {
-                std::cout << "Failiure! code = " << (int)failCode << std::endl;
-            }
+            int response = log.resetLogBlocks();
+            if(response<0)
+                {
+                    std::cout << "An Error Occured: "<< -response<<std::endl;
+                }
+                else
+                {
+                    std::cout << "Success! Finished reseting all blocks"<<std::endl;
+                }
             break;
         }
 

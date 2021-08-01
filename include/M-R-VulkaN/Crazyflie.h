@@ -57,7 +57,9 @@ private:
     std::vector<ParamValueCallback> _paramReceivedCallbacks;
     std::vector<ConsoleCallback> _consoleCallbacks;
     std::thread _paramRecvThread;
+    public:
     Log _log;
+    private:
     template <class Val>
 
     bool setParamValCrazyflie(uint16_t paramId, const Val &newValue)

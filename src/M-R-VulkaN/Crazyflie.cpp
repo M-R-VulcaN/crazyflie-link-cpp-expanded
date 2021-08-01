@@ -175,7 +175,6 @@ void Crazyflie::addLogCallback(const LogBlockReceivedCallback &callback)
         uint32_t period = 0;
         std::memcpy(&period,p_recv.payload()+1,3);
         data.reserve(p_recv.payloadSize()-4);
-        // std::copy_n(p_recv.payload()+4,p_recv.payloadSize()-5,data.begin());
         data.insert(data.begin(),p_recv.payload()+4,p_recv.payload()+p_recv.payloadSize());
         return callback(p_recv.payload()[0],period,data);
     };
