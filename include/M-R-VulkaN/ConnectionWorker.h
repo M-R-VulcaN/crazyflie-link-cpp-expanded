@@ -27,6 +27,7 @@ private:
     std::list<PacketCallbackBundle> _paramReceivedCallbacks;
     std::thread _receivingThread;
     std::mutex _threadSleepMutex;
+    std::mutex _callbackMutex;
 
     std::condition_variable _threadSleepConVar;
     std::atomic<bitcraze::crazyflieLinkCpp::Connection *> _conAtomicPtr;

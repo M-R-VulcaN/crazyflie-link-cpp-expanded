@@ -31,6 +31,7 @@ void ConnectionWorker::stop()
 }
 void ConnectionWorker::addCallback(const PacketCallbackBundle &callback)
 {
+    std::lock_guard<std::mutex> lock(_callbackMutex);
     _paramReceivedCallbacks.push_back(callback);
 }
 
@@ -57,6 +58,8 @@ void ConnectionWorker::receivePacketsThreadFunc()
 
         if (p_recv && !_deactivateThread)
         {
+            std::lock_guard<std::mutex> lock(_callbackMutex);
+
             // if(p_recv.port() == 13)
             //     std::cout << p_recv <<std::endl;
             auto it = _paramReceivedCallbacks.begin();
