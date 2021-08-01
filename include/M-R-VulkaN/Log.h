@@ -37,6 +37,7 @@ private:
     Toc *_tocPtr;
     ConnectionWrapper _conWpr;
     OccupiedStatus idsOccupied[UINT8_MAX] = {OccupiedStatus::UNKNOWN};
+    std::map<uint8_t,std::list<TocItem>> _logBlocks;
 
 public:
     Log(Toc &toc, ConnectionWorker &con);
@@ -83,4 +84,7 @@ public:
      * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
     */
     int resetLogBlocks();
+
+    std::list<TocItem> getLogBlock(uint8_t id) const;
+    
 };

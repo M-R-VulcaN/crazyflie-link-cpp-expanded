@@ -30,6 +30,7 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
 
             if (LOG_SUCCESS == failCode)
             {
+                _logBlocks.insert({i,{_tocPtr->getItem(logId)}});
                 idsOccupied[i] = OccupiedStatus::OCCUPIED;
                 return i;
             }
@@ -42,6 +43,7 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
 
 int Log::createLogBlock(uint8_t id, uint8_t logType, uint16_t logId)
 {
+    
     if (idsOccupied[id] != OccupiedStatus::OCCUPIED)
     {
         uint8_t data[] = {CONTROL_CREATE_BLOCK_V2, id, logType, (uint8_t)(logId & 0xff), (uint8_t)(logId >> 8)};
@@ -52,6 +54,7 @@ int Log::createLogBlock(uint8_t id, uint8_t logType, uint16_t logId)
         failCode = p_recv.payload()[2];
         if (LOG_SUCCESS == failCode)
         {
+            _logBlocks.insert({id,{_tocPtr->getItem(logId)}});
             idsOccupied[id] = OccupiedStatus::OCCUPIED;
             return id;
         }
@@ -72,6 +75,8 @@ int Log::deleteLogBlock(uint8_t id)
         failCode = p_recv.payload()[2];
         if (ENOENT == failCode || 0 == failCode)
         {
+            _logBlocks.erase(id);
+
             idsOccupied[id] = OccupiedStatus::NOT_OCCUPIED;
             return id;
         }
@@ -91,6 +96,8 @@ int Log::appendLogBlock(uint8_t id, uint8_t logType, uint16_t logId)
         failCode = p_recv.payload()[2];
         if (LOG_SUCCESS == failCode)
         {
+            _logBlocks[id].push_back(_tocPtr->getItem(logId));
+            
             idsOccupied[id] = OccupiedStatus::OCCUPIED;
             return id;
         }
@@ -142,5 +149,16 @@ int Log::resetLogBlocks()
     failCode = p_recv.payload()[2];
 
     std::fill(idsOccupied, idsOccupied + UINT8_MAX, OccupiedStatus::NOT_OCCUPIED);
+    if(LOG_SUCCESS == failCode)
+    {
+        _logBlocks.clear();
+    }
     return -failCode;
+}
+std::list<TocItem> Log::getLogBlock(uint8_t id) const
+{
+    auto res = _logBlocks.find(id);
+    if(res == _logBlocks.end())
+        return std::list<TocItem>();
+    return res->second;
 }

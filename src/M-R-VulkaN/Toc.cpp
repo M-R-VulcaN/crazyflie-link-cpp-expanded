@@ -22,6 +22,10 @@ TocItem::TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv)
         _accessType = AccessType::RW;
     }
 }
+bool operator==(const std::string&val, const TocItemType& self)
+{
+    return self == val;
+}
 
 bool TocItem::operator<(const TocItem &other) const
 {
@@ -130,6 +134,28 @@ void Toc::insert(const TocItem &tocItem)
 {
     _tocItems.insert({{tocItem._groupName, tocItem._name}, tocItem});
 }
+TocItem Toc::getItem(uint16_t id, bool caching ) const
+{
+    for(auto item : _tocItemsCache)
+    {
+        if(item.second._id == id)
+        {
+            return item.second;
+        }
+    }
+    for(auto item : _tocItems)
+    {
+        if(item.second._id == id)
+        {
+            if(caching)
+                const_cast<std::map<StrPair, TocItem> &>(_tocItemsCache).insert(item);
+
+            return item.second;
+        }
+    }
+    return TocItem();
+}
+
 
 TocItem Toc::getItem(const std::string &groupName, const std::string &paramName, bool caching) const
 {

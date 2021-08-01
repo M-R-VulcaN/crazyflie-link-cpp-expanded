@@ -17,7 +17,6 @@ using namespace bitcraze::crazyflieLinkCpp;
 
 int main()
 {
-
     resetUSB();
 
     Crazyflie crazyflie("usb://0");

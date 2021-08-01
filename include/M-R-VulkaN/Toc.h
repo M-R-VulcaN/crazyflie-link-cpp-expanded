@@ -70,6 +70,7 @@ struct TocItemType
     friend std::string to_string(TocItemType const &self);
     bool operator==(uint8_t val) const;
     bool operator==(const std::string &val) const;
+    friend bool operator==(const std::string&val, const TocItemType& self);
     TocItemType &operator=(const std::string &strParamType);
     TocItemType &operator=(const uint8_t &paramType);
 };
@@ -110,6 +111,7 @@ private:
 
 public:
     void insert(const TocItem &tocItem);
+    TocItem getItem(uint16_t id, bool caching = true) const;
     TocItem getItem(const std::string &groupName, const std::string &paramName, bool caching = true) const;
     uint16_t getItemId(const std::string &groupName, const std::string &paramName, bool caching = true) const;
     std::vector<TocItem> getAllTocItems() const;
