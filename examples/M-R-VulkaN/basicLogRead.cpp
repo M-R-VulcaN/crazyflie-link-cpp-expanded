@@ -65,14 +65,19 @@ int main()
                 userInputStr[MAX_LEN_NAME] = 0;
 
                 std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
-
+            std::cout << "pass" << std::endl;
                 std::string temp = std::string(userInputStr);
                 std::string groupName = temp.substr(0, temp.find("."));
                 std::string paramName = temp.substr(groupName.length() + 1);
+            std::cout << "pass" << std::endl;
 
                 uint16_t logId = tocRef.getItemId(groupName, paramName);
                 auto tocItem = tocRef.getItem(groupName, paramName);
+            std::cout << "pass" << std::endl;
+
                 int response = log.createLogBlock(tocItem._type._type,logId);
+            std::cout << "pass" << std::endl;
+
                  if(response<0)
                 {
                     std::cout << "An Error Occured: "<< -response<<std::endl;
@@ -81,6 +86,8 @@ int main()
                 {
                     std::cout << "Success! Log Block Id = " <<response<<std::endl;
                 }
+            std::cout << "pass" << std::endl;
+
             }
 
             break;

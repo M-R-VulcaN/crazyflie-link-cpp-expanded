@@ -12,6 +12,7 @@
 #define CONTROL_APPEND_BLOCK_V2 7
 
 #define CONTROL_CH 1
+#define DATA_CH 2
 #define CRTP_PORT_LOG 0x05
 #define MAX_LEN_NAME 31
 #define MAX_LOG_BLOCK_SIZE 26
