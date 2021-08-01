@@ -171,9 +171,13 @@ void Crazyflie::addLogCallback(const LogBlockReceivedCallback &callback)
 {
     auto func = (std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[callback](Packet p_recv)
     {
-        std::array<uint8_t,MAX_LOG_BLOCK_SIZE> data;
-        std::copy_n(p_recv.payload()+5,p_recv.payloadSize()-5,data.begin());
-        return callback(p_recv.payload()[0],(*(const uint32_t*)p_recv.payload()+1),data);
+        std::vector<uint8_t> data;
+        uint32_t period = 0;
+        std::memcpy(&period,p_recv.payload()+1,3);
+        data.reserve(p_recv.payloadSize()-4);
+        // std::copy_n(p_recv.payload()+4,p_recv.payloadSize()-5,data.begin());
+        data.insert(data.begin(),p_recv.payload()+4,p_recv.payload()+p_recv.payloadSize());
+        return callback(p_recv.payload()[0],period,data);
     };
     _conWorker.addCallback({LOG_PORT, LOG_DATA_CHANNEL, func});
 }

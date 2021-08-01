@@ -31,7 +31,7 @@
 typedef std::function<bool(const uint8_t *, uint8_t)> AppChannelCallback;
 typedef std::function<bool(const ParamValue &)> ParamValueCallback;
 typedef std::function<bool(const char *)> ConsoleCallback;
-typedef std::function<bool(uint8_t,uint32_t, const std::array<uint8_t,MAX_LOG_BLOCK_SIZE>&)> LogBlockReceivedCallback;
+typedef std::function<bool(uint8_t,uint32_t, const std::vector<uint8_t>&)> LogBlockReceivedCallback;
 
 class Crazyflie
 {

@@ -1,7 +1,7 @@
 #include "Crazyflie.h"
 
 
-bool logCallback(uint8_t id,uint32_t period, const std::array<uint8_t,MAX_LOG_BLOCK_SIZE>& data)
+bool logCallback(uint8_t id,uint32_t period, const std::vector<uint8_t>& data)
 {
     if(id == 0)
     {
