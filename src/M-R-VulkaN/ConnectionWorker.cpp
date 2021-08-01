@@ -57,6 +57,8 @@ void ConnectionWorker::receivePacketsThreadFunc()
 
         if (p_recv && !_deactivateThread)
         {
+            // if(p_recv.port() == 13)
+            //     std::cout << p_recv <<std::endl;
             auto it = _paramReceivedCallbacks.begin();
             while (it != _paramReceivedCallbacks.end())
             {
