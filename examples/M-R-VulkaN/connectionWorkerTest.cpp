@@ -48,6 +48,8 @@ int main()
 {
     Crazyflie cf("usb://0");
     cf.init();
+    cf.printLogToc();
+    cf.printParamToc();
     // Connection con("usb://0");
     // ConnectionWorker conWorker(con);
     // // Crazyflie cf("usb://0");

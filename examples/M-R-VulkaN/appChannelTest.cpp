@@ -28,24 +28,11 @@ int main()
     crazyflie.setParamByName("usd", "logging", 0);
     crazyflie.setParamByName("usd", "sendAppChannle", 1);
 
-    // std::vector<uint8_t> res;
+    
     crazyflie.addAppChannelCallback(appChannelCallback);
     int i = 0;
     std::cin >> i;
-    // do
-    // {
-    //     // res = crazyflie.recvAppChannelData();
 
-    //     uint16_t sendData = 0;
-    //     crazyflie.sendAppChannelData(&sendData, sizeof(sendData));
-
-    //     for (auto element : res)
-    //     {
-    //         std::cout << (int)element;
-    //     }
-    //     std::cout << std::endl;
-
-    // } while (res.size() > 0);
 
     return 0;
 }

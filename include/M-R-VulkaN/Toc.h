@@ -107,7 +107,6 @@ private:
     std::map<StrPair, TocItem> _tocItems;
     std::map<StrPair, TocItem> _tocItemsCache;
     TocInfo _tocInfo;
-    8 - 8;
 
 public:
     void insert(const TocItem &tocItem);

@@ -6,9 +6,7 @@ using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
 ConnectionWorker::ConnectionWorker(Connection &con) : _conAtomicPtr(&con)
 {
-    // ((Connection*)_conAtomicPtr) = &con;
     _receivingThread = std::thread(&ConnectionWorker::receivePacketsThreadFunc, this);
-    _isThreadSleeping = true;
     _deactivateThread = true;
     _receivingThread.detach();
 }
@@ -19,24 +17,17 @@ ConnectionWorker::~ConnectionWorker()
 }
 void ConnectionWorker::start()
 {
-
-    std::unique_lock<std::mutex> lock(_threadSleepMutex);
+    std::lock_guard<std::mutex> lock(_threadSleepMutex);
     _deactivateThread = false;
 
-    const std::atomic<bool> *isSleepingPtr = &_isThreadSleeping;
-
-    _threadSleepConVar.wait(lock, [isSleepingPtr]()
-                            { return !(*isSleepingPtr); });
+    _threadSleepConVar.notify_all();
 }
 void ConnectionWorker::stop()
 {
-    std::unique_lock<std::mutex> lock(_threadSleepMutex);
+    std::lock_guard<std::mutex> lock(_threadSleepMutex);
     _deactivateThread = true;
-    const std::atomic<bool> *isSleepingPtr = &_isThreadSleeping;
-    // const std::atomic<bool> * isSleepingPtr = &_isThreadSleeping;
 
-    _threadSleepConVar.wait(lock, [isSleepingPtr]()
-                            { return (bool)*isSleepingPtr; });
+    _threadSleepConVar.notify_all();
 }
 void ConnectionWorker::addCallback(const PacketCallbackBundle &callback)
 {
@@ -48,39 +39,22 @@ void ConnectionWorker::receivePacketsThreadFunc()
     Packet p_recv;
     while (true)
     {
-        // std::this_thread::sleep_for(std::chrono::nanoseconds(10));
-        while (_deactivateThread)
+ 
+        if (_deactivateThread)
         {
-
-            if (!_isThreadSleeping)
-            {
-                std::lock_guard<std::mutex> lock(_threadSleepMutex);
-
-                _isThreadSleeping = true;
-                _threadSleepConVar.notify_all();
-            }
-            if (nullptr == _conAtomicPtr)
-                return;
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        if (_isThreadSleeping)
-        {
-            std::lock_guard<std::mutex> lock(_threadSleepMutex);
-
-            _isThreadSleeping = false;
-            _threadSleepConVar.notify_all();
+            std::atomic<bool>* deactivateThreadPtr = &_deactivateThread;
+            std::unique_lock<std::mutex> lock(_threadSleepMutex);
+            _threadSleepConVar.wait(lock, [deactivateThreadPtr](){return !*deactivateThreadPtr;});
         }
 
-        // _conAtomicPtr->recv
+
         if (_conAtomicPtr)
         {
             p_recv = ((Connection *)_conAtomicPtr)->recv(1);
         }
         else
             break;
-        // {
-        //     std::lock_guard<std::mutex> lock(_post)
-        // }
+
         if (p_recv && !_deactivateThread)
         {
             auto it = _paramReceivedCallbacks.begin();
@@ -96,12 +70,11 @@ void ConnectionWorker::receivePacketsThreadFunc()
                     it++;
                 }
             }
-            _receivedPackets.push_back(p_recv);
+          
         }
     }
 }
 void ConnectionWorker::send(const Packet &p)
 {
-    // std::lock_guard<std::mutex> lock(_conMutex);
     ((Connection *)_conAtomicPtr)->send(p);
 }
