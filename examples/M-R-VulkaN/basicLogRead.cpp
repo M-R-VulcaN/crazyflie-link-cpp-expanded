@@ -67,37 +67,28 @@ int main()
                 userInputStr[MAX_LEN_NAME] = 0;
 
                 std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
-            std::cout << "pass" << std::endl;
                 std::string temp = std::string(userInputStr);
                 std::string groupName = temp.substr(0, temp.find("."));
                 std::string paramName = temp.substr(groupName.length() + 1);
-            std::cout << "pass" << std::endl;
 
                 uint16_t logId = tocRef.getItemId(groupName, paramName);
                 auto tocItem = tocRef.getItem(groupName, paramName);
-            std::cout << "pass" << std::endl;
 
                 int response = log.createLogBlock(tocItem._type._type,logId);
-            std::cout << "pass" << std::endl;
 
-                 if(response<0)
+                if(response<0)
                 {
                     std::cout << "An Error Occured: "<< -response<<std::endl;
                 }
                 else
                 {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                    std::cout << "Successfully created new log block!     Log Block Id = " <<response<<std::endl;
                 }
-            std::cout << "pass" << std::endl;
 
             }
-
             break;
-        // std::cout << ">> ";
 
-        //     break;
         case APPEND_BLOCK_CHOICE:
-
             std::cin.ignore(INT32_MAX, '\n');
             {
                 std::cout << "Enter log block id: " << std::endl;
@@ -123,167 +114,165 @@ int main()
                 }
                 else
                 {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                    std::cout << "Successfully appended log block!     Log Block Id = " <<response<<std::endl;
                 }
             }
             break;
 
         case DELETE_BLOCK_CHOICE:
-        {
-            int id = 0; //add a check function if the id exist
-            std::cout << "Enter log id:" << std::endl;
-            std::cin >> id;
-            int response = log.deleteLogBlock(id);
- if(response<0)
+            {
+                int id = 0; //add a check function if the id exist
+                std::cout << "Enter log id:" << std::endl;
+                std::cin >> id;
+                int response = log.deleteLogBlock(id);
+                if(response<0)
                 {
                     std::cout << "An Error Occured: "<< -response<<std::endl;
                 }
                 else
                 {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                    std::cout << "Successfully deleted log block!     Log Block Id = " <<response<<std::endl;
                 }
-            break;
-        }
+                break;
+            }
+
         case START_BLOCK_CHOICE:
-        {
-            int id = 0; //add a check function if the id exist
-            int PeriodTimeInMs = 0;
-            std::cout << "Enter log id:" << std::endl;
-            std::cin >> id;
-            std::cout << "Enter perion time in ms:" << std::endl;
-            std::cin >> PeriodTimeInMs;
-            int response = log.startLogBlock(id, PeriodTimeInMs/10);
-            if(response<0)
-                {
-                    std::cout << "An Error Occured: "<< -response<<std::endl;
-                }
-                else
-                {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
-                }
-            break;
-        }
+            {
+                int id = 0; //add a check function if the id exist
+                int PeriodTimeInMs = 0;
+                std::cout << "Enter log id:" << std::endl;
+                std::cin >> id;
+                std::cout << "Enter perion time in ms:" << std::endl;
+                std::cin >> PeriodTimeInMs;
+                int response = log.startLogBlock(id, PeriodTimeInMs/10);
+                if(response<0)
+                    {
+                        std::cout << "An Error Occured: "<< -response<<std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "Successfully started logging!     Log Block Id = " <<response<<std::endl;
+                    }
+                break;
+            }
 
         case STOP_BLOCK_CHOICE:
-        {
-            int id = 0; //add a check function if the id exist
-            // int PeriodTimeInMs = 0;
-            std::cout << "Enter log id:" << std::endl;
-            std::cin >> id;
-            
-            int response = log.stopLogBlock(id);
-            if(response<0)
-                {
-                    std::cout << "An Error Occured: "<< -response<<std::endl;
-                }
-                else
-                {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
-                }
-            break;
-        }
+            {
+                int id = 0; //add a check function if the id exist
+                // int PeriodTimeInMs = 0;
+                std::cout << "Enter log id:" << std::endl;
+                std::cin >> id;
+                
+                int response = log.stopLogBlock(id);
+                if(response<0)
+                    {
+                        std::cout << "An Error Occured: "<< -response<<std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "Successfully Stopped logging!     Log Block Id = " <<response<<std::endl;
+                    }
+                break;
+            }
         case BLOCK_RESET:
-        {
-            int response = log.resetLogBlocks();
-            if(response<0)
-                {
-                    std::cout << "An Error Occured: "<< -response<<std::endl;
-                }
-                else
-                {
-                    std::cout << "Success! Finished reseting all blocks"<<std::endl;
-                }
-            break;
-        }
+            {
+                int response = log.resetLogBlocks();
+                if(response<0)
+                    {
+                        std::cout << "An Error Occured: "<< -response<<std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "Success! Finished reseting all blocks"<<std::endl;
+                    }
+                break;
+            }
         case LOG_RECEIVE:
-        {
-            std::cin.ignore(INT32_MAX, '\n');
+            {
+                std::cin.ignore(INT32_MAX, '\n');
 
-            std::mutex mu;
-            std::unique_lock<std::mutex> lock(mu);
-            std::mutex *muPtr = &mu;
-            std::condition_variable waitTillFinished;
-            std::condition_variable *waitTillFinishedPtr = &waitTillFinished;
-            std::atomic<bool> isFinished(false);
-            std::atomic<bool> *isFinishedPtr = &isFinished;
-            std::atomic<bool> isCallbackFinished(false);
-            std::atomic<bool> *isCallbackFinishedPtr = &isCallbackFinished;
+                std::mutex mu;
+                std::unique_lock<std::mutex> lock(mu);
+                std::mutex *muPtr = &mu;
+                std::condition_variable waitTillFinished;
+                std::condition_variable *waitTillFinishedPtr = &waitTillFinished;
+                std::atomic<bool> isFinished(false);
+                std::atomic<bool> *isFinishedPtr = &isFinished;
+                std::atomic<bool> isCallbackFinished(false);
+                std::atomic<bool> *isCallbackFinishedPtr = &isCallbackFinished;
 
-            crazyflie.addLogCallback([log,isFinishedPtr,muPtr,waitTillFinishedPtr,isCallbackFinishedPtr](uint8_t id, uint32_t period, const std::vector<uint8_t>& data){
-                std::lock_guard<std::mutex> lock(*muPtr);
-                std::list<TocItem> logBlockItems = log.getLogBlock(id);
-                int currDataIndex = 0;
-                std::cout << "period: "<<period << " val=";
-                for(TocItem tocItem : logBlockItems)
-                {
-                    TocItemType type = tocItem._type;
-                    if ("uint8_t" == type)
+                crazyflie.addLogCallback([log,isFinishedPtr,muPtr,waitTillFinishedPtr,isCallbackFinishedPtr](uint8_t id, uint32_t period, const std::vector<uint8_t>& data){
+                    std::lock_guard<std::mutex> lock(*muPtr);
+                    std::list<TocItem> logBlockItems = log.getLogBlock(id);
+                    int currDataIndex = 0;
+                    std::cout << "period: "<<period << " val=";
+                    for(TocItem tocItem : logBlockItems)
                     {
-                        std::cout << data[currDataIndex];
+                        TocItemType type = tocItem._type;
+                        if ("uint8_t" == type)
+                        {
+                            std::cout << data[currDataIndex];
+                        }
+                        else if ("uint16_t" == type)
+                        {
+                            std::cout << *(uint16_t*)data.data()+currDataIndex;
+                        }
+                        else if ("uint32_t" == type)
+                        {
+                            std::cout << *(uint32_t*)data.data()+currDataIndex;
+                        }
+                        else if ("uint64_t" == type)
+                        {
+                            std::cout << *(uint64_t*)data.data()+currDataIndex;
+                        }
+                        else if ("int8_t" == type)
+                        {
+                            std::cout << *(int8_t*)data.data()+currDataIndex;
+                        }
+                        else if ("int16_t" == type)
+                        {
+                            std::cout << *(int16_t*)data.data()+currDataIndex;
+                        }
+                        else if ("int32_t" == type)
+                        {
+                            std::cout << *(int32_t*)data.data()+currDataIndex;
+                        }
+                        else if ("int64_t" == type)
+                        {
+                            std::cout << *(int64_t*)data.data()+currDataIndex;
+                        }
+                        else if ("FP16" == type)
+                        {
+                            std::cout << *(float*)data.data()+currDataIndex;
+                        }
+                        else if ("float" == type)
+                        {
+                            std::cout << *(float*)data.data()+currDataIndex;
+                        }
+                        else if ("double" == type)
+                        {
+                            std::cout << *(float*)data.data()+currDataIndex;
+                        }
+                        std::cout <<std::endl;            
+                        *isCallbackFinishedPtr = true;
+                        waitTillFinishedPtr->notify_all();
+                        return false;
                     }
-                    else if ("uint16_t" == type)
-                    {
-                        std::cout << *(uint16_t*)data.data()+currDataIndex;
-                    }
-                    else if ("uint32_t" == type)
-                    {
-                        std::cout << *(uint32_t*)data.data()+currDataIndex;
-                    }
-                    else if ("uint64_t" == type)
-                    {
-                        std::cout << *(uint64_t*)data.data()+currDataIndex;
-                    }
-                    else if ("int8_t" == type)
-                    {
-                        std::cout << *(int8_t*)data.data()+currDataIndex;
-                    }
-                    else if ("int16_t" == type)
-                    {
-                        std::cout << *(int16_t*)data.data()+currDataIndex;
-                    }
-                    else if ("int32_t" == type)
-                    {
-                        std::cout << *(int32_t*)data.data()+currDataIndex;
-                    }
-                    else if ("int64_t" == type)
-                    {
-                        std::cout << *(int64_t*)data.data()+currDataIndex;
-                    }
-                    else if ("FP16" == type)
-                    {
-                        std::cout << *(float*)data.data()+currDataIndex;
-                    }
-                    else if ("float" == type)
-                    {
-                        std::cout << *(float*)data.data()+currDataIndex;
-                    }
-                    else if ("double" == type)
-                    {
-                        std::cout << *(float*)data.data()+currDataIndex;
-                    }
-                    std::cout <<std::endl;
-                }
-                if((bool)*isFinishedPtr)
-                {
-                    *isCallbackFinishedPtr = true;
-                    waitTillFinishedPtr->notify_all();
-                    return false;
-                }
-                return true;
-            }); 
-            std::cout << "Press enter to stop receiving"<<std::endl;
-            lock.unlock();
-            std::cin.getline(nullptr,0,'\n'); 
-            lock.lock(); 
-            isFinished = true;
-            waitTillFinished.wait(lock,[isCallbackFinishedPtr](){return (bool)*isCallbackFinishedPtr;});       
-            break;
+                    return true;
+                }); 
+                std::cout << "Press enter to stop receiving"<<std::endl;
+                lock.unlock();
+                std::cin.getline(nullptr,0,'\n'); 
+                lock.lock(); 
+                isFinished = true;
+                waitTillFinished.wait(lock,[isCallbackFinishedPtr](){return (bool)*isCallbackFinishedPtr;});       
+                break;
+            }
+
+            default:
+                break;
+            }
         }
 
-        default:
-            break;
-        }
-    }
-
-    return 0;
+        return 0;
 }

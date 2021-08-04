@@ -121,6 +121,7 @@ int Log::startLogBlock(uint8_t id, uint8_t period)
     }
     return -GENERIC_LOG_ERROR;
 }
+
 int Log::stopLogBlock(uint8_t id)
 {
     if (idsOccupied[id] != OccupiedStatus::NOT_OCCUPIED)
@@ -140,6 +141,7 @@ int Log::stopLogBlock(uint8_t id)
     }
     return -GENERIC_LOG_ERROR;
 }
+
 int Log::resetLogBlocks()
 {
     uint8_t data[] = {CONTROL_RESET};
@@ -155,6 +157,7 @@ int Log::resetLogBlocks()
     }
     return -failCode;
 }
+
 std::list<TocItem> Log::getLogBlock(uint8_t id) const
 {
     auto res = _logBlocks.find(id);
