@@ -44,7 +44,7 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
 int Log::createLogBlock(uint8_t id, uint8_t logType, uint16_t logId)
 {
     
-    if (true) //idsOccupied[id] != OccupiedStatus::OCCUPIED)
+    if (idsOccupied[id] != OccupiedStatus::OCCUPIED)
     {
         uint8_t data[] = {CONTROL_CREATE_BLOCK_V2, id, logType, (uint8_t)(logId & 0xff), (uint8_t)(logId >> 8)};
 
