@@ -29,10 +29,9 @@ int main()
 {
     Crazyflie crazyflie("usb://0");
     
-    // crazyflie.init();
+    crazyflie.init();
 
-    // // crazyflie.printLogToc();
-    // // crazyflie.printParamToc();
+    crazyflie.printLogToc();
 
     // std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
     // std::cin.ignore(INT32_MAX, '\n');
@@ -53,7 +52,7 @@ int main()
 
     // Log.createLogBlock();
     // Log::createLogBlock(1);
-    ////
+    // //
     // std::cout << tocWpr->getAllTocItems().size();
 
     // Crazyflie crazyflie("usb://0");

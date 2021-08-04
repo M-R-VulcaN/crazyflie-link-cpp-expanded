@@ -67,6 +67,7 @@ int main()
                 userInputStr[MAX_LEN_NAME] = 0;
 
                 std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
+
                 std::string temp = std::string(userInputStr);
                 std::string groupName = temp.substr(0, temp.find("."));
                 std::string paramName = temp.substr(groupName.length() + 1);
@@ -74,16 +75,17 @@ int main()
                 uint16_t logId = tocRef.getItemId(groupName, paramName);
                 auto tocItem = tocRef.getItem(groupName, paramName);
 
-                int response = log.createLogBlock(tocItem._type._type,logId);
+                int response = log.createLogBlock(0,tocItem._type._type,logId);
 
                 if(response<0)
                 {
-                    std::cout << "An Error Occured: "<< -response<<std::endl;
+                    std::cout << "An Error Occured: "<< -response <<std::endl;
                 }
                 else
                 {
-                    std::cout << "Successfully created new log block!     Log Block Id = " <<response<<std::endl;
+                    std::cout << "Success! Log Block Id = " << response <<std::endl;
                 }
+            std::cout << "pass" << std::endl;
 
             }
             break;
@@ -144,8 +146,10 @@ int main()
                 std::cin >> id;
                 std::cout << "Enter perion time in ms:" << std::endl;
                 std::cin >> PeriodTimeInMs;
-                int response = log.startLogBlock(id, PeriodTimeInMs/10);
-                if(response<0)
+                if(PeriodTimeInMs/10 > 0)
+                {
+                    int response = log.startLogBlock(id, PeriodTimeInMs/10);
+                    if(response<0)
                     {
                         std::cout << "An Error Occured: "<< -response<<std::endl;
                     }
@@ -153,7 +157,13 @@ int main()
                     {
                         std::cout << "Successfully started logging!     Log Block Id = " <<response<<std::endl;
                     }
-                break;
+                    break;
+                }
+                else
+                {   
+                    std::cout << "Error! perion time should be more than 10! (in ms)" << std::endl;
+                }
+                break;    
             }
 
         case STOP_BLOCK_CHOICE:

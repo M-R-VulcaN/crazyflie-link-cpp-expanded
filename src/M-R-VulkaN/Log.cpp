@@ -44,7 +44,7 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
 int Log::createLogBlock(uint8_t id, uint8_t logType, uint16_t logId)
 {
     
-    if (idsOccupied[id] != OccupiedStatus::OCCUPIED)
+    if (true) //idsOccupied[id] != OccupiedStatus::OCCUPIED)
     {
         uint8_t data[] = {CONTROL_CREATE_BLOCK_V2, id, logType, (uint8_t)(logId & 0xff), (uint8_t)(logId >> 8)};
 
@@ -58,6 +58,21 @@ int Log::createLogBlock(uint8_t id, uint8_t logType, uint16_t logId)
             idsOccupied[id] = OccupiedStatus::OCCUPIED;
             return id;
         }
+        // for (i = 0; i < UINT8_MAX; i++)
+        //         {
+        //             if (!idsOccupied[i])
+        //             {
+        //                 idsOccupied[i] = true;
+        //                 data[1] = i;
+        //                 conWpr.sendData(data, 5);
+        //                 Packet p_recv = conWpr.recvFilteredData(0);
+        //                 std::cout << p_recv << std::endl;
+        //                 failCode = p_recv.payload()[2];
+                        // if (17 == failCode)
+                        //     continue;
+                        // break;
+        //             }
+        //         }
         return -failCode;
     }
     return -GENERIC_LOG_ERROR;

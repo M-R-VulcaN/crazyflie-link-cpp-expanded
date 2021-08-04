@@ -13,11 +13,10 @@ using namespace bitcraze::crazyflieLinkCpp;
 
 int main()
 {
-    // std::cout << "pass";
-
     Crazyflie crazyflie("usb://0");
-    // std::cout << "pass";
+
     crazyflie.init();
+
     int i, value, newValueSize = 0;
     std::string group = "";
     std::string name = "";
@@ -25,6 +24,7 @@ int main()
     std::cout << "crazyflie connected"
               << "\n\n1 - print TOC parameters.\n2 - Save TOC parameteres to .csv file\n3 - Change parameter value\n\nenter your option: " << std::endl;
     std::cin >> i;
+
     while (i != 0)
     {
         if (i == 1)
@@ -56,6 +56,6 @@ int main()
         std::cout << "\n\n1 - print TOC parameters.\n2 - Save TOC parameteres to .csv file\n3 - Change parameter value by name and group.\n\nenter your option: " << std::endl;
         std::cin >> i;
     }
-
+    
     return 0;
 }
