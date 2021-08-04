@@ -181,8 +181,6 @@ void Crazyflie::addLogCallback(const LogBlockReceivedCallback &callback)
     _conWorker.addCallback({LOG_PORT, LOG_DATA_CHANNEL, func});
 }
 
-
-
 void Crazyflie::addConsoleCallback(const ConsoleCallback &callback)
 {
 
@@ -195,6 +193,7 @@ void Crazyflie::addConsoleCallback(const ConsoleCallback &callback)
     };
     _conWorker.addCallback({0, 0, func});
 }
+
 void Crazyflie::paramRecvThreadFunc()
 {
     // _
