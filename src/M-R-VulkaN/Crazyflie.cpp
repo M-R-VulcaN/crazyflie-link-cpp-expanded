@@ -86,7 +86,7 @@ void Crazyflie::printLogToc()
         std::cout << tocItem << std::endl;
     }
     std::cout << "Printed " << tocItemsVector.size() << " items total" << std::endl;
-    std::cout << "=========================================================================" << std::endl;
+    std::cout << "=============================================" << std::endl;
 }
 
 bool Crazyflie::init()
