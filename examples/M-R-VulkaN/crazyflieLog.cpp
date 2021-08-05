@@ -17,8 +17,18 @@ int main()
     res = cf.startLogBlock(10, "test");
     if (res < 0)
         std::cout << "starting Error: " << res << std::endl;
-    Log &log = cf._log;
+    res = cf.createLogBlock({
+                                    {"stabilizer", "yaw"},
+                                    {"stabilizer","roll"},
+                                },
+                                "test2");
 
+    if (res < 0)
+        std::cout << "creation Error: " << res << std::endl;
+    res = cf.startLogBlock(10, "test2");
+    if (res < 0)
+        std::cout << "starting Error: " << res << std::endl;
+    Log &log = cf._log;
 
     std::mutex mu;
     std::unique_lock<std::mutex> lock(mu);
@@ -37,7 +47,7 @@ int main()
                           std::lock_guard<std::mutex> lock(*muPtr);
                           std::list<TocItem> logBlockItems = log.getLogBlock(id);
                           int currDataIndex = 0;
-                          std::cout << "period: " << period << " val=";
+                          std::cout <<"id:  "<<(int)id  <<"  period:  " << period << "  val=  ";
 
                             for(TocItem tocItem : logBlockItems)
                             {
