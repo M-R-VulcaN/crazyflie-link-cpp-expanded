@@ -75,7 +75,7 @@ int main()
                 uint16_t logId = tocRef.getItemId(groupName, paramName);
                 auto tocItem = tocRef.getItem(groupName, paramName);
 
-                int response = log.createLogBlock(0,tocItem._type._type,logId);
+                int response = log.createLogBlock(tocItem._type._type,logId);
 
                 if(response<0)
                 {
