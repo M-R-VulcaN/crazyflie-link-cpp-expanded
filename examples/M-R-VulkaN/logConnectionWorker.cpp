@@ -17,7 +17,7 @@ bool logCallback(uint8_t id,uint32_t period, const std::vector<uint8_t>& data)
 
 int main()
 {
-    Crazyflie cf("usb://00");
+    Crazyflie cf("usb://0");
     cf.init();
     cf.addLogCallback(logCallback);
     int i = 0;

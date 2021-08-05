@@ -67,37 +67,30 @@ int main()
                 userInputStr[MAX_LEN_NAME] = 0;
 
                 std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
-            std::cout << "pass" << std::endl;
+
                 std::string temp = std::string(userInputStr);
                 std::string groupName = temp.substr(0, temp.find("."));
                 std::string paramName = temp.substr(groupName.length() + 1);
-            std::cout << "pass" << std::endl;
 
                 uint16_t logId = tocRef.getItemId(groupName, paramName);
                 auto tocItem = tocRef.getItem(groupName, paramName);
-            std::cout << "pass" << std::endl;
 
-                int response = log.createLogBlock(tocItem._type._type,logId);
-            std::cout << "pass" << std::endl;
+                int response = log.createLogBlock(0,tocItem._type._type,logId);
 
-                 if(response<0)
+                if(response<0)
                 {
-                    std::cout << "An Error Occured: "<< -response<<std::endl;
+                    std::cout << "An Error Occured: "<< -response <<std::endl;
                 }
                 else
                 {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                    std::cout << "Success! Log Block Id = " << response <<std::endl;
                 }
             std::cout << "pass" << std::endl;
 
             }
-
             break;
-        // std::cout << ">> ";
 
-        //     break;
         case APPEND_BLOCK_CHOICE:
-
             std::cin.ignore(INT32_MAX, '\n');
             {
                 std::cout << "Enter log block id: " << std::endl;
@@ -123,80 +116,88 @@ int main()
                 }
                 else
                 {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                    std::cout << "Successfully appended log block!     Log Block Id = " <<response<<std::endl;
                 }
             }
             break;
 
         case DELETE_BLOCK_CHOICE:
-        {
-            int id = 0; //add a check function if the id exist
-            std::cout << "Enter log id:" << std::endl;
-            std::cin >> id;
-            int response = log.deleteLogBlock(id);
- if(response<0)
+            {
+                int id = 0; //add a check function if the id exist
+                std::cout << "Enter log id:" << std::endl;
+                std::cin >> id;
+                int response = log.deleteLogBlock(id);
+                if(response<0)
                 {
                     std::cout << "An Error Occured: "<< -response<<std::endl;
                 }
                 else
                 {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                    std::cout << "Successfully deleted log block!     Log Block Id = " <<response<<std::endl;
                 }
-            break;
-        }
+                break;
+            }
+
         case START_BLOCK_CHOICE:
-        {
-            int id = 0; //add a check function if the id exist
-            int PeriodTimeInMs = 0;
-            std::cout << "Enter log id:" << std::endl;
-            std::cin >> id;
-            std::cout << "Enter perion time in ms:" << std::endl;
-            std::cin >> PeriodTimeInMs;
-            int response = log.startLogBlock(id, PeriodTimeInMs/10);
-            if(response<0)
+            {
+                int id = 0; //add a check function if the id exist
+                int PeriodTimeInMs = 0;
+                std::cout << "Enter log id:" << std::endl;
+                std::cin >> id;
+                std::cout << "Enter perion time in ms:" << std::endl;
+                std::cin >> PeriodTimeInMs;
+                if(PeriodTimeInMs/10 > 0)
                 {
-                    std::cout << "An Error Occured: "<< -response<<std::endl;
+                    int response = log.startLogBlock(id, PeriodTimeInMs/10);
+                    if(response<0)
+                    {
+                        std::cout << "An Error Occured: "<< -response<<std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "Successfully started logging!     Log Block Id = " <<response<<std::endl;
+                    }
+                    break;
                 }
                 else
-                {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
+                {   
+                    std::cout << "Error! perion time should be more than 10! (in ms)" << std::endl;
                 }
-            break;
-        }
+                break;    
+            }
 
         case STOP_BLOCK_CHOICE:
-        {
-            int id = 0; //add a check function if the id exist
-            // int PeriodTimeInMs = 0;
-            std::cout << "Enter log id:" << std::endl;
-            std::cin >> id;
-            
-            int response = log.stopLogBlock(id);
-            if(response<0)
-                {
-                    std::cout << "An Error Occured: "<< -response<<std::endl;
-                }
-                else
-                {
-                    std::cout << "Success! Log Block Id = " <<response<<std::endl;
-                }
-            break;
-        }
+            {
+                int id = 0; //add a check function if the id exist
+                std::cout << "Enter log id:" << std::endl;
+                std::cin >> id;
+                
+                int response = log.stopLogBlock(id);
+                if(response<0)
+                    {
+                        std::cout << "An Error Occured: "<< -response<<std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "Successfully Stopped logging!     Log Block Id = " <<response<<std::endl;
+                    }
+                break;
+            }
         case BLOCK_RESET:
-        {
-            int response = log.resetLogBlocks();
-            if(response<0)
-                {
-                    std::cout << "An Error Occured: "<< -response<<std::endl;
-                }
-                else
-                {
-                    std::cout << "Success! Finished reseting all blocks"<<std::endl;
-                }
-            break;
-        }
+            {
+                int response = log.resetLogBlocks();
+                if(response<0)
+                    {
+                        std::cout << "An Error Occured: "<< -response<<std::endl;
+                    }
+                    else
+                    {
+                        std::cout << "Success! Finished reseting all blocks"<<std::endl;
+                    }
+                break;
+            }
         case LOG_RECEIVE:
-        {
+{
             std::cin.ignore(INT32_MAX, '\n');
 
             std::mutex mu;

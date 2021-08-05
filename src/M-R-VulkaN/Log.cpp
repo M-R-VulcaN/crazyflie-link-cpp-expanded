@@ -58,6 +58,21 @@ int Log::createLogBlock(uint8_t id, uint8_t logType, uint16_t logId)
             idsOccupied[id] = OccupiedStatus::OCCUPIED;
             return id;
         }
+        // for (i = 0; i < UINT8_MAX; i++)
+        //         {
+        //             if (!idsOccupied[i])
+        //             {
+        //                 idsOccupied[i] = true;
+        //                 data[1] = i;
+        //                 conWpr.sendData(data, 5);
+        //                 Packet p_recv = conWpr.recvFilteredData(0);
+        //                 std::cout << p_recv << std::endl;
+        //                 failCode = p_recv.payload()[2];
+                        // if (17 == failCode)
+                        //     continue;
+                        // break;
+        //             }
+        //         }
         return -failCode;
     }
     return -GENERIC_LOG_ERROR;
@@ -121,6 +136,7 @@ int Log::startLogBlock(uint8_t id, uint8_t period)
     }
     return -GENERIC_LOG_ERROR;
 }
+
 int Log::stopLogBlock(uint8_t id)
 {
     if (idsOccupied[id] != OccupiedStatus::NOT_OCCUPIED)
@@ -140,6 +156,7 @@ int Log::stopLogBlock(uint8_t id)
     }
     return -GENERIC_LOG_ERROR;
 }
+
 int Log::resetLogBlocks()
 {
     uint8_t data[] = {CONTROL_RESET};
@@ -155,6 +172,7 @@ int Log::resetLogBlocks()
     }
     return -failCode;
 }
+
 std::list<TocItem> Log::getLogBlock(uint8_t id) const
 {
     auto res = _logBlocks.find(id);
