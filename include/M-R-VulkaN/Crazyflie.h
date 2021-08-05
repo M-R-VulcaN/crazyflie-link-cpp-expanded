@@ -53,6 +53,7 @@ private:
     public:
     Log _log;
     private:
+    std::map<std::string,uint8_t> _logBlockNames;
     template <class Val>
 
     bool setParamValCrazyflie(uint16_t paramId, const Val &newValue)
@@ -112,34 +113,29 @@ public:
  
 
     /**
-     * If successful returns non-negative integer representing the new logBlock id. eg: id = 5 or id = 0
-     * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
+     * Creates the entire log block
+     * if successful returns a non-negative intiger representing the logBlockId 
+     * if unsuccessful it returns a negative integer representing the error. eg: -ENOENT = -2 
     */
-    int createLogBlock(const std::string &logBlockName, const std::string &logGroup, const std::string &logName);
-
-    /**
-     * If successful returns non-negative integer representing the appended logBlock id. eg: id = 5 or id = 0
-     * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
-    */
-    int appendLogBlock(uint8_t id,uint8_t logType, uint16_t logId);
+    int createLogBlock(const std::vector<std::pair<std::string,std::string>>& logItemNames, const std::string &logName);
 
     /**
      * If successful returns non-negative integer representing the deleted logBlock id. eg: id = 5 or id = 0
      * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
     */
-    int deleteLogBlock(uint8_t id);
+    int deleteLogBlock( const std::string &logName);
 
     /**
      * If successful returns non-negative integer representing the logBlock id that was started. eg: id = 5 or id = 0
      * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
     */
-    int startLogBlock(uint8_t id, uint8_t period);
+    int startLogBlock( uint8_t period, const std::string &logName);
 
     /**
      * If successful returns non-negative integer representing the logBlock id which was stopped. eg: id = 5 or id = 0
      * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
     */
-    int stopLogBlock(uint8_t id);
+    int stopLogBlock( const std::string &logName);
 
     /**
      * If successful returns 0

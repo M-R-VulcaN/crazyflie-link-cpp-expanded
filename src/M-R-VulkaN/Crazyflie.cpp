@@ -220,3 +220,100 @@ const Toc &Crazyflie::getLogToc() const
 {
     return _logToc;
 }
+
+int Crazyflie::createLogBlock(const std::vector<std::pair<std::string,std::string>>& logItemNames, const std::string &logName)
+{
+    TocItem tocItem =  _logToc.getItem(logItemNames.front().first,logItemNames.front().second);
+    if(!tocItem)
+    {
+        return -GENERIC_LOG_ERROR;
+    }
+    int logBlockId = _log.createLogBlock(tocItem._type._type,tocItem._id);
+    if(logBlockId<0) //If error
+        return logBlockId;
+
+    for(int i = 1; i < (int)logItemNames.size() ; i++)
+    {
+        std::cout << "i: "<<i << std::endl;
+        std::cout << logItemNames[i].first<<"." << logItemNames[i].second<< std::endl;
+        tocItem =  _logToc.getItem(logItemNames[i].first,logItemNames[i].second);
+        if(!tocItem)
+        {
+            _log.deleteLogBlock(logBlockId);
+            
+            return -GENERIC_LOG_ERROR;
+        }
+        int res =_log.appendLogBlock(logBlockId,tocItem._type._type,tocItem._id);
+        if(res <0)//if error
+            return res;
+    }
+    _logBlockNames.insert({logName,logBlockId});
+    return logBlockId;
+}
+
+int Crazyflie::deleteLogBlock( const std::string &logName)
+{
+    auto it = _logBlockNames.find(logName);
+
+    if(_logBlockNames.end()== it)
+        return -GENERIC_LOG_ERROR;
+
+    uint8_t logBlockId = it->second;
+    int res = _log.deleteLogBlock(logBlockId);
+
+    if(LOG_SUCCESS == res)
+    {
+        _logBlockNames.erase(it);
+        return logBlockId;
+    }
+
+    return -res;
+}
+
+int Crazyflie::startLogBlock( uint8_t period, const std::string &logName)
+{
+    auto it = _logBlockNames.find(logName);
+    
+    if(_logBlockNames.end()== it)
+        return -GENERIC_LOG_ERROR;
+
+    uint8_t logBlockId = it->second;
+    int res = _log.startLogBlock(logBlockId, period);
+
+    if(LOG_SUCCESS == res)
+    {
+        return logBlockId;
+    }
+
+    return -res;
+}
+int Crazyflie::stopLogBlock( const std::string &logName)
+{
+     auto it = _logBlockNames.find(logName);
+    
+    if(_logBlockNames.end()== it)
+        return -GENERIC_LOG_ERROR;
+
+    uint8_t logBlockId = it->second;
+    int res = _log.stopLogBlock(logBlockId);
+
+    if(LOG_SUCCESS == res)
+    {
+        return logBlockId;
+    }
+
+    return -res;
+}
+
+int Crazyflie::resetLogBlocks()
+{
+    int res = _log.resetLogBlocks();
+
+    if(LOG_SUCCESS == res)
+    {
+        _logBlockNames.clear();
+        return LOG_SUCCESS;
+    }
+
+    return -res;
+}

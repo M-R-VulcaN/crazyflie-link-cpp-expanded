@@ -169,6 +169,16 @@ target_link_libraries(example_logConnectionWorker
   crazyflieLinkCpp
 )
 
+
+# example_crazyflieLog
+add_executable(example_crazyflieLog
+  examples/M-R-VulkaN/crazyflieLog.cpp
+)
+target_link_libraries(example_crazyflieLog
+  crazyflieLinkCpp
+)
+
+
 # # example_basicParamCSV
 # add_executable(example_basicParamCSV
 #   examples/M-R-VulkaN/basicParamCSV.cpp

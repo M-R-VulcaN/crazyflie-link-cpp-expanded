@@ -36,6 +36,16 @@ bool TocItem::operator>(const TocItem &other) const
 {
     return ((unsigned)_id) > ((unsigned)other._id);
 }
+TocItem& TocItem::operator=(const TocItem& other)
+{
+    _groupName = other._groupName;
+    _name = other._name;
+    _type = other._type;
+    _accessType = other._accessType;
+    _id = other._id;
+    return *this;
+}
+
 
 std::string to_string(AccessType const &self)
 {
@@ -118,6 +128,10 @@ TocItem::~TocItem()
 TocItem::TocItem()
 {
 }
+TocItem::operator bool() const
+{
+    return "" == _groupName  || "" == _name;
+}
 
 TocInfo::~TocInfo()
 {
@@ -163,7 +177,8 @@ TocItem Toc::getItem(const std::string &groupName, const std::string &paramName,
     if (res == _tocItemsCache.end())
     {
         res = _tocItems.find({groupName, paramName});
-
+        if(res == _tocItems.end())
+            return TocItem();
         if (caching)
         {
             const_cast<std::map<StrPair, TocItem> &>(_tocItemsCache).insert(*res);

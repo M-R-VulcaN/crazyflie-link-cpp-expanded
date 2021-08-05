@@ -82,13 +82,14 @@ struct TocItem
     TocItemType _type;
     AccessType _accessType;
     uint16_t _id;
-
+    TocItem& operator=(const TocItem& other);
     bool operator>(const TocItem &other) const;
     bool operator<(const TocItem &other) const;
     TocItem(const TocItem &other);
     TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv);
     TocItem();
     ~TocItem();
+    operator bool() const;
     friend std::ostream &operator<<(std::ostream &out, const TocItem &tocItem);
 };
 
