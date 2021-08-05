@@ -12,7 +12,9 @@
 
 typedef void (*PacketCallbackFunc)(bitcraze::crazyflieLinkCpp::Packet);
 
-
+//The PacketCallback returns a boolean,
+//If it returns true then the callback will be called for another loop
+//If it returns false then the callback is removed from the list
 typedef std::function<bool(bitcraze::crazyflieLinkCpp::Packet)> PacketCallback;
 struct PacketCallbackBundle
 {
@@ -32,7 +34,7 @@ private:
     std::condition_variable _threadSleepConVar;
     std::atomic<bitcraze::crazyflieLinkCpp::Connection *> _conAtomicPtr;
     std::atomic<bool> _deactivateThread;
-    void receivePacketsThreadFunc();
+    void receivePacketsThreadFunc();//Todo: create a thread each new callback
 
 public:
     ConnectionWorker(bitcraze::crazyflieLinkCpp::Connection &con);

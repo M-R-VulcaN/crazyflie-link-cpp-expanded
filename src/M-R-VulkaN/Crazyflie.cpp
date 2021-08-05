@@ -164,7 +164,16 @@ void Crazyflie::addAppChannelCallback(const AppChannelCallback &callback)
 
 void Crazyflie::addParamReceivedCallback(const ParamValueCallback &callback)
 {
-    _paramReceivedCallbacks.push_back(callback);
+      auto func = (std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[callback](Packet p_recv)
+    {
+        ParamValue pVal = {0};
+        uint16_t id = 0;
+
+        std::memcpy(&pVal,p_recv.payload()+2, p_recv.payloadSize()-2);
+        std::memcpy(&id,p_recv.payload(),sizeof(id));
+        return callback( id,pVal);
+    };
+    _conWorker.addCallback({LOG_PORT, LOG_DATA_CHANNEL, func});
 }
 
 void Crazyflie::addLogCallback(const LogBlockReceivedCallback &callback)

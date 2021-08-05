@@ -29,7 +29,7 @@
 #define APPCHANNEL_PORT 13
 
 typedef std::function<bool(const uint8_t *, uint8_t)> AppChannelCallback;
-typedef std::function<bool(const ParamValue &)> ParamValueCallback;
+typedef std::function<bool(uint16_t, const ParamValue &)> ParamValueCallback;
 typedef std::function<bool(const char *)> ConsoleCallback;
 typedef std::function<bool(uint8_t,uint32_t, const std::vector<uint8_t>&)> LogBlockReceivedCallback;
 
@@ -40,12 +40,7 @@ private:
     Toc _logToc;
 
     bitcraze::crazyflieLinkCpp::Connection _con;
-
-public:
     ConnectionWorker _conWorker;
-
-private:
-
     ConnectionWrapper _conWrapperParamRead;
     ConnectionWrapper _conWrapperParamWrite;
     ConnectionWrapper _conWrapperParamToc;
@@ -54,8 +49,6 @@ private:
     TocWrapper _logTocWpr;
     TocWrapper _paramTocWpr;
     bool _isRunning;
-    std::vector<ParamValueCallback> _paramReceivedCallbacks;
-    std::vector<ConsoleCallback> _consoleCallbacks;
     std::thread _paramRecvThread;
     public:
     Log _log;
@@ -78,9 +71,7 @@ private:
     Val getParamValFromCrazyflie(uint16_t paramId)
     {
         Val res = 0;
-        // _conWorker.stop();
         bitcraze::crazyflieLinkCpp::Packet p = _conWrapperParamRead.sendRecvData(0, paramId);
-        // _conWorker.start();
         std::memcpy(&res, p.payload() + PAYLOAD_VALUE_BEGINING_INDEX, std::min(sizeof(res), p.payloadSize() - PAYLOAD_VALUE_BEGINING_INDEX));
 
         return res;
@@ -117,12 +108,43 @@ public:
     std::vector<std::pair<TocItem, ParamValue>> getTocAndValues();
 
     void sendAppChannelData(const void *data, const size_t &dataLen);
-    // std::vector<uint8_t> recvAppChannelData();
-    //returns the amount of bytes it wrote
-    // size_t recvAppChannelData(void *dest, const size_t &dataLen);
 
-    //**************************************
-    //todo: add callback for param changed
-    //todo: console
-    //**************************************
+ 
+
+    /**
+     * If successful returns non-negative integer representing the new logBlock id. eg: id = 5 or id = 0
+     * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
+    */
+    int createLogBlock(const std::string &logBlockName, const std::string &logGroup, const std::string &logName);
+
+    /**
+     * If successful returns non-negative integer representing the appended logBlock id. eg: id = 5 or id = 0
+     * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
+    */
+    int appendLogBlock(uint8_t id,uint8_t logType, uint16_t logId);
+
+    /**
+     * If successful returns non-negative integer representing the deleted logBlock id. eg: id = 5 or id = 0
+     * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
+    */
+    int deleteLogBlock(uint8_t id);
+
+    /**
+     * If successful returns non-negative integer representing the logBlock id that was started. eg: id = 5 or id = 0
+     * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
+    */
+    int startLogBlock(uint8_t id, uint8_t period);
+
+    /**
+     * If successful returns non-negative integer representing the logBlock id which was stopped. eg: id = 5 or id = 0
+     * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
+    */
+    int stopLogBlock(uint8_t id);
+
+    /**
+     * If successful returns 0
+     * If failed returns the error code as a negative integer. eg: -ENOENT = -2 
+    */
+    int resetLogBlocks();
+
 };
