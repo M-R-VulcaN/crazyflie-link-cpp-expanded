@@ -11,6 +11,7 @@
 #include "Log.h"
 
 #define PAYLOAD_VALUE_BEGINING_INDEX 3
+#define PAYLOAD_READ_LOG_DATA_START_INDEX 4
 #define NOT_FOUND 0
 
 #define APP_CHANNEL 2

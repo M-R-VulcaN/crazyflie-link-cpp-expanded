@@ -53,6 +53,19 @@ const std::map<uint8_t, std::string>
         {0x06, "float"},
         {0x07, "double"}};
 
+
+const std::map<uint8_t, std::string>
+    LOG_TYPES = {
+        //   TypeId:       TypeName:
+        {1, "uint8_t"},
+        {2, "uint16_t"},
+        {3, "uint32_t"},
+        {4, "int8_t"},
+        {5, "int16_t"},
+        {6, "int32_t"},
+        {7, "float"},
+        {8, "FP16"}};
+
 struct AccessType
 {
     uint8_t _accessType;
@@ -66,6 +79,7 @@ struct AccessType
 struct TocItemType
 {
     uint8_t _type;
+    bool _isParam;
     operator std::string() const;
     friend std::string to_string(TocItemType const &self);
     bool operator==(uint8_t val) const;

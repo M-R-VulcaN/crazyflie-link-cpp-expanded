@@ -184,7 +184,16 @@ void Crazyflie::addLogCallback(const LogBlockReceivedCallback &callback)
         uint32_t period = 0;
         std::memcpy(&period,p_recv.payload()+1,3);
         data.reserve(p_recv.payloadSize()-4);
-        data.insert(data.begin(),p_recv.payload()+4,p_recv.payload()+p_recv.payloadSize());
+        for(int i = PAYLOAD_READ_LOG_DATA_START_INDEX; i < (int)p_recv.payloadSize();i++)
+        {
+            data.push_back(p_recv.payload()[i]);
+        }
+        // for(auto byte : data)
+        // {
+        //     std::cout << (int) byte <<"  ";
+        // }
+        // std::cout<<std::endl;
+
         return callback(p_recv.payload()[0],period,data);
     };
     _conWorker.addCallback({LOG_PORT, LOG_DATA_CHANNEL, func});

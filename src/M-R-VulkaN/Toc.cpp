@@ -130,7 +130,7 @@ TocItem::TocItem()
 }
 TocItem::operator bool() const
 {
-    return "" == _groupName  || "" == _name;
+    return !("" == _groupName  || "" == _name);
 }
 
 TocInfo::~TocInfo()

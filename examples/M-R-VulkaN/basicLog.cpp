@@ -209,64 +209,87 @@ int main()
             std::condition_variable *waitTillFinishedPtr = &waitTillFinished;
             std::atomic<bool> isFinished(false);
             std::atomic<bool> *isFinishedPtr = &isFinished;
-            std::atomic<bool> isCallbackFinished(false);
+            std::atomic<bool> isCallbackFinished(true);
             std::atomic<bool> *isCallbackFinishedPtr = &isCallbackFinished;
 
             crazyflie.addLogCallback([log,isFinishedPtr,muPtr,waitTillFinishedPtr,isCallbackFinishedPtr](uint8_t id, uint32_t period, const std::vector<uint8_t>& data){
+                *isCallbackFinishedPtr = false;
                 std::lock_guard<std::mutex> lock(*muPtr);
                 std::list<TocItem> logBlockItems = log.getLogBlock(id);
                 int currDataIndex = 0;
-                std::cout << "period: "<<period << " val=";
+                std::cout << "period: " << period << " val=";
+                for(auto byte : data)
+                {
+                    std::cout <<(int)byte<<" ";
+                }
+                std::cout<<std::endl;
                 for(TocItem tocItem : logBlockItems)
                 {
+                    std::cout << "currDataIndex: " <<currDataIndex << std::endl;
+                    std::cout << "tocItem: " <<tocItem << std::endl;
+
                     TocItemType type = tocItem._type;
                     if ("uint8_t" == type)
                     {
                         std::cout << data[currDataIndex];
+                        currDataIndex += sizeof(uint8_t);
                     }
                     else if ("uint16_t" == type)
                     {
-                        std::cout << *(uint16_t*)data.data()+currDataIndex;
+                        std::cout << *(uint16_t *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(uint16_t);
                     }
                     else if ("uint32_t" == type)
                     {
-                        std::cout << *(uint32_t*)data.data()+currDataIndex;
+                        std::cout << *(uint32_t *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(uint32_t);
                     }
                     else if ("uint64_t" == type)
                     {
-                        std::cout << *(uint64_t*)data.data()+currDataIndex;
+                        std::cout << *(uint64_t *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(uint64_t);
                     }
                     else if ("int8_t" == type)
                     {
-                        std::cout << *(int8_t*)data.data()+currDataIndex;
+                        std::cout << *(int8_t *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(int8_t);
                     }
                     else if ("int16_t" == type)
                     {
-                        std::cout << *(int16_t*)data.data()+currDataIndex;
+                        std::cout << *(int16_t *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(int16_t);
                     }
                     else if ("int32_t" == type)
                     {
-                        std::cout << *(int32_t*)data.data()+currDataIndex;
+                        std::cout << *(int32_t *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(int32_t);
                     }
                     else if ("int64_t" == type)
                     {
-                        std::cout << *(int64_t*)data.data()+currDataIndex;
+                        std::cout << *(int64_t *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(int64_t);
                     }
                     else if ("FP16" == type)
                     {
-                        std::cout << *(float*)data.data()+currDataIndex;
+                        std::cout << *(float *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(float);
                     }
                     else if ("float" == type)
                     {
-                        std::cout << *(float*)data.data()+currDataIndex;
+                        std::cout << *(float *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(float);
                     }
                     else if ("double" == type)
                     {
-                        std::cout << *(float*)data.data()+currDataIndex;
+                        std::cout << *(float *)(data.data() + currDataIndex);
+                        currDataIndex += sizeof(float);
                     }
-                    std::cout <<std::endl;
+                    std::cout <<"  ";
+
                 }
-                if((bool)*isFinishedPtr)
+                std::cout << std::endl;
+
+                if ((bool)*isFinishedPtr)
                 {
                     *isCallbackFinishedPtr = true;
                     waitTillFinishedPtr->notify_all();
