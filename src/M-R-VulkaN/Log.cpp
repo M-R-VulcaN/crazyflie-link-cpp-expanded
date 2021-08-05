@@ -15,7 +15,6 @@ Log::~Log()
 
 int Log::createLogBlock(uint8_t logType, uint16_t logId)
 {
-    std::cout << "here #1" << std::endl;
     uint16_t i = 0;
     uint8_t data[] = {CONTROL_CREATE_BLOCK_V2, 0, logType, (uint8_t)(logId & 0xff), (uint8_t)(logId >> 8)};
     uint8_t failCode = 0;
@@ -46,7 +45,6 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
 
 int Log::createLogBlock(uint8_t id, uint8_t logType, uint16_t logId)
 {
-    std::cout << "here #2" << std::endl;
     if (idsOccupied[id] != OccupiedStatus::OCCUPIED)
     {
         uint8_t data[] = {CONTROL_CREATE_BLOCK_V2, id, logType, (uint8_t)(logId & 0xff), (uint8_t)(logId >> 8)};
@@ -129,7 +127,7 @@ int Log::stopLogBlock(uint8_t id)
 {
     if (idsOccupied[id] != OccupiedStatus::NOT_OCCUPIED)
     {
-        uint8_t data[] = {CONTROL_START_BLOCK, id};
+        uint8_t data[] = {CONTROL_STOP_BLOCK, id};
 
         uint8_t failCode = 0;
 

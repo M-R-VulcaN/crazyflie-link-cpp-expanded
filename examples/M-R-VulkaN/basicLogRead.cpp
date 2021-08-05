@@ -85,7 +85,6 @@ int main()
                 {
                     std::cout << "Success! Log Block Id = " << response <<std::endl;
                 }
-            std::cout << "pass" << std::endl;
 
             }
             break;
