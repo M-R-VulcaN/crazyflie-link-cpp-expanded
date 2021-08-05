@@ -25,8 +25,7 @@
 #define LOG_CONTROL_CHANNEL 1 //	Log control: Used for adding/removing/starting/pausing log blocks
 #define LOG_DATA_CHANNEL 2    // 	Log data: Used to send log data from the Crazyflie to the client
 
-#define PARAM_PORT 2
-#define LOG_PORT 5
+
 #define APPCHANNEL_PORT 13
 
 typedef std::function<bool(const uint8_t *, uint8_t)> AppChannelCallback;

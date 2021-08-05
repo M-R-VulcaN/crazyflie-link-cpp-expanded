@@ -2,8 +2,9 @@
 
 const uint8_t AccessType::RW = 0;
 const uint8_t AccessType::RO = 1;
+const uint8_t AccessType::NOACC = 2;
 
-TocItem::TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv)
+TocItem::TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv) 
 {
     _id = 0;
     memcpy(&_id, &p_recv.payload()[1], sizeof(_id));
@@ -12,6 +13,12 @@ TocItem::TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv)
 
     _groupName = (const char *)(p_recv.payload()) + 4;
     _name = (const char *)(p_recv.payload()) + 4 + _groupName.length() + 1;
+    if(p_recv.port() == LOG_PORT)
+    {
+        _type = typeAndAccessType;
+        _type._isParam = false;
+        _accessType = AccessType::NOACC;
+    }
     _type = typeAndAccessType & ~ACCESS_TYPE_BYTE;
     if ((typeAndAccessType & ACCESS_TYPE_BYTE) == (ACCESS_TYPE_BYTE * ((int)AccessType::RO)))
     {
@@ -49,6 +56,8 @@ TocItem& TocItem::operator=(const TocItem& other)
 
 std::string to_string(AccessType const &self)
 {
+    if(self._accessType == AccessType::NOACC)
+        return "";
     return AccessType::RO == self._accessType ? "RO" : "RW";
 }
 
@@ -58,6 +67,8 @@ AccessType &AccessType::operator=(const std::string &strAccessType)
         _accessType = AccessType::RW;
     else if (strAccessType == "RO")
         _accessType = AccessType::RO;
+    else if (strAccessType == "" || strAccessType == "NOACC")
+        _accessType = AccessType::NOACC;
     return *this;
 }
 AccessType &AccessType::operator=(const uint8_t &accessType)
@@ -88,24 +99,99 @@ std::ostream &operator<<(std::ostream &out, const TocInfo &tocInfo)
 }
 
 std::string to_string(TocItemType const &self)
-{
-    auto res = PARAM_TYPES.find(self._type);
-
-    if (res != PARAM_TYPES.end())
+{   
+    if(self._isParam)
     {
-        return res->second;
+        auto res = PARAM_TYPES.find(self._type);
+
+        if (res != PARAM_TYPES.end())
+        {
+            return res->second;
+        }
     }
+    else
+    {
+        auto res = LOG_TYPES.find(self._type);
+
+        if (res != LOG_TYPES.end())
+        {
+            return res->second;
+        }
+    }
+    
     return "? " + (int)self._type;
 }
 
-TocItemType &TocItemType::operator=(const std::string &strParamType)
+void TocItemType::setIsParam(bool isParam)
 {
-    for (auto element : PARAM_TYPES)
+    if(_isParam != isParam)
     {
-        if (element.second == strParamType)
+        bool prevIsParam = _isParam;
+        std::string currStrType = "";
+        _isParam = isParam;
+        if(prevIsParam)
         {
-            _type = element.first;
-            break;
+            for (auto element : PARAM_TYPES)
+            {
+                if (element.first == _type)
+                {   
+                    currStrType = element.second;
+                    break;
+                }
+            }
+            for (auto element : LOG_TYPES)
+            {
+                if (element.second == currStrType)
+                {   
+                    _type = element.first;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (auto element : LOG_TYPES)
+            {
+                if (element.first == _type)
+                {   
+                    currStrType = element.second;
+                    break;
+                }
+            }
+            for (auto element : PARAM_TYPES)
+            {
+                if (element.second == currStrType)
+                {   
+                    _type = element.first;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+TocItemType &TocItemType::operator=(const std::string &strType)
+{
+    if(_isParam)
+    {
+        for (auto element : PARAM_TYPES)
+        {
+            if (element.second == strType)
+            {   
+                _type = element.first;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (auto element : LOG_TYPES)
+        {
+            if (element.second == strType)
+            {   
+                _type = element.first;
+                break;
+            }
         }
     }
     return *this;
@@ -240,3 +326,10 @@ TocItemType::operator std::string() const
 {
     return to_string(*this);
 }
+TocItemType::TocItemType(uint8_t type, bool isParam) :_type(type),_isParam(isParam)
+{
+}
+TocItemType::~TocItemType()
+{}
+TocItemType::TocItemType()
+{}

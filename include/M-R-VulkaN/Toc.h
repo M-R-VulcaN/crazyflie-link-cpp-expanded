@@ -9,6 +9,9 @@
 #define ACCESS_TYPE_BYTE 64
 #define FLOAT_PARAM_TYPE 0x06
 
+#define PARAM_PORT 2
+#define LOG_PORT 5
+
 typedef std::pair<std::string, std::string> StrPair;
 
 #pragma pack(push, 1)
@@ -71,6 +74,7 @@ struct AccessType
     uint8_t _accessType;
     static const uint8_t RW;
     static const uint8_t RO;
+    static const uint8_t NOACC;
     friend std::string to_string(AccessType const &self);
     AccessType &operator=(const std::string &strAccessType);
     AccessType &operator=(const uint8_t &accessType);
@@ -78,8 +82,11 @@ struct AccessType
 
 struct TocItemType
 {
+    TocItemType(uint8_t type, bool isParam);
+    ~TocItemType();
+    TocItemType();
     uint8_t _type;
-    bool _isParam;
+    bool _isParam = true;
     operator std::string() const;
     friend std::string to_string(TocItemType const &self);
     bool operator==(uint8_t val) const;
@@ -87,6 +94,7 @@ struct TocItemType
     friend bool operator==(const std::string&val, const TocItemType& self);
     TocItemType &operator=(const std::string &strParamType);
     TocItemType &operator=(const uint8_t &paramType);
+    void setIsParam(bool isParam);
 };
 
 struct TocItem

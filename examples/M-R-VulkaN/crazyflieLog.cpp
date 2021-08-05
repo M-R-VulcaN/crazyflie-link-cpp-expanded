@@ -8,21 +8,17 @@ int main()
                                     {"stabilizer", "roll"},
                                     {"oa", "up"},
                                     {"oa", "front"},
-                                    // {"stabilizer","pitch"},
+                                    {"stabilizer","pitch"},
                                 },
                                 "test");
 
     if (res < 0)
         std::cout << "creation Error: " << res << std::endl;
-    res = cf.startLogBlock(40, "test");
+    res = cf.startLogBlock(10, "test");
     if (res < 0)
         std::cout << "starting Error: " << res << std::endl;
     Log &log = cf._log;
 
-    std::cout << "pass " << res << std::endl;
-
-    //  std::cin.ignore(INT32_MAX, '\n');
-    std::cout << "pass " << res << std::endl;
 
     std::mutex mu;
     std::unique_lock<std::mutex> lock(mu);
@@ -33,7 +29,7 @@ int main()
     std::atomic<bool> *isFinishedPtr = &isFinished;
     std::atomic<bool> isCallbackFinished(false);
     std::atomic<bool> *isCallbackFinishedPtr = &isCallbackFinished;
-    std::cout << "pass " << res << std::endl;
+    // std::cout << "pass " << res << std::endl;
 
     cf.addLogCallback([log, isFinishedPtr, muPtr, waitTillFinishedPtr, isCallbackFinishedPtr](uint8_t id, uint32_t period, const std::vector<uint8_t> &data)
                       {
@@ -45,8 +41,7 @@ int main()
 
                             for(TocItem tocItem : logBlockItems)
                             {
-                                std::cout << "currDataIndex: " <<currDataIndex << std::endl;
-
+                                // std::cout << std::endl<<to_string(tocItem._type) << std::endl;
                               TocItemType type = tocItem._type;
                               if ("uint8_t" == type)
                               {
