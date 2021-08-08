@@ -117,19 +117,6 @@ bool Crazyflie::isRunning() const
     return _isRunning;
 }
 
-/*
-        {0x08, "uint8_t"},
-        {0x09, "uint16_t"},
-        {0x0A, "uint32_t"},
-        {0x0B, "uint64_t"},
-        {0x00, "int8_t"},
-        {0x01, "int16_t"},
-        {0x02, "int32_t"},
-        {0x03, "int64_t"},
-        {0x05, "FP16"},
-        {0x06, "float"},
-        {0x07, "double"}};
-*/
 std::vector<std::pair<TocItem, ParamValue>> Crazyflie::getTocAndValues()
 {
     std::vector<std::pair<TocItem, ParamValue>> res;
@@ -188,12 +175,6 @@ void Crazyflie::addLogCallback(const LogBlockReceivedCallback &callback)
         {
             data.push_back(p_recv.payload()[i]);
         }
-        // for(auto byte : data)
-        // {
-        //     std::cout << (int) byte <<"  ";
-        // }
-        // std::cout<<std::endl;
-
         return callback(p_recv.payload()[0],period,data);
     };
     _conWorker.addCallback({LOG_PORT, LOG_DATA_CHANNEL, func});
@@ -212,14 +193,6 @@ void Crazyflie::addConsoleCallback(const ConsoleCallback &callback)
     _conWorker.addCallback({0, 0, func});
 }
 
-void Crazyflie::paramRecvThreadFunc()
-{
-    // _
-    // for(auto callback : _paramReceivedCallbacks)
-    // {
-    //     callback()
-    // }
-}
 
 const Toc &Crazyflie::getParamToc() const
 {
