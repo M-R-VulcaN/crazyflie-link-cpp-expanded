@@ -218,17 +218,18 @@ int main()
                 std::list<TocItem> logBlockItems = log.getLogBlock(id);
                 int currDataIndex = 0;
                 std::cout << "period: " << period << " val=";
-                for(auto byte : data)
-                {
-                    std::cout <<(int)byte<<" ";
-                }
-                std::cout<<std::endl;
+                // for(auto byte : data)
+                // {
+                //     std::cout <<(int)byte<<" ";
+                // }
+                // std::cout<<std::endl;
                 for(TocItem tocItem : logBlockItems)
                 {
-                    std::cout << "currDataIndex: " <<currDataIndex << std::endl;
-                    std::cout << "tocItem: " <<tocItem << std::endl;
-
+                    // std::cout << "currDataIndex: " <<currDataIndex << std::endl;
+                    // std::cout << "tocItem: " <<tocItem << std::endl;
                     TocItemType type = tocItem._type;
+                    std::cout<<" "<<to_string(type)<< ": ";
+                    
                     if ("uint8_t" == type)
                     {
                         std::cout << data[currDataIndex];
