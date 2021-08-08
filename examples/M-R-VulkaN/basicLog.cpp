@@ -31,6 +31,30 @@ enum UserChoices
     LOG_TOC_PRINT
 };
 
+std::pair<uint16_t,std::string> enterIdOrName(uint16_t defaultId)
+{
+    char userInputStr[MAX_LEN_NAME];
+
+    std::cout << "Enter log block id or group and name: (group.name) " << std::endl;
+    uint16_t logBlockId = defaultId;
+    std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
+    bool hasOnlyDigits = (std::string(userInputStr).find_first_not_of( "0123456789" ) == std::string::npos);
+    if(hasOnlyDigits)
+        logBlockId = std::stoi(userInputStr);
+    else
+    {
+        std::cout << defaultId << std::endl;
+        return {logBlockId,userInputStr};
+    }
+    std::cin.ignore(INT32_MAX, '\n');
+    std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
+    userInputStr[MAX_LEN_NAME] = 0;
+
+    std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
+
+    return {logBlockId,userInputStr};
+}
+
 int main()
 {
     Crazyflie crazyflie("usb://0");
@@ -38,6 +62,7 @@ int main()
     const Toc &tocRef = crazyflie.getLogToc();
     crazyflie.init();
     Log& log = crazyflie._log;
+    uint16_t currentId = 0;
     while (true)
     {
         uint16_t userInput = 0;
@@ -86,6 +111,7 @@ int main()
                 else
                 {
                     std::cout << "Successfully created a new log block! Log Block Id = " << response <<std::endl;
+                    currentId = response;
                 }
             }
             break;
@@ -93,17 +119,19 @@ int main()
         case APPEND_BLOCK_CHOICE:
             std::cin.ignore(INT32_MAX, '\n');
             {
-                std::cout << "Enter log block id: " << std::endl;
-                int logBlockId = 0;
-                std::cin >> logBlockId;
-                std::cin.ignore(INT32_MAX, '\n');
-                std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
-                char userInputStr[MAX_LEN_NAME];
-                userInputStr[MAX_LEN_NAME] = 0;
+                // std::cout << "Enter log block id: " << std::endl;
+                // int logBlockId = 0;
+                // std::cin >> logBlockId;
+                // std::cin.ignore(INT32_MAX, '\n');
+                // std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
+                // char userInputStr[MAX_LEN_NAME];
+                // userInputStr[MAX_LEN_NAME] = 0;
 
-                std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
+                // std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
+                auto res = enterIdOrName(currentId);
+                int logBlockId = res.first;
 
-                std::string temp = std::string(userInputStr);
+                std::string temp = res.second;
                 std::string groupName = temp.substr(0, temp.find("."));
                 std::string paramName = temp.substr(groupName.length() + 1);
 
