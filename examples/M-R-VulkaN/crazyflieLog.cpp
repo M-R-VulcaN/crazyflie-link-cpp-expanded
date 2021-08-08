@@ -41,7 +41,8 @@ int main()
     std::atomic<bool> *isCallbackFinishedPtr = &isCallbackFinished;
     // std::cout << "pass " << res << std::endl;
 
-    cf.addLogCallback([log, isFinishedPtr, muPtr, waitTillFinishedPtr, isCallbackFinishedPtr](uint8_t id, uint32_t period, const std::vector<uint8_t> &data)
+    cf.addLogCallback([log, isFinishedPtr, muPtr, waitTillFinishedPtr, isCallbackFinishedPtr]
+    (uint8_t id, uint32_t period, const std::vector<uint8_t> &data)
                       {
                         
                           std::lock_guard<std::mutex> lock(*muPtr);
@@ -55,7 +56,7 @@ int main()
                               TocItemType type = tocItem._type;
                               if ("uint8_t" == type)
                               {
-                                  std::cout << data[currDataIndex];
+                                  std::cout << (int)data[currDataIndex];
                                   currDataIndex += sizeof(uint8_t);
                               }
                               else if ("uint16_t" == type)

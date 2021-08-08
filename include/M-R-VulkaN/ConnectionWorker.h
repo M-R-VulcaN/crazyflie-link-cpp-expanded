@@ -4,11 +4,13 @@
 #include <list>
 #include <thread>
 #include <mutex>
+#include <shared_mutex>
 #include <condition_variable>
 #include "Connection.h"
 #include "Packet.hpp"
 #include <functional>
 #include <atomic>
+// #include <boost/atomic/
 
 
 

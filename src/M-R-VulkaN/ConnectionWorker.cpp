@@ -1,7 +1,6 @@
 #include "ConnectionWorker.h"
 #include <iostream>
 #include <chrono>
-#include <shared_timed_mutex>
 
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
@@ -59,32 +58,43 @@ void ConnectionWorker::receivePacketsThreadFunc()
 
         if (p_recv && !_deactivateThread)
         {
-            std::lock_guard<std::mutex> lock(_callbackMutex);
 
             // if(p_recv.port() == 5 && p_recv.channel()==2)
                 std::cout << p_recv <<std::endl;
             auto* paramReceivedCallbacksPtr = &_paramReceivedCallbacks;
             auto* p_recvPtr=&p_recv;
-            std::unique_lock<std::shared_timed_mutex> uniqueLock(_callbackSharedMutex,std::defer_lock);
-            std::shared_lock<std::shared_timed_mutex> sharedLock(_callbackSharedMutex,std::defer_lock);
-            auto* callbackSharedMutexPtr = &_callbackSharedMutex;
-            sharedLock.lock();
+            auto* callbackMutexPtr = &_callbackMutex;
+            std::condition_variable waitForIterator;
+            std::condition_variable* waitForIteratorPtr = &waitForIterator;
+            // std::shared_lock<std::shared_timed_mutex> sharedLock(_callbackSharedMutex);
+            std::mutex mu;
+            std::mutex* muPtr = &mu;
+            std::unique_lock<std::mutex> waitForIteratorLock(mu);
+            std::lock_guard<std::mutex> lock(_callbackMutex);
+            std::atomic<bool> isIteratorFinished(false);
+            std::atomic<bool>* isIteratorFinishedPtr = &isIteratorFinished;
+
             for(auto it = _paramReceivedCallbacks.begin(); it != _paramReceivedCallbacks.end(); it++)
             {
                 auto* itPtr = &it;
                 if(p_recv.channel() == it->_channel && it->_port == p_recv.port())
                 {
-                    std::thread thread([paramReceivedCallbacksPtr, itPtr,p_recvPtr, callbackSharedMutexPtr](){
-                        if(!(*itPtr)->_packetCallbackFunc(*p_recvPtr))
+                    std::thread thread([paramReceivedCallbacksPtr, itPtr,p_recvPtr, callbackMutexPtr,muPtr,waitForIteratorPtr,isIteratorFinishedPtr](){
+                        std::unique_lock<std::mutex> lock(*muPtr);
+                        auto it = *itPtr;
+                        lock.unlock();
+                        *isIteratorFinishedPtr = true;
+                        waitForIteratorPtr->notify_all();
+                        if(!it->_packetCallbackFunc(*p_recvPtr))
                         {
-                            std::unique_lock<std::shared_timed_mutex> lock(*callbackSharedMutexPtr);
-                            paramReceivedCallbacksPtr->erase(*itPtr);
+                            std::lock_guard<std::mutex> lock(*callbackMutexPtr);
+                            paramReceivedCallbacksPtr->erase(it);
                         }
                     });
                     thread.detach();
+                    waitForIterator.wait(waitForIteratorLock,[isIteratorFinishedPtr](){return (bool)*isIteratorFinishedPtr;});
                 }
             }
-            sharedLock.unlock();
 
             // while (it != _paramReceivedCallbacks.end())
             // {
