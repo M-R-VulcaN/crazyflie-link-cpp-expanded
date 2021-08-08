@@ -119,15 +119,6 @@ int main()
         case APPEND_BLOCK_CHOICE:
             std::cin.ignore(INT32_MAX, '\n');
             {
-                // std::cout << "Enter log block id: " << std::endl;
-                // int logBlockId = 0;
-                // std::cin >> logBlockId;
-                // std::cin.ignore(INT32_MAX, '\n');
-                // std::cout << "Enter log group and name in the following format:(group.name): " << std::endl;
-                // char userInputStr[MAX_LEN_NAME];
-                // userInputStr[MAX_LEN_NAME] = 0;
-
-                // std::cin.getline(userInputStr, MAX_LEN_NAME - 1, '\n');
                 auto res = enterIdOrName(currentId);
                 int logBlockId = res.first;
 

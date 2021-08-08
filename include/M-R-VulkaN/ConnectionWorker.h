@@ -35,6 +35,7 @@ private:
     std::thread _receivingThread;//The mutex for receiving packets
     std::mutex _threadSleepMutex; //The mutex for changing the receive-thread's state from active to inactive or vice versa
     std::mutex _callbackMutex; // The mutex for running a callback function
+    std::shared_timed_mutex _callbackSharedMutex;
 
     std::condition_variable _threadSleepConVar; //Condition variable which is used for waiting whenever the receive-thread is sleeping
     std::atomic<bitcraze::crazyflieLinkCpp::Connection *> _conAtomicPtr; // An atomic pointer to the Connection object so that you could do multi-thread activities on it

@@ -32,7 +32,6 @@ void LoggingCrazyflieWrapper::start(bool withDebugging)
   
     Debug::passFlag = true;
     Crazyflie* cfPtr = _crazyflie;
-    // std::vector<uint8_t> result;
 
     std::ofstream outputFile(_outputFilePath);
     std::ofstream* outputFilePtr= &outputFile;

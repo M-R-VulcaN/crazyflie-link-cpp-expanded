@@ -1,6 +1,7 @@
 #include "ConnectionWorker.h"
 #include <iostream>
 #include <chrono>
+#include <shared_timed_mutex>
 
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
@@ -61,20 +62,42 @@ void ConnectionWorker::receivePacketsThreadFunc()
             std::lock_guard<std::mutex> lock(_callbackMutex);
 
             // if(p_recv.port() == 5 && p_recv.channel()==2)
-            //     std::cout << p_recv <<std::endl;
-            auto it = _paramReceivedCallbacks.begin();
-            while (it != _paramReceivedCallbacks.end())
+                std::cout << p_recv <<std::endl;
+            auto* paramReceivedCallbacksPtr = &_paramReceivedCallbacks;
+            auto* p_recvPtr=&p_recv;
+            std::unique_lock<std::shared_timed_mutex> uniqueLock(_callbackSharedMutex,std::defer_lock);
+            std::shared_lock<std::shared_timed_mutex> sharedLock(_callbackSharedMutex,std::defer_lock);
+            auto* callbackSharedMutexPtr = &_callbackSharedMutex;
+            sharedLock.lock();
+            for(auto it = _paramReceivedCallbacks.begin(); it != _paramReceivedCallbacks.end(); it++)
             {
-                if (p_recv.channel() == it->_channel && it->_port == p_recv.port() && !it->_packetCallbackFunc(p_recv))
+                auto* itPtr = &it;
+                if(p_recv.channel() == it->_channel && it->_port == p_recv.port())
                 {
-                    it = _paramReceivedCallbacks.erase(it);
-                    continue;
-                }
-                else
-                {
-                    it++;
+                    std::thread thread([paramReceivedCallbacksPtr, itPtr,p_recvPtr, callbackSharedMutexPtr](){
+                        if(!(*itPtr)->_packetCallbackFunc(*p_recvPtr))
+                        {
+                            std::unique_lock<std::shared_timed_mutex> lock(*callbackSharedMutexPtr);
+                            paramReceivedCallbacksPtr->erase(*itPtr);
+                        }
+                    });
+                    thread.detach();
                 }
             }
+            sharedLock.unlock();
+
+            // while (it != _paramReceivedCallbacks.end())
+            // {
+            //     if (p_recv.channel() == it->_channel && it->_port == p_recv.port() && !it->_packetCallbackFunc(p_recv))
+            //     {
+            //         it = _paramReceivedCallbacks.erase(it);
+            //         continue;
+            //     }
+            //     else
+            //     {
+            //         it++;
+            //     }
+            // }
           
         }
     }
