@@ -40,7 +40,7 @@ private:
     std::shared_timed_mutex _callbackSharedMutex;
 
     std::condition_variable _threadSleepConVar; //Condition variable which is used for waiting whenever the receive-thread is sleeping
-    std::atomic<bitcraze::crazyflieLinkCpp::Connection *> _conAtomicPtr; // An atomic pointer to the Connection object so that you could do multi-thread activities on it
+    bitcraze::crazyflieLinkCpp::Connection * _conAtomicPtr; // An atomic pointer to the Connection object so that you could do multi-thread activities on it
     std::atomic<bool> _deactivateThread; //a switch for activating or deactivated the thread
     void receivePacketsThreadFunc();// The function which runs on the packets receive thread
 
@@ -50,6 +50,7 @@ public:
     ConnectionWorker(bitcraze::crazyflieLinkCpp::Connection &con);
 
     //Destructor for the connection worker
+    //This stops the thread completely 
     ~ConnectionWorker();
 
     //start wakes up the thread from its sleeping

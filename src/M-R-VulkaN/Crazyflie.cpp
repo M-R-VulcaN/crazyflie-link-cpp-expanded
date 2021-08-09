@@ -212,8 +212,6 @@ int Crazyflie::createLogBlock(const std::vector<std::pair<std::string,std::strin
 
     for(int i = 1; i < (int)logItemNames.size() ; i++)
     {
-        std::cout << "i: "<<i << std::endl;
-        std::cout << logItemNames[i].first<<"." << logItemNames[i].second<< std::endl;
         tocItem =  _logToc.getItem(logItemNames[i].first,logItemNames[i].second);
         if(!tocItem)
         {
@@ -249,15 +247,12 @@ int Crazyflie::deleteLogBlock( const std::string &logName)
 
 int Crazyflie::startLogBlock( uint8_t period, const std::string &logName)
 {
-    std::cout << "logBlock: " << logName << std::endl;
     auto it = _logBlockNames.find(logName);
     
     if(_logBlockNames.end()== it)
         return -GENERIC_LOG_ERROR;
-    std::cout << "logBlock (pass): " << logName <<  std::endl;
 
     uint8_t logBlockId = it->second;
-    std::cout << "logBlock (pass): " << logName <<  std::endl;
 
     return _log.startLogBlock(logBlockId, period);
 }

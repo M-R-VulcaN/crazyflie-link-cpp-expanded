@@ -4,17 +4,21 @@
 
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
+
+
 ConnectionWorker::ConnectionWorker(Connection &con) : _conAtomicPtr(&con)
 {
     _receivingThread = std::thread(&ConnectionWorker::receivePacketsThreadFunc, this);
     _deactivateThread = true;
     _receivingThread.detach();
 }
+
 ConnectionWorker::~ConnectionWorker()
 {
     _conAtomicPtr = nullptr;
     this->stop();
 }
+
 void ConnectionWorker::start()
 {
     std::lock_guard<std::mutex> lock(_threadSleepMutex);

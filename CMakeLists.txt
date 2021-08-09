@@ -170,6 +170,14 @@ target_link_libraries(example_crazyflieLog
   crazyflieLinkCpp
 )
 
+# example_stressTest
+add_executable(example_stressTest
+  examples/M-R-VulkaN/stressTest.cpp
+)
+target_link_libraries(example_stressTest
+  crazyflieLinkCpp
+)
+
 
 # # example_basicParamCSV
 # add_executable(example_basicParamCSV

@@ -1,6 +1,6 @@
 #pragma once
 #include <errno.h>
-#include <any>
+#include <boost/spirit/home/support/detail/hold_any.hpp>
 
 #include "Toc.h"
 #include "ConnectionWrapper.h"
@@ -29,7 +29,7 @@ struct LogBlock
     bool _isActive;
 };
 
-typedef std::function<bool(const std::map<TocItem,void*>&, uint32_t)> LogBlockCallback;
+typedef std::function<bool(const std::map<TocItem,boost::spirit::hold_any>&, uint32_t)> LogBlockCallback;
 
 
 enum class OccupiedStatus

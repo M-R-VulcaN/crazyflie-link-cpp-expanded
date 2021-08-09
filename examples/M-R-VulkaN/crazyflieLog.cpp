@@ -40,35 +40,35 @@ int main()
     std::atomic<bool> *isCallbackFinishedPtr = &isCallbackFinished;
     std::cout << "pass " << res << std::endl;
     cf.addLogCallback([ isFinishedPtr, muPtr, waitTillFinishedPtr, isCallbackFinishedPtr]
-    (const std::map<TocItem,void*>& tocItemsAndValues, uint32_t period)
+    (const std::map<TocItem,boost::spirit::hold_any>& tocItemsAndValues, uint32_t period)
                       {
                         std::cout <<"  period:  " << period << "  val=  ";
                         for(auto element : tocItemsAndValues)
                         {
                         
-                            if(to_string(element.first._type).find("uint")!=std::string::npos)
-                            {
-                                uint32_t res = 0;
-                                std::memcpy(&res, element.second,element.first._type.size());
-                                std::cout << res;
-                            }
-                            else if (element.first._type == "int8_t")
-                            {
-                                std::cout << (int)*(int8_t*)element.second;
-                            }
-                             else if (element.first._type == "int16_t")
-                            {
-                                std::cout << *(int16_t*)element.second;
-                            }
-                             else if(element.first._type == "int32_t")
-                            {
-                                std::cout << *(int32_t*)element.second;
-                            }
-                            else if (element.first._type == "float")
-                            {
-                                std::cout << *(float*)element.second;
-                            }
-                            std::cout <<"  ";
+                            // if(to_string(element.first._type).find("uint")!=std::string::npos)
+                            // {
+                            //     uint32_t res = 0;
+                            //     std::memcpy(&res, element.second,element.first._type.size());
+                            //     std::cout << res;
+                            // }
+                            // else if (element.first._type == "int8_t")
+                            // {
+                            //     std::cout << (int)*(int8_t*)element.second;
+                            // }
+                            //  else if (element.first._type == "int16_t")
+                            // {
+                            //     std::cout << *(int16_t*)element.second;
+                            // }
+                            //  else if(element.first._type == "int32_t")
+                            // {
+                            //     std::cout << *(int32_t*)element.second;
+                            // }
+                            // else if (element.first._type == "float")
+                            // {
+                            //     std::cout << *(float*)element.second;
+                            // }
+                            std::cout << element.second<<"  ";
                         }
                         std::cout << std::endl;
 
