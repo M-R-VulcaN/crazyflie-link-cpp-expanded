@@ -316,7 +316,7 @@ int main()
                     return false;
                 }
                 return true;
-            }); 
+            },"test"); 
             std::cout << "Press enter to stop receiving"<<std::endl;
             lock.unlock();
             std::cin.getline(nullptr,0,'\n'); 

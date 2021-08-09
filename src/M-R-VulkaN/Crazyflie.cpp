@@ -163,21 +163,17 @@ void Crazyflie::addParamReceivedCallback(const ParamValueCallback &callback)
     _conWorker.addCallback({LOG_PORT, LOG_DATA_CHANNEL, func});
 }
 
-void Crazyflie::addLogCallback(const LogBlockReceivedCallback &callback)
+int Crazyflie::addLogCallback(const LogBlockCallback &callback, const std::string &logName)
 {
-    auto func = (std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[callback](Packet p_recv)
-    {
-        std::vector<uint8_t> data;
-        uint32_t period = 0;
-        std::memcpy(&period,p_recv.payload()+1,3);
-        data.reserve(p_recv.payloadSize()-4);
-        for(int i = PAYLOAD_READ_LOG_DATA_START_INDEX; i < (int)p_recv.payloadSize();i++)
-        {
-            data.push_back(p_recv.payload()[i]);
-        }
-        return callback(p_recv.payload()[0],period,data);
-    };
-    _conWorker.addCallback({LOG_PORT, LOG_DATA_CHANNEL, func});
+    auto it = _logBlockNames.find(logName);
+
+    if(_logBlockNames.end()== it)
+        return -GENERIC_LOG_ERROR;
+
+    uint8_t logBlockId = it->second;
+
+    _log.addLogCallback(logBlockId,callback);
+    return logBlockId;
 }
 
 void Crazyflie::addConsoleCallback(const ConsoleCallback &callback)
@@ -226,7 +222,7 @@ int Crazyflie::createLogBlock(const std::vector<std::pair<std::string,std::strin
             return -GENERIC_LOG_ERROR;
         }
         int res =_log.appendLogBlock(logBlockId,tocItem._type._type,tocItem._id);
-        if(res <0)//if error
+        if(res < 0)//if error
             return res;
     }
     _logBlockNames.insert({logName,logBlockId});
@@ -243,31 +239,27 @@ int Crazyflie::deleteLogBlock( const std::string &logName)
     uint8_t logBlockId = it->second;
     int res = _log.deleteLogBlock(logBlockId);
 
-    if(LOG_SUCCESS == res)
+    if(res > 0) //not failed
     {
         _logBlockNames.erase(it);
-        return logBlockId;
     }
 
-    return -res;
+    return res;
 }
 
 int Crazyflie::startLogBlock( uint8_t period, const std::string &logName)
 {
+    std::cout << "logBlock: " << logName << std::endl;
     auto it = _logBlockNames.find(logName);
     
     if(_logBlockNames.end()== it)
         return -GENERIC_LOG_ERROR;
+    std::cout << "logBlock (pass): " << logName <<  std::endl;
 
     uint8_t logBlockId = it->second;
-    int res = _log.startLogBlock(logBlockId, period);
+    std::cout << "logBlock (pass): " << logName <<  std::endl;
 
-    if(LOG_SUCCESS == res)
-    {
-        return logBlockId;
-    }
-
-    return -res;
+    return _log.startLogBlock(logBlockId, period);
 }
 int Crazyflie::stopLogBlock( const std::string &logName)
 {
@@ -277,25 +269,11 @@ int Crazyflie::stopLogBlock( const std::string &logName)
         return -GENERIC_LOG_ERROR;
 
     uint8_t logBlockId = it->second;
-    int res = _log.stopLogBlock(logBlockId);
 
-    if(LOG_SUCCESS == res)
-    {
-        return logBlockId;
-    }
-
-    return -res;
+    return _log.stopLogBlock(logBlockId);
 }
 
 int Crazyflie::resetLogBlocks()
 {
-    int res = _log.resetLogBlocks();
-
-    if(LOG_SUCCESS == res)
-    {
-        _logBlockNames.clear();
-        return LOG_SUCCESS;
-    }
-
-    return -res;
+    return _log.resetLogBlocks();
 }

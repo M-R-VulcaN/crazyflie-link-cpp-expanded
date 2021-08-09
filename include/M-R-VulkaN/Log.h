@@ -1,5 +1,6 @@
 #pragma once
 #include <errno.h>
+#include <any>
 
 #include "Toc.h"
 #include "ConnectionWrapper.h"
@@ -10,6 +11,9 @@
 #define CONTROL_RESET 5
 #define CONTROL_CREATE_BLOCK_V2 6
 #define CONTROL_APPEND_BLOCK_V2 7
+
+#define PAYLOAD_READ_LOG_DATA_START_INDEX 4
+
 
 #define CONTROL_CH 1
 #define DATA_CH 2
@@ -25,6 +29,9 @@ struct LogBlock
     bool _isActive;
 };
 
+typedef std::function<bool(const std::map<TocItem,void*>&, uint32_t)> LogBlockCallback;
+
+
 enum class OccupiedStatus
 {
     OCCUPIED,
@@ -36,13 +43,14 @@ class Log
 private:
     Toc *_tocPtr;
     ConnectionWrapper _conWpr;
+    ConnectionWorker* _conWorkerPtr;
     OccupiedStatus idsOccupied[UINT8_MAX] = {OccupiedStatus::UNKNOWN};
     std::map<uint8_t,std::list<TocItem>> _logBlocks;
 
 public:
     Log(Toc &toc, ConnectionWorker &con);
     ~Log();
-
+    void addLogCallback(uint8_t id, const LogBlockCallback &callback);
     /**
      * If successful returns non-negative integer representing the new logBlock id. eg: id = 5 or id = 0
      * If failed returns the error code as a negative integer. eg: -ENOENT = -2 

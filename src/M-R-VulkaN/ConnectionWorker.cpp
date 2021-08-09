@@ -60,7 +60,7 @@ void ConnectionWorker::receivePacketsThreadFunc()
         {
 
             // if(p_recv.port() == 5 && p_recv.channel()==2)
-                std::cout << p_recv <<std::endl;
+                // std::cout << p_recv <<std::endl;
             auto* paramReceivedCallbacksPtr = &_paramReceivedCallbacks;
             auto* p_recvPtr=&p_recv;
             auto* callbackMutexPtr = &_callbackMutex;

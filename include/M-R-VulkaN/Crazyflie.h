@@ -11,7 +11,6 @@
 #include "Log.h"
 
 #define PAYLOAD_VALUE_BEGINING_INDEX 3
-#define PAYLOAD_READ_LOG_DATA_START_INDEX 4
 #define NOT_FOUND 0
 
 #define APP_CHANNEL 2
@@ -31,7 +30,7 @@
 typedef std::function<bool(const uint8_t *, uint8_t)> AppChannelCallback;
 typedef std::function<bool(uint16_t, const ParamValue &)> ParamValueCallback;
 typedef std::function<bool(const char *)> ConsoleCallback;
-typedef std::function<bool(uint8_t,uint32_t, const std::vector<uint8_t>&)> LogBlockReceivedCallback;
+// typedef std::function<bool(uint8_t,uint32_t, const std::vector<uint8_t>&)> LogBlockReceivedCallback;
 
 class Crazyflie
 {
@@ -86,7 +85,7 @@ public:
     void addAppChannelCallback(const AppChannelCallback &callback);
     void addParamReceivedCallback(const ParamValueCallback &callback);
     void addConsoleCallback(const ConsoleCallback &callback);
-    void addLogCallback(const LogBlockReceivedCallback &callback);
+    int addLogCallback(const LogBlockCallback &callback, const std::string &logName);
     Crazyflie(const std::string &uri);
     ~Crazyflie();
     bool isRunning() const;
