@@ -52,11 +52,17 @@ int main()
                                 std::memcpy(&res, element.second,element.first._type.size());
                                 std::cout << res;
                             }
-                            else if (to_string(element.first._type).find("int")!=std::string::npos)
+                            else if (element.first._type == "int8_t")
                             {
-                                int32_t res = 0;
-                                std::memcpy(&res, element.second,element.first._type.size());
-                                std::cout << res;
+                                std::cout << (int)*(int8_t*)element.second;
+                            }
+                             else if (element.first._type == "int16_t")
+                            {
+                                std::cout << *(int16_t*)element.second;
+                            }
+                             else if(element.first._type == "int32_t")
+                            {
+                                std::cout << *(int32_t*)element.second;
                             }
                             else if (element.first._type == "float")
                             {
