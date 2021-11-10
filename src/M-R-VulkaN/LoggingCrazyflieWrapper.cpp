@@ -24,11 +24,9 @@ void LoggingCrazyflieWrapper::start(bool withDebugging)
     std::unique_lock<std::mutex> lock(mu);
     std::condition_variable waitForLoggingToFinish;
     std::condition_variable* waitForLoggingToFinishPtr = &waitForLoggingToFinish;
-    std::cout <<"passs"<<std::endl;
 
     _crazyflie->setParamByName<uint8_t>("usd", "logging", 0);
     _crazyflie->setParamByName<uint8_t>("usd", "sendAppChannle", 1);
-    std::cout <<"passs"<<std::endl;
   
     Debug::passFlag = true;
     Crazyflie* cfPtr = _crazyflie;
@@ -137,8 +135,6 @@ void LoggingCrazyflieWrapper::start(bool withDebugging)
             waitForLoggingToFinishPtr->notify_all();
             return false;
         }
-        // if(data != nullptr && dataLen >0)
-        //     std::cout << "pass" <<std::endl;
         return true;
     });
     waitForLoggingToFinish.wait(lock,[isFinishedPtr](){return (bool)*isFinishedPtr;});

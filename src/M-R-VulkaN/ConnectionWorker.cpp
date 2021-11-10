@@ -59,14 +59,13 @@ void ConnectionWorker::receivePacketsThreadFunc()
         if (p_recv && !_deactivateThread)
         {
 
-            // if(p_recv.port() == 5 && p_recv.channel()==2)
-                std::cout << p_recv <<std::endl;
+            // if(p_recv.port() == 5 && p_recv.channel()==2) //debug
+                // std::cout << p_recv <<std::endl;
             auto* paramReceivedCallbacksPtr = &_paramReceivedCallbacks;
             auto* p_recvPtr=&p_recv;
             auto* callbackMutexPtr = &_callbackMutex;
             std::condition_variable waitForIterator;
             std::condition_variable* waitForIteratorPtr = &waitForIterator;
-            // std::shared_lock<std::shared_timed_mutex> sharedLock(_callbackSharedMutex);
             std::mutex mu;
             std::mutex* muPtr = &mu;
             std::unique_lock<std::mutex> waitForIteratorLock(mu);
@@ -95,19 +94,6 @@ void ConnectionWorker::receivePacketsThreadFunc()
                     waitForIterator.wait(waitForIteratorLock,[isIteratorFinishedPtr](){return (bool)*isIteratorFinishedPtr;});
                 }
             }
-
-            // while (it != _paramReceivedCallbacks.end())
-            // {
-            //     if (p_recv.channel() == it->_channel && it->_port == p_recv.port() && !it->_packetCallbackFunc(p_recv))
-            //     {
-            //         it = _paramReceivedCallbacks.erase(it);
-            //         continue;
-            //     }
-            //     else
-            //     {
-            //         it++;
-            //     }
-            // }
           
         }
     }
