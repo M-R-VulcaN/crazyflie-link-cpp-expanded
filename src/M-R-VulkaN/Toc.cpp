@@ -203,12 +203,27 @@ TocItemType &TocItemType::operator=(const uint8_t &paramType)
     return *this;
 }
 
+uint8_t TocItemType::size() const
+{
+    if(*this== "uint8_t" || *this== "int8_t")
+        return 1;
+    if(*this== "uint16_t" || *this== "int16_t"|| *this== "FP16")
+        return 2;
+    if(*this== "uint32_t" || *this== "int32_t"|| *this== "float")
+        return 4;
+    return 0;
+}
+
 TocInfo::TocInfo()
 {
 }
 
 TocItem::~TocItem()
 {
+}
+uint8_t TocItem::size() const
+{
+    return _type.size();
 }
 
 TocItem::TocItem()

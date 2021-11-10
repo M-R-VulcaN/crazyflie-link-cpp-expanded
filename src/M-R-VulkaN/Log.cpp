@@ -2,7 +2,7 @@
 #include <errno.h>
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
-Log::Log(Toc &toc, ConnectionWorker &conWorker) : _tocPtr(&toc), _conWpr(conWorker)
+Log::Log(Toc &toc, ConnectionWorker &conWorker) : _tocPtr(&toc), _conWpr(conWorker), _conWorkerPtr(&conWorker)
 {
     _conWpr.setPort(CRTP_PORT_LOG);
     _conWpr.setChannel(CONTROL_CH);
@@ -13,6 +13,76 @@ Log::~Log()
 {
 }
 
+//  if(to_string(element.first._type).find("uint")!=std::string::npos)
+//                             {
+//                                 uint32_t res = 0;
+//                                 std::memcpy(&res, element.second,element.first._type.size());
+//                                 std::cout << res;
+//                             }
+//                             else if (element.first._type == "int8_t")
+//                             {
+//                                 std::cout << (int)*(int8_t*)element.second;
+//                             }
+//                              else if (element.first._type == "int16_t")
+//                             {
+//                                 std::cout << *(int16_t*)element.second;
+//                             }
+//                              else if(element.first._type == "int32_t")
+//                             {
+//                                 std::cout << *(int32_t*)element.second;
+//                             }
+//                             else if (element.first._type == "float")
+//                             {
+//                                 std::cout << *(float*)element.second;
+//                             }
+
+void Log::addLogCallback(uint8_t id,const LogBlockCallback &callback)
+{
+    std::list<TocItem>* logBlockPtr = &(_logBlocks.find(id)->second);
+    auto func = (std::function<bool(bitcraze::crazyflieLinkCpp::Packet)>)[callback,logBlockPtr,id](Packet p_recv)
+    {
+        if(p_recv.payload()[0] != id) 
+            return true;
+        std::map<TocItem,boost::spirit::hold_any> result;
+        uint8_t* dataPtr = (uint8_t*)p_recv.payload()+PAYLOAD_READ_LOG_DATA_START_INDEX;
+        uint32_t period = 0;
+        std::memcpy(&period,p_recv.payload()+1,3);
+        for(TocItem tocItem : *logBlockPtr)
+        {
+            boost::spirit::hold_any value;
+            if(to_string(tocItem._type).find("uint")!=std::string::npos)
+            {
+                uint32_t res = 0;
+                std::memcpy(&res, dataPtr,tocItem.size());
+                value = res;
+            }
+            else if (tocItem._type == "int8_t")
+            {
+                value =*(int8_t*)dataPtr;
+            }
+                else if (tocItem._type == "int16_t")
+            {
+                value =*(int16_t*)dataPtr;
+            }
+                else if(tocItem._type == "int32_t")
+            {
+                value = *(int32_t*)dataPtr;
+            }
+            else if (tocItem._type == "float")
+            {
+                value = *(float*)dataPtr;
+            }
+            result.insert(std::make_pair(tocItem,value));
+
+            dataPtr = dataPtr + (int)tocItem.size();
+
+        }
+        return callback(result,period);
+    };
+    _conWorkerPtr->addCallback({LOG_PORT, DATA_CH, func});
+}
+
+
 int Log::createLogBlock(uint8_t logType, uint16_t logId)
 {
     uint16_t i = 0;
@@ -21,7 +91,6 @@ int Log::createLogBlock(uint8_t logType, uint16_t logId)
 
     for (i = 0; i < UINT8_MAX; i++)
     {
-        std::cout << (int)idsOccupied[i] << std::endl;
         if (idsOccupied[i] != OccupiedStatus::OCCUPIED)
         {
             data[1] = i;
@@ -110,14 +179,19 @@ int Log::startLogBlock(uint8_t id, uint8_t period)
 {
     if (idsOccupied[id] != OccupiedStatus::NOT_OCCUPIED)
     {
+
         uint8_t data[] = {CONTROL_START_BLOCK, id, period};
+
         Packet p_recv = _conWpr.sendRecvData(0, data);
+
         uint8_t failCode = p_recv.payload()[2];
+
         if (LOG_SUCCESS == failCode)
         {
             idsOccupied[id] = OccupiedStatus::OCCUPIED;
             return id;
         }
+
         return -failCode;
     }
     return -GENERIC_LOG_ERROR;

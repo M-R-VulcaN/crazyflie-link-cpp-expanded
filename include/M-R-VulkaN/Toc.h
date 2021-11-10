@@ -94,6 +94,8 @@ struct TocItemType
     friend bool operator==(const std::string&val, const TocItemType& self);
     TocItemType &operator=(const std::string &strParamType);
     TocItemType &operator=(const uint8_t &paramType);
+    uint8_t size() const;
+
     void setIsParam(bool isParam);
 };
 
@@ -107,6 +109,7 @@ struct TocItem
     TocItem& operator=(const TocItem& other);
     bool operator>(const TocItem &other) const;
     bool operator<(const TocItem &other) const;
+    uint8_t size() const;
     TocItem(const TocItem &other);
     TocItem(const bitcraze::crazyflieLinkCpp::Packet &p_recv);
     TocItem();

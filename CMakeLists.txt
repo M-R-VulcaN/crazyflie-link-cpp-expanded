@@ -2,8 +2,8 @@ cmake_minimum_required (VERSION 3.5)
 project(crazyflie-link-cpp)
 
 
-# Enable C++14 and warnings
-set(CMAKE_CXX_STANDARD 14)
+# Enable C++17 and warnings
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -167,6 +167,14 @@ add_executable(example_crazyflieLog
   examples/M-R-VulkaN/crazyflieLog.cpp
 )
 target_link_libraries(example_crazyflieLog
+  crazyflieLinkCpp
+)
+
+# example_stressTest
+add_executable(example_stressTest
+  examples/M-R-VulkaN/stressTest.cpp
+)
+target_link_libraries(example_stressTest
   crazyflieLinkCpp
 )
 

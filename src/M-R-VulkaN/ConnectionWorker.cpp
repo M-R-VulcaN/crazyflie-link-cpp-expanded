@@ -4,17 +4,21 @@
 
 using bitcraze::crazyflieLinkCpp::Connection;
 using bitcraze::crazyflieLinkCpp::Packet;
+
+
 ConnectionWorker::ConnectionWorker(Connection &con) : _conAtomicPtr(&con)
 {
     _receivingThread = std::thread(&ConnectionWorker::receivePacketsThreadFunc, this);
     _deactivateThread = true;
     _receivingThread.detach();
 }
+
 ConnectionWorker::~ConnectionWorker()
 {
     _conAtomicPtr = nullptr;
     this->stop();
 }
+
 void ConnectionWorker::start()
 {
     std::lock_guard<std::mutex> lock(_threadSleepMutex);
@@ -59,7 +63,11 @@ void ConnectionWorker::receivePacketsThreadFunc()
         if (p_recv && !_deactivateThread)
         {
 
+<<<<<<< HEAD
             // if(p_recv.port() == 5 && p_recv.channel()==2) //debug
+=======
+            // if(p_recv.port() == 5 && p_recv.channel()==2)
+>>>>>>> 6ec85a38ec5dff2b40b3d65c0a10ce7c47c3cac6
                 // std::cout << p_recv <<std::endl;
             auto* paramReceivedCallbacksPtr = &_paramReceivedCallbacks;
             auto* p_recvPtr=&p_recv;
