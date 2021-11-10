@@ -1,75 +1,27 @@
-# Crazyflie C++ Lib 
+# Crazyflie C++ Link - "src" directory
 
-A library which you could include into your c++ project and run the functions in here to code yourself a program for the crazyflie. A c++ version of [crazyflie-lib-python](https://github.com/bitcraze/crazyflie-lib-python)
+contains all files that are connected to the library
 
-## Setup and Install
-
-### For Visual Studio Editting Best Experience
-
-```
-sudo apt install -y libusb-1.0-0-dev
-git clone https://github.com/M-R-VulcaN/crazyflie-link-cpp-expanded.git
-cd crazyflie-link-cpp-expanded
-```
-## How to Run
-
-First you must build:
-
-```
-mkdir build
-cd build
-cmake ..
-make
-```
-
-Before you can run an example:
-
-```
-./example_<example_name>
-```
-
-## File Structure Explained
-### Directories
-
-`src` - source files for crazyflie lib classes and functions
-
-`examples` - example files 
-
-`include/crazflieLinkCpp` - contains all header files for crazyflie lib
+## Files Explained
 
 
-## Build and install development version of the python binding
+### `ConnectionWrapper.cpp`
 
-1. [Install vscode](https://code.visualstudio.com/download)
-2. `code <path_to_repo_directory>`
-3. Install `c/c++` add-on
-4. Install `CMakeLists` add-on
-5. Click `Allow` intelisense for c/c++
-6. Click `Allow` intelisense for CMakeLists and select `unspecified` compiler
+**`isBigEndian`** - returns true if the current cpu is big edian and false if it is small edian.
 
-## Development
+**`ConnectionWrapper`** - Takes a connection as an arguement, the class acts as a 'wrapper' to that connection given to the constructor, which it keeps an reference of.
 
-### Repo Structure
+**`recvFilteredData`** - returns the first Packet recieved with the specified port and channel. If no port and channel specified it uses the same port and channel used by the ConnectionWrapper itself.
 
-* `src` - source files for crazyflie lib classes and functions
+**`sendData`** - takes 2 or 4 arguements. The pointer of the data and the second argument is the size of the data. It combins the first and second data together (if porvided) and sends it all to the crazyflie. Sends the data through the connection by writing it into the packet
 
-* `examples` - example files which you can run
+**`getConnection`** - returns a reference to the connection stored in the connectionWrapper.
 
-* `include` - contains all header files for crazyflie lib
+**`setPort`** - sets the port of the packet used by the connectionWrapper.
 
-# IMPORTANT DATA SOURCES and REFERENCES 
+**`setChannel`** - sets the channel of the packet used by the connectionWrapper.
 
 
-*   [Bitcraze parameters documentation](https://www.bitcraze.io/documentation/repository/crazyflie-firmware/master/functional-areas/crtp/crtp_parameters/) 
-
-
-*   parameter [TOC structure](https://github.com/bitcraze/crazyflie-lib-python/blob/master/cflib/crazyflie/toc.py)
-
-
-*   [Bitcraze python lib](https://github.com/bitcraze/crazyflie-lib-python)
-
-
-*   [How to properly setup usb of crazyflie in ubuntu](https://www.bitcraze.io/documentation/repository/crazyflie-lib-python/0.1.9/usb_permissions/)
 
 
 # METHODS and ARCHITECTURE
@@ -351,3 +303,12 @@ Note: The difference between V2 and V1 is the use of 2 bytes instead of 1 to rep
    </td>
   </tr>
 </table>
+
+
+
+
+ 
+ 
+
+
+

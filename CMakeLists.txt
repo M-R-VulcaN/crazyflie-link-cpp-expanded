@@ -2,8 +2,8 @@ cmake_minimum_required (VERSION 3.5)
 project(crazyflie-link-cpp)
 
 
-# Enable C++14 and warnings
-set(CMAKE_CXX_STANDARD 14)
+# Enable C++17 and warnings
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -23,25 +23,34 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/tools/build)
 find_package(libusb REQUIRED)
 
+set(BITCRAZE_INCLUDE ${CMAKE_SOURCE_DIR}/include/bitcraze)
+set(M_R_VULKAN_INCLUDE ${CMAKE_SOURCE_DIR}/include/M-R-VulkaN)
+
 include_directories(
-  include
+  ${BITCRAZE_INCLUDE}
+  ${M_R_VULKAN_INCLUDE}
   ${LIBUSB_INCLUDE_DIR}
 )
 
-# C++ library
+# C++ library  
 
 add_library(crazyflieLinkCpp
-  src/USBManager.cpp
-  src/Connection.cpp
-  src/USBDevice.cpp
-  src/Crazyradio.cpp
-  src/CrazyradioThread.cpp
-  src/CrazyflieUSB.cpp
-  src/CrazyflieUSBThread.cpp
-  src/Version.cpp
-  src/Toc.cpp
-  src/Param.cpp
-  src/ConnectionWrapper.cpp
+  src/bitcraze/USBManager.cpp
+  src/bitcraze/Connection.cpp
+  src/bitcraze/USBDevice.cpp
+  src/bitcraze/Crazyradio.cpp
+  src/bitcraze/CrazyradioThread.cpp
+  src/bitcraze/CrazyflieUSB.cpp
+  src/bitcraze/CrazyflieUSBThread.cpp
+  src/bitcraze/Version.cpp
+  src/M-R-VulkaN/ConnectionWrapper.cpp
+  src/M-R-VulkaN/LoggingCrazyflieWrapper.cpp
+  src/M-R-VulkaN/ConnectionWorker.cpp
+  src/M-R-VulkaN/Crazyflie.cpp
+  src/M-R-VulkaN/Toc.cpp
+  src/M-R-VulkaN/TocWrapper.cpp
+  src/M-R-VulkaN/debug.cpp
+  src/M-R-VulkaN/Log.cpp
 )
 
 # target_include_directories(libCrazyflieLinkCpp
@@ -74,7 +83,7 @@ set_property(TARGET crazyflieLinkCpp PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # example_console
 add_executable(example_console
-  examples/console.cpp
+  examples/bitcraze/console.cpp
 )
 target_link_libraries(example_console
   crazyflieLinkCpp
@@ -82,7 +91,7 @@ target_link_libraries(example_console
 
 # example_scan
 add_executable(example_scan
-  examples/scan.cpp
+  examples/bitcraze/scan.cpp
 )
 target_link_libraries(example_scan
   crazyflieLinkCpp
@@ -90,24 +99,90 @@ target_link_libraries(example_scan
 
 # example_benchmark
 add_executable(example_benchmark
-  examples/benchmark.cpp
+  examples/bitcraze/benchmark.cpp
 )
 target_link_libraries(example_benchmark
   crazyflieLinkCpp
 )
 
+# example_basicLog
+add_executable(example_basicLog
+  examples/M-R-VulkaN/basicLog.cpp
+)
+target_link_libraries(example_basicLog
+  crazyflieLinkCpp
+)
+
 # example_basicToc
 add_executable(example_basicToc
-  examples/basicToc.cpp
+  examples/M-R-VulkaN/basicToc.cpp
 )
 target_link_libraries(example_basicToc
   crazyflieLinkCpp
 )
 
-# example_basicParam
-add_executable(example_basicParam
-  examples/basicParam.cpp
+# example_appChannelTest
+add_executable(example_appChannelTest
+  examples/M-R-VulkaN/appChannelTest.cpp
 )
-target_link_libraries(example_basicParam
+target_link_libraries(example_appChannelTest
   crazyflieLinkCpp
 )
+
+# example_logViaAppChannel
+add_executable(example_logViaAppChannel
+  examples/M-R-VulkaN/logViaAppChannel.cpp
+)
+target_link_libraries(example_logViaAppChannel
+  crazyflieLinkCpp
+)
+
+# example_connectionWorkerTest
+add_executable(example_connectionWorkerTest
+  examples/M-R-VulkaN/connectionWorkerTest.cpp
+)
+target_link_libraries(example_connectionWorkerTest
+  crazyflieLinkCpp
+)
+
+# example_resetUsb
+add_executable(example_resetUsb
+  examples/M-R-VulkaN/resetUsb.cpp
+)
+target_link_libraries(example_resetUsb
+  crazyflieLinkCpp
+)
+
+# example_logConnectionWorker
+add_executable(example_logConnectionWorker
+  examples/M-R-VulkaN/logConnectionWorker.cpp
+)
+target_link_libraries(example_logConnectionWorker
+  crazyflieLinkCpp
+)
+
+
+# example_crazyflieLog
+add_executable(example_crazyflieLog
+  examples/M-R-VulkaN/crazyflieLog.cpp
+)
+target_link_libraries(example_crazyflieLog
+  crazyflieLinkCpp
+)
+
+# example_stressTest
+add_executable(example_stressTest
+  examples/M-R-VulkaN/stressTest.cpp
+)
+target_link_libraries(example_stressTest
+  crazyflieLinkCpp
+)
+
+
+# # example_basicParamCSV
+# add_executable(example_basicParamCSV
+#   examples/M-R-VulkaN/basicParamCSV.cpp
+# )
+# target_link_libraries(example_basicParamCSV
+#   crazyflieLinkCpp
+# )

@@ -1,8 +1,0 @@
-/home/makers/crazyflie-link-cpp-expanded/build/CMakeFiles/crazyflieLinkCpp.dir
-/home/makers/crazyflie-link-cpp-expanded/build/CMakeFiles/rebuild_cache.dir
-/home/makers/crazyflie-link-cpp-expanded/build/CMakeFiles/example_console.dir
-/home/makers/crazyflie-link-cpp-expanded/build/CMakeFiles/example_scan.dir
-/home/makers/crazyflie-link-cpp-expanded/build/CMakeFiles/example_benchmark.dir
-/home/makers/crazyflie-link-cpp-expanded/build/CMakeFiles/edit_cache.dir
-/home/makers/crazyflie-link-cpp-expanded/build/CMakeFiles/example_basicToc.dir
-/home/makers/crazyflie-link-cpp-expanded/build/CMakeFiles/example_basicParam.dir
